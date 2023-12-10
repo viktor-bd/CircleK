@@ -26,7 +26,7 @@ public class OrderController {
     order.addOrderLine(orderLine);
     }
     public OrderLine createOrderLine (Product product, int quantity){
-        OrderLine orderLine = new OrderLine(orderLineID, quantity, product);
+        OrderLine orderLine = new OrderLine(quantity, product);
         return orderLine;
     }
 

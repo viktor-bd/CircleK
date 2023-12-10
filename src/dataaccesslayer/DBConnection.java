@@ -1,4 +1,4 @@
-package dbaccess;
+package dataaccesslayer;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;

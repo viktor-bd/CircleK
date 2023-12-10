@@ -1,8 +1,8 @@
-package dbaccess;
+package dataaccesslayer;
 
 import model.Order;
 
-public class OrderDAL {
+public class OrderDB implements OrderDBIF{
     public void saveOrder(Order newOrder) {
         //TODO implement this
     }

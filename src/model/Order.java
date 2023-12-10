@@ -17,6 +17,7 @@ public class Order {
     private Customer customer;
     private Employee employee;
     private ArrayList<OrderLine> orderLines;
+    private static final int minimumProducts = 20; // Minimum number of products to order as per special requirement skal det være her eller i Order?
 
     /**
      * TODO Check if orderID should be initialized in constructor or set on confirmation of order

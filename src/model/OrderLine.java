@@ -10,14 +10,13 @@ package model;
 public class OrderLine {
     private int orderLineId;
     private int quantity;
-    private Order order;
+
     private Product product;
 
     // Constuctor for OrderLine
-    public OrderLine(int orderLineId, int quantity, Order order, Product product) {
-        this.orderLineId = orderLineId;
+    public OrderLine(int quantity, Product product) {
+        this.orderLineId = -1; //If -1, then it is not in the database
         this.quantity = quantity;
-        this.order = order;
         this.product = product;
     }
 
@@ -40,13 +39,7 @@ public class OrderLine {
     }
 
     // Getter and Setter for orderId
-    public Order getOrder() {
-    	return order;
-    }
 
-    public void setOrder(Order order) {
-    	this.order = order;
-    }
 
     // Getter and Setter for sku
     public Product getProduct() {

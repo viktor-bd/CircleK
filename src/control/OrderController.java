@@ -7,11 +7,11 @@ import java.time.LocalDateTime;
 
 public class OrderController {
 
-    private OrderDAL orderDAL;
+    private OrderDB orderDB;
 
 
-    public OrderController(OrderDAL orderDAL) {
-        this.orderDAL = orderDAL;
+    public OrderController(OrderDB orderDB) {
+        this.orderDB =  new OrderDB();
     }
 
     public Order createOrder(int orderID, boolean pickUpStatus, LocalDateTime pickupDate, boolean isPaid, Customer customer, Employee employee) {
@@ -19,7 +19,7 @@ public class OrderController {
         return newOrder;
     }
     public Order saveOrder(Order order) {
-        orderDAL.saveOrder(order); // Call orderDAL to save the order
+        orderDB.saveOrder(order); // Call orderDAL to save the order
         return order;
     }
     public void addOrderLineToOrder(OrderLine orderLine, Order order) {

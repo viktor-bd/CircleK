@@ -25,7 +25,8 @@ public class OrderController {
     }
 
     }
-    public OrderLine createOrderLine (Product product, int quantity){
+
+    public OrderLine createOrderLine(Product product, int quantity) {
         OrderLine orderLine = new OrderLine(quantity, product);
         return orderLine;
     }

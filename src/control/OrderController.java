@@ -24,6 +24,9 @@ public class OrderController {
         return order;
     }
 
+    public Order addOrderLineToOrder(OrderLine orderLine, Order order) {
+        order.addOrderLine(orderLine);
+        return order;
     }
 
     public OrderLine createOrderLine(Product product, int quantity) {

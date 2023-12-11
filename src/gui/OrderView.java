@@ -67,25 +67,7 @@ public class OrderView extends JFrame {
 	}
 
 	public void btnCreateOrderClicked(ActionEvent e) {
-		// Step 2: Show custom date and time selection dialog
-		DateSelectionPanel dateSelectionPanel = new DateSelectionPanel();
-		int result = JOptionPane.showConfirmDialog(null, dateSelectionPanel, "Select Date and Time",
-				JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-
-		// Step 3: Wait for dialog interaction
-		if (result == JOptionPane.OK_OPTION) {
-			// Retrieve selected date and time
-			LocalDate selectedDate = dateSelectionPanel.getSelectedDate();
-			int selectedHour = dateSelectionPanel.getSelectedHour();
-			int selectedMinute = dateSelectionPanel.getSelectedMinute();
-
-			// Process the selected date and time
-			System.out.println("Selected Date: " + selectedDate);
-			System.out.println("Selected Time: " + selectedHour + ":" + selectedMinute);
-
-			// Step 4: Enable ProductView after interaction
-			enableProductView();
-		}
+		
 	}
 
 	public void enableProductView() {

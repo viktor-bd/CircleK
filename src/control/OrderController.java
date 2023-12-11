@@ -25,10 +25,18 @@ public class OrderController {
     public void addOrderLineToOrder(OrderLine orderLine, Order order) {
     order.addOrderLine(orderLine);
     }
+<<<<<<< Updated upstream
     public OrderLine createOrderLine (Product product, int quantity){
         OrderLine orderLine = new OrderLine(quantity, product);
         return orderLine;
     }
+=======
+//TODO
+//    public OrderLine createOrderLine (Product product, int quantity){
+//        OrderLine orderLine = new OrderLine(orderLineID, quantity, product);
+//        return orderLine;
+//    }
+>>>>>>> Stashed changes
 
     //TODO orderID skal hentes fra DB via GUI kald til CTRL som går til DAL
     public void confirmOrder(Order order){

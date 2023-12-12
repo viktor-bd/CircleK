@@ -44,6 +44,7 @@ public class DatePickerView extends JFrame {
 		JButton btnCreateOrder = new JButton("Opret ordre");
 		btnCreateOrder.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				createOrderClicked();
 			}
 		});
 		btnCreateOrder.setBounds(151, 227, 101, 23);
@@ -89,5 +90,10 @@ public class DatePickerView extends JFrame {
 		// Set DatePickers start date
 		dateModel.setDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
 				calendar.get(Calendar.DAY_OF_MONTH) + 1);
+	}
+	public void createOrderClicked() {
+		//TODO Indsæt "fjern" datePicker metode
+		ProductView productView = new ProductView();
+		productView.setVisible(true);
 	}
 }

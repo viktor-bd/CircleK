@@ -59,7 +59,7 @@ public class OrderView extends JFrame {
 		btnLogOut = new JButton("Log ud(?)");
 		btnLogOut.setBounds(172, 154, 89, 23);
 		getContentPane().add(btnLogOut);
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public void run(OrderView orderView) {
@@ -67,7 +67,15 @@ public class OrderView extends JFrame {
 	}
 
 	public void btnCreateOrderClicked(ActionEvent e) {
-		
+		openDatePickerView();
+	}
+
+	/**
+	 * 
+	 */
+	private void openDatePickerView() {
+		DatePickerView dpv = new DatePickerView();
+		dpv.setVisible(true);
 	}
 
 	public void enableProductView() {

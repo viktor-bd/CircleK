@@ -19,7 +19,18 @@ public class Employee extends Person {
     }
 
 
-    public int getEmployeeId() {
+    /**
+     * TODO DELETE HARDCODE CONSTRUCTOR
+	 * @param i
+	 */
+	public Employee(int i) {
+		super(i, "x", "x", "x", "x", "x", "x");
+		this.employeeId = i;
+		this.isManager = true;
+	}
+
+
+	public int getEmployeeId() {
         return employeeId;
     }
     

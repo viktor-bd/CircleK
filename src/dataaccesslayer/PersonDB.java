@@ -4,8 +4,26 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import dataaccesslayer.DBConnection;
+import dataaccesslayer.DataAccessException;
 import model.Customer;
+
 public class PersonDB implements PersonDBIF {
+	private Connection connection;
+	
+	private static final String findCustomerByPhoneNumberQuery = "SELECT sql here";
+	
+	private PreparedStatement findCustomerByPhoneNumber;
+	
+	public PersonDB() throws DataAccessException {
+		 try {
+				findCustomerByPhoneNumber = DBConnection.getInstance().getDBcon().prepareStatement(findCustomerByPhoneNumberQuery);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				throw new DataAccessException(e, "Could not prepare statement");
+			}
+	}
 	public Customer lookUpCustomerInDB(String validPhoneNumber) throws DataAccessException {
 		
 		try {
@@ -36,5 +54,8 @@ public class PersonDB implements PersonDBIF {
 
 		System.out.println("Object succesfully created " + customer.getFirstName());
 		return customer;
+			
+}
+    
 
 }

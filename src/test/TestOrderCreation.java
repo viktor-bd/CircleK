@@ -27,9 +27,13 @@ public class TestOrderCreation {
 		//Act
 		//Assert
 	}
-	
+	/*
+	 * This test is testing the phone number "88888888" against the database to find a customer with the
+	 * given phone number. A successful test result is achieved if the validPhoneNumber is equal to that of
+	 * the found customer's phone number. In the database, phone number is unique.
+	 */
 	@Test
-	@DisplayName("--: Given valid existing customer, return found customer")
+	@DisplayName("S?_TC_?: Given valid phone number of existing customer, return found customer")
 	public void givenValidPhoneNumberWillReturnCustomer() throws DataAccessException {
 		//Arrange
 		PersonDB personDB = new PersonDB();

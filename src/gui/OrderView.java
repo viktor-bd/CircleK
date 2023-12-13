@@ -31,6 +31,7 @@ public class OrderView extends JFrame {
 	private JButton btnConfirmDenyOrders;
 	private JDatePanelImpl datePanel;
 	private Component datePicker;
+	private JLabel lblEmployee;
 
 	/**
 	 * Creation of frame
@@ -41,35 +42,39 @@ public class OrderView extends JFrame {
 		setTitle("Startskærm");
 		setBounds(100, 100, 500, 300);
 		JPanel panel = new JPanel();
-		panel.setBounds(172, 5, 89, 23);
+		panel.setBounds(0, 5, 484, 256);
 		getContentPane().add(panel);
-		panel.setLayout(null);			
-
-		btnCreateOrder = new JButton("Opret ordre");
-		btnCreateOrder.setBounds(172, 52, 89, 23);
-		getContentPane().add(btnCreateOrder);
-		btnCreateOrder.addActionListener(this::btnCreateOrderClicked);
+		panel.setLayout(null);
+		btnLogOut = new JButton("Log ud");
+		btnLogOut.setBounds(186, 149, 89, 23);
+		panel.add(btnLogOut);
 
 		btnViewOrders = new JButton("Se ordrer");
-		btnViewOrders.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				confirmedOrdersViewClicked();
-			}
-		});
-		btnViewOrders.setBounds(172, 120, 89, 23);
-		getContentPane().add(btnViewOrders);
+		btnViewOrders.setBounds(186, 115, 89, 23);
+		panel.add(btnViewOrders);
 
 		btnConfirmDenyOrders = new JButton("Godkend/Afvis ordre");
+		btnConfirmDenyOrders.setBounds(186, 81, 89, 23);
+		panel.add(btnConfirmDenyOrders);
+
+		btnCreateOrder = new JButton("Opret ordre");
+		btnCreateOrder.setBounds(186, 47, 89, 23);
+		panel.add(btnCreateOrder);
+
+		lblEmployee = new JLabel("");
+		lblEmployee.setBounds(0, 5, 145, 21);
+		getContentPane().add(lblEmployee);
+		btnCreateOrder.addActionListener(this::btnCreateOrderClicked);
 		btnConfirmDenyOrders.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				confirmDenyClicked();
 			}
 		});
-		btnConfirmDenyOrders.setBounds(172, 86, 89, 23);
-		getContentPane().add(btnConfirmDenyOrders);
-		btnLogOut = new JButton("Log ud(?)");
-		btnLogOut.setBounds(172, 154, 89, 23);
-		getContentPane().add(btnLogOut);
+		btnViewOrders.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				confirmedOrdersViewClicked();
+			}
+		});
 		btnLogOut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				logOutClicked();
@@ -102,6 +107,7 @@ public class OrderView extends JFrame {
 		dpv.setVisible(true);
 		clearWindow();
 	}
+
 	/**
 	 * Opens a ConfirmedOrdersView when confirmOrdersViewClicked
 	 */

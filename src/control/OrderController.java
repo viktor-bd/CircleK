@@ -12,7 +12,7 @@ public class OrderController {
 
 
     public OrderController(OrderDB orderDB) {
-        this.orderDB = new OrderDB();
+        this.orderDB = orderDB;
     }
 
     public Order createOrder(int orderID, boolean pickUpStatus, LocalDateTime pickupDate, boolean isPaid, Customer customer, Employee employee) {
@@ -41,4 +41,5 @@ public class OrderController {
         order.setPickUpStatus(true);
         // Add logic to update the order directly in the database or perform necessary operations
     }
+
 }

@@ -15,9 +15,9 @@ public class PersonController {
 	/**
 	 * 
 	 */
-	public PersonController() {
+	public PersonController(PersonDB personDB) {
 		// TODO Auto-generated constructor stub
-		this.personDB = new PersonDB();
+		this.personDB = personDB;
 	}
 
 }

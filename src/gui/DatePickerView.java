@@ -110,9 +110,9 @@ public class DatePickerView extends JFrame {
 	public void createOrderClicked() {
 		// Retrieve value from calendar
 		getDateFromCalender();
-		System.out.println(desiredDate); // TODO Formatér / slet
 		openProductView();
 		clearWindow();
+		//TODO Logic for check of desiredDate - currentDate >= 2
 	}
 	/**
 	 * Opens a ProductView with the two dates, creation date and desired date

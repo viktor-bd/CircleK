@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
@@ -26,7 +27,7 @@ public class ProductView extends JFrame {
 	 * 
 	 */
 	// TODO Indsæt date med i constructor
-	public ProductView() {
+	public ProductView(Date creationDate, Date desiredDateofCustomer) {
 		setTitle("Opret ordre forespørgsel");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 500, 300);

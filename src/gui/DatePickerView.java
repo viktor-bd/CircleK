@@ -27,12 +27,14 @@ import java.awt.event.ActionEvent;
  */
 public class DatePickerView extends JFrame {
 	private UtilDateModel dateModel;
+	private Date currentDate;
+	private Date desiredDate;
 
 	/**
 	 * 
 	 */
 	public DatePickerView() {
-		
+
 		setTitle("Vælg dato");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 500, 300);
@@ -82,18 +84,49 @@ public class DatePickerView extends JFrame {
 	 */
 	private void setData() {
 		// Current date and time
-		Date currentDate = new Date();
+		currentDate = new Date();
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(currentDate);
-		
 
 		// Set DatePickers start date
 		dateModel.setDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-				calendar.get(Calendar.DAY_OF_MONTH) + 1);
+				calendar.get(Calendar.DAY_OF_MONTH) + 2);
+
 	}
+
+	/**
+	 * Retrives date of DatePicker from user
+	 */
+	public Date getDateFromCalender() {
+		// Retrieve value from calendar
+		desiredDate = dateModel.getValue();
+		System.out.println(desiredDate); // TODO Formatér / slet
+		return desiredDate;
+	}
+	/**
+	 * Handles operations when create order is clicked
+	 * 
+	 */
 	public void createOrderClicked() {
-		//TODO Indsæt "fjern" datePicker metode
-		ProductView productView = new ProductView();
+		// Retrieve value from calendar
+		getDateFromCalender();
+		System.out.println(desiredDate); // TODO Formatér / slet
+		openProductView();
+		clearWindow();
+	}
+	/**
+	 * Opens a ProductView with the two dates, creation date and desired date
+	 */
+	public void openProductView() {
+		ProductView productView = new ProductView(currentDate, desiredDate);
 		productView.setVisible(true);
+	}
+
+	/**
+	 * Closes current window
+	 */
+	public void clearWindow() {
+		this.setVisible(false);
+		this.dispose();
 	}
 }

@@ -15,7 +15,7 @@ public class Customer extends Person {
     public Customer(int personId, String firstName, String lastName, String phoneNumber,
                     String zipcode, String email, String address, Boolean isBusiness) {
         super(personId, firstName, lastName, phoneNumber, zipcode, email, address);
-        //this.customerId = customerId;
+        this.customerId = personId;
         this.isBusiness = isBusiness;
     }
 

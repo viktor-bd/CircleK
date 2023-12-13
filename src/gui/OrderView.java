@@ -51,7 +51,12 @@ public class OrderView extends JFrame {
 		btnCreateOrder.addActionListener(this::btnCreateOrderClicked);
 
 		btnViewOrders = new JButton("Se ordrer");
-		btnViewOrders.setBounds(172, 86, 89, 23);
+		btnViewOrders.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				confirmedOrdersViewClicked();
+			}
+		});
+		btnViewOrders.setBounds(172, 120, 89, 23);
 		getContentPane().add(btnViewOrders);
 
 		btnConfirmDenyOrders = new JButton("Godkend/Afvis ordre");
@@ -60,7 +65,7 @@ public class OrderView extends JFrame {
 				confirmDenyClicked();
 			}
 		});
-		btnConfirmDenyOrders.setBounds(172, 120, 89, 23);
+		btnConfirmDenyOrders.setBounds(172, 86, 89, 23);
 		getContentPane().add(btnConfirmDenyOrders);
 		btnLogOut = new JButton("Log ud(?)");
 		btnLogOut.setBounds(172, 154, 89, 23);
@@ -95,6 +100,14 @@ public class OrderView extends JFrame {
 	private void openDatePickerView() {
 		DatePickerView dpv = new DatePickerView();
 		dpv.setVisible(true);
+		clearWindow();
+	}
+	/**
+	 * Opens a ConfirmedOrdersView when confirmOrdersViewClicked
+	 */
+	private void confirmedOrdersViewClicked() {
+		ConfirmedOrdersView confirmedOrdersView = new ConfirmedOrdersView();
+		confirmedOrdersView.setVisible(true);
 		clearWindow();
 	}
 

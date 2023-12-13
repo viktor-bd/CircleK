@@ -35,7 +35,7 @@ public class Order {
                  boolean isPaid, Customer customer, Employee employee) {
         this.orderId = orderId;
         this.date = LocalDateTime.now();
-        this.pickUpStatus = pickUpStatus;
+        this.pickUpStatus = pickUpStatus; // TODO False from creation, manually 
         this.pickupDate = pickupDate;
         this.isPaid = isPaid;
         this.customer = customer;

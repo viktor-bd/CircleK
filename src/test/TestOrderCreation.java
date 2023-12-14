@@ -20,7 +20,7 @@ import dataaccesslayer.OrderDB;
 
 public class TestOrderCreation {
 
-	@Test
+	/*@Test
 	@DisplayName("S01_TC_01: Given valid input in order, order creation should be successful")
 	public void givenValidInputInOrderWillReturnSuccess() {
 		// TODO implement test logic
@@ -31,7 +31,7 @@ public class TestOrderCreation {
 
 		// Act
 		// Assert
-	}
+	}*/
 
 	/*
 	 * This test is testing the phone number "88888888" against the database to find

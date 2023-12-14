@@ -42,4 +42,9 @@ public class OrderController {
         // Add logic to update the order directly in the database or perform necessary operations
     }
 
+	public void addCustomerToOrder(Customer customer, Order order) {
+		// TODO mangler lige logic skal nok skrive det - Viktor
+		
+	}
+
 }

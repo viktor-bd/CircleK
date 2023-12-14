@@ -11,13 +11,13 @@ public class Customer extends Person {
     private int customerId; //TODO Same as employeeID, check whether its needed to duplicate to differentiate: Fix constructor if wanted
     private Boolean isBusiness; // Allow null, 1 for business, 0 for private
 
-    // Constructor
-    public Customer(int personId, String firstName, String lastName, String phoneNumber,
-                    String zipcode, String email, String address, Boolean isBusiness) {
-        super(personId, firstName, lastName, phoneNumber, zipcode, email, address);
-        this.customerId = personId;
-        this.isBusiness = isBusiness;
-    }
+	// Constructor
+	public Customer(int personId, String firstName, String lastName, String phoneNumber, String zipcode, String email,
+			String address) {
+		super(personId, firstName, lastName, phoneNumber, zipcode, email, address);
+		this.customerId = personId;
+		isBusiness = false; // Redundant, as NULL from db return is treated as false anyhow.
+	}
 
     // Getter and Setter for customerId
     public int getCustomerId() {

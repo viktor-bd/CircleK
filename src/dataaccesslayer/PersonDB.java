@@ -41,16 +41,15 @@ public class PersonDB implements PersonDBIF {
 		
 	}
 	private Customer buildObject(ResultSet resultSet) throws SQLException {
-		Customer customer = new Customer(
-				resultSet.getInt("person_id"),
-				resultSet.getString("firsName"), 
-				resultSet.getString("lastName"),
-				resultSet.getString("phoneNumber"),
-				resultSet.getString("zipcode"),
-				resultSet.getString("email"),
-				resultSet.getString("address"),
-				resultSet.getBoolean("isBusiness")
-				);
+		Customer customer = new Customer(resultSet.getInt("person_id"), resultSet.getString("first_name"),
+				resultSet.getString("last_name"), resultSet.getString("phonenumber"), resultSet.getString("zipcode"),
+				resultSet.getString("email"), resultSet.getString("address"));
+		int isBusinessInteger = resultSet.getInt("isBusiness");
+		boolean isBusiness = false;
+		if (isBusinessInteger == 1) {
+			isBusiness = true;
+		}
+		customer.setIsBusiness(isBusiness);
 
 		System.out.println("Object succesfully created " + customer.getFirstName());
 		return customer;

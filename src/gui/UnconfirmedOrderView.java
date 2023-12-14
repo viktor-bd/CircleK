@@ -10,8 +10,15 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+
+import control.OrderController;
+import dataaccesslayer.DataAccessException;
+import dataaccesslayer.OrderDB;
+import model.Order;
 
 /**
  * @author Rasmus Larsen, Viktor Dorph, Johannes Jensen, Malik Agerbæk, Shemon Chowdhury 
@@ -19,11 +26,16 @@ import javax.swing.JTable;
  */
 public class UnconfirmedOrderView extends JFrame {
 	private JTable tableUnconfirmedOrder;
+	private JTable tableUnconfirmedOrders;
+	private UnconfirmedOrderTableModel unconfirmedOrderTableModel;
+	private OrderController orderController;
 
 	/**
 	 * Creates and sets the view
+	 * @throws DataAccessException 
 	 */
-	public UnconfirmedOrderView() {
+	public UnconfirmedOrderView() throws DataAccessException {
+		orderController = new OrderController(new OrderDB());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Bekræft ordrer");
 		setBounds(100, 100, 500, 300);
@@ -67,7 +79,12 @@ public class UnconfirmedOrderView extends JFrame {
 		scrollPane.setBounds(0, 21, 331, 240);
 		panel.add(scrollPane);
 		
-		tableUnconfirmedOrder = new JTable();
+		tableUnconfirmedOrders = new JTable();
+		tableUnconfirmedOrders.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		unconfirmedOrderTableModel = new UnconfirmedOrderTableModel();
+		scrollPane.setViewportView(tableUnconfirmedOrders);
+		
+		
 		
 		// TODO Auto-generated constructor stub
 	}
@@ -108,5 +125,14 @@ public class UnconfirmedOrderView extends JFrame {
 	public void clearWindow() {
 		this.setVisible(false);
 		this.dispose();
+	}
+	
+	public void display() {
+		
+	}
+	public ArrayList<Order> getOrdersFromDB() {
+		orderController.getOrders();
+		return null;
+		
 	}
 }

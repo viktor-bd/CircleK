@@ -42,8 +42,11 @@ public class OrderController {
         // Add logic to update the order directly in the database or perform necessary operations
     }
 
-	public void addCustomerToOrder(Customer customer, Order order) {
-		// TODO mangler lige logic skal nok skrive det - Viktor
+	/**
+	 * Returns orders from DB that is either confirmed or not
+	 */
+	public void getOrdersWithBoolean(boolean isConfirmed) {
+		orderDB.getOrdersWithBoolean(isConfirmed);
 		
 	}
 

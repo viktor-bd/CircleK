@@ -34,7 +34,7 @@ public class TestOrderCreation {
 	 * number. In the database, phone number is unique.
 	 */
 	@Test
-	@DisplayName("S?_TC_?: Given valid phone number of existing customer, return found customer")
+	@DisplayName("S04_TC_01: Given valid phone number of existing customer, return found customer")
 	public void givenValidPhoneNumberWillReturnCustomer() throws DataAccessException {
 		// Arrange
 		PersonDB personDB = new PersonDB();

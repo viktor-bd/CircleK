@@ -16,6 +16,9 @@ import javax.swing.JScrollBar;
 import java.awt.ScrollPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JTable;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 
 /**
  * @author Rasmus Larsen, Viktor Dorph, Johannes Jensen, Malik Agerbæk, Shemon
@@ -23,6 +26,8 @@ import java.awt.event.ActionEvent;
  *
  */
 public class ConfirmedOrdersView extends JFrame {
+	private JTable tableConfirmed;
+	private ConfirmedOrderTableModel confirmedOrderTableModel;
 
 	/**
 	 * 
@@ -45,10 +50,6 @@ public class ConfirmedOrdersView extends JFrame {
 		btnReadyForPickup.setBounds(326, 227, 98, 23);
 		panel.add(btnReadyForPickup);
 
-		ScrollPane scrollPane = new ScrollPane();
-		scrollPane.setBounds(10, 10, 297, 241);
-		panel.add(scrollPane);
-
 		JButton btnBackToMenu = new JButton("Tilbage");
 		btnBackToMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -57,6 +58,15 @@ public class ConfirmedOrdersView extends JFrame {
 		});
 		btnBackToMenu.setBounds(321, 11, 103, 23);
 		panel.add(btnBackToMenu);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 26, 296, 224);
+		panel.add(scrollPane);
+		
+		tableConfirmed = new JTable();
+		tableConfirmed.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		confirmedOrderTableModel = new ConfirmedOrderTableModel();
+		scrollPane.setViewportView(tableConfirmed);
 	}
 
 	/**

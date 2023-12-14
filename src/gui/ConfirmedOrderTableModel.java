@@ -1,9 +1,6 @@
-/**
- * 
- */
 package gui;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -11,20 +8,17 @@ import java.util.ArrayList;
 import control.OrderController;
 import model.Order;
 
-/**
- * @author Rasmus Larsen, Viktor Dorph, Johannes Jensen, Malik Agerbæk, Shemon Chowdhury 
- *
- */
-public class UnconfirmedOrderTableModel extends AbstractTableModel {
+public class ConfirmedOrderTableModel extends AbstractTableModel {
 	
 	private OrderController orderController;
 	private ArrayList<Order> orders;
 	private static final String[] COLUMN_HEADERS = {"Ordre id #", "PickUp Status", 
 			"PickUp Dato", "Betalt", "Kunde", "Medarbejder"};
 	/**
-	 * 
+	 * @author Rasmus Larsen, Viktor Dorph, Johannes Jensen, Malik Agerbæk, Shemon Chowdhury 
+	 *
 	 */
-	public UnconfirmedOrderTableModel() {
+	public ConfirmedOrderTableModel() {
 		super();
 		this.orders = new ArrayList<Order>();
 	}
@@ -78,6 +72,5 @@ public class UnconfirmedOrderTableModel extends AbstractTableModel {
 		this.orders = orders;
 		super.fireTableDataChanged();
 	}
+	
 }
-
-

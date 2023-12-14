@@ -12,8 +12,9 @@ public class Main {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		OrderView ov = new OrderView();
-		ov.run(ov);
+		/*OrderView ov = new OrderView();
+		ov.run(ov);*/
+		
 	}
 	
 }

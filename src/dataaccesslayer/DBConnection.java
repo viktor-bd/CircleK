@@ -8,7 +8,7 @@ import java.sql.SQLException;
 public class DBConnection { // Constants used to get access to the database
 							// SQL Server
 	private static final String driver = "jdbc:sqlserver://localhost:1433";       
-	private static final String databaseName = ";databaseName=PersistenceGroup3"; //TODO Insert correct name
+	private static final String databaseName = ";databaseName=CircleKStock6"; //TODO Insert correct name
 	private static String userName = "; user=sa";								  //TODO Insert correct name
 	private static String password = ";password=Password1234";					  //TODO Insert correct PW
 	private static String encryption = ";encrypt=false";

@@ -12,5 +12,8 @@
 *.zip
 *.tar.gz
 *.rar
+/bin/
 
+# Project file #
+.project
 

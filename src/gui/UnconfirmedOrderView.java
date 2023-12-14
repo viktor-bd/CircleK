@@ -1,0 +1,107 @@
+/**
+ * 
+ */
+package gui;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import java.awt.BorderLayout;
+import javax.swing.JLabel;
+import javax.swing.JButton;
+import javax.swing.JScrollPane;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+/**
+ * @author Rasmus Larsen, Viktor Dorph, Johannes Jensen, Malik Agerbæk, Shemon Chowdhury 
+ *
+ */
+public class UnconfirmedOrderView extends JFrame {
+
+	/**
+	 * Creates and sets the view
+	 */
+	public UnconfirmedOrderView() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setTitle("Bekræft ordrer");
+		setBounds(100, 100, 500, 300);
+		
+		JPanel panel = new JPanel();
+		getContentPane().add(panel, BorderLayout.CENTER);
+		panel.setLayout(null);
+		
+		JLabel lblUnconfirmedOrders = new JLabel("Ordrer til godkendelse");
+		lblUnconfirmedOrders.setBounds(0, 0, 331, 22);
+		panel.add(lblUnconfirmedOrders);
+		
+		JButton btnBackToMenu = new JButton("Tilbage");
+		btnBackToMenu.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				backToMenuClicked();
+			}
+		});
+		btnBackToMenu.setBounds(331, 23, 103, 23);
+		panel.add(btnBackToMenu);
+		
+		JButton btnConfirmOrder = new JButton("Godkend ordre");
+		btnConfirmOrder.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				confirmOrderClicked();
+			}
+		});
+		btnConfirmOrder.setBounds(331, 238, 103, 23);
+		panel.add(btnConfirmOrder);
+		
+		JButton btnRejectOrder = new JButton("Afvis ordre");
+		btnRejectOrder.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rejectOrderClicked();
+			}
+		});
+		btnRejectOrder.setBounds(331, 214, 103, 23);
+		panel.add(btnRejectOrder);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(0, 21, 331, 240);
+		panel.add(scrollPane);
+		// TODO Auto-generated constructor stub
+	}
+	/**
+	 * The selected order will be rejected on click
+	 */
+	protected void rejectOrderClicked() {
+		// TODO Show active order
+
+		// The active order is removed
+		
+		// GUI updates to show new state
+		
+	}
+	/**
+	 * The selected order will be confirmed on click
+	 */
+	protected void confirmOrderClicked() {
+		// TODO Show active order
+		
+		// The active is order is created using the CreateOrder function
+		
+		// GUI updates to show new state
+		
+	}
+	/**
+	 * Go back to menu from OrderView
+	 */
+	private void backToMenuClicked() {
+		
+		OrderView orderView = new OrderView();
+			orderView.run(orderView);
+			clearWindow();
+	}
+	/**
+	 * Close current window
+	 */
+	public void clearWindow() {
+		this.setVisible(false);
+		this.dispose();
+	}
+}

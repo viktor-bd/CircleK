@@ -11,12 +11,14 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JTable;
 
 /**
  * @author Rasmus Larsen, Viktor Dorph, Johannes Jensen, Malik Agerbæk, Shemon Chowdhury 
  *
  */
 public class UnconfirmedOrderView extends JFrame {
+	private JTable tableUnconfirmedOrder;
 
 	/**
 	 * Creates and sets the view
@@ -64,6 +66,9 @@ public class UnconfirmedOrderView extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(0, 21, 331, 240);
 		panel.add(scrollPane);
+		
+		tableUnconfirmedOrder = new JTable();
+		
 		// TODO Auto-generated constructor stub
 	}
 	/**

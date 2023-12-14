@@ -15,10 +15,14 @@ import javax.swing.JButton;
 import javax.swing.JScrollBar;
 import java.awt.ScrollPane;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+
+import control.OrderController;
+import dataaccesslayer.OrderDB;
 
 /**
  * @author Rasmus Larsen, Viktor Dorph, Johannes Jensen, Malik Agerbæk, Shemon
@@ -28,11 +32,13 @@ import javax.swing.ListSelectionModel;
 public class ConfirmedOrdersView extends JFrame {
 	private JTable tableConfirmed;
 	private ConfirmedOrderTableModel confirmedOrderTableModel;
+	private OrderController orderController;
 
 	/**
 	 * 
 	 */
 	public ConfirmedOrdersView() {
+		orderController = new OrderController(new OrderDB());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Bekræftede ordrer");
 		setBounds(100, 100, 500, 300);
@@ -95,4 +101,13 @@ public class ConfirmedOrdersView extends JFrame {
 		this.setVisible(false);
 		this.dispose();
 	}
+	
+	public void display() {
+		
+	}
+	
+	public ArrayList<Order> getOrdersFromDB() {
+		orderController.getOrdersWithBoolean();
+	}
+	
 }

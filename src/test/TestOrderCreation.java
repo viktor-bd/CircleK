@@ -38,11 +38,11 @@ public class TestOrderCreation {
 		//Arrange
 		PersonDB personDB = new PersonDB();
 		PersonController personController = new PersonController(personDB);
-		String validPhoneNumber = "88888888";
+		String validPhoneNumber = "98765430";
 		// Act
 		//TODO implement lookUpCustomerInDB in OrderController
 		Customer foundCustomer = personController.lookUpCustomerInDB(validPhoneNumber);
-		//Assert
+		System.out.println(foundCustomer.getIsBusiness());
 		assertEquals(foundCustomer.getPhoneNumber(), validPhoneNumber);
 		
 	}

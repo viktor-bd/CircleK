@@ -1,4 +1,5 @@
 package model;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -44,6 +45,21 @@ public class Order {
     }
     
     /**
+     * TODO PLACEHOLDER CONSTRUCTOR
+	 * @param int1
+	 * @param pickUpStatus2
+	 * @param localDate
+	 * @param isPaid2
+	 * @param customer2
+	 * @param employee2
+	 */
+	public Order(boolean pickUpStatus2, LocalDate localDate, boolean isPaid2, Customer customer2,
+			Employee employee2) {
+		this.date = LocalDateTime.now();
+		this.orderId = -1;
+	}
+
+	/**
 	 * Returns the current time in the specified format.
 	 * FIXME Separate class?
 	 * @return the formatted current time

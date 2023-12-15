@@ -191,5 +191,9 @@ public class Order {
     	return orderLines.size();
     }
     
+    public ArrayList<OrderLine> getOrderLines() {
+    	return orderLines;
+    }
+  
 
 }

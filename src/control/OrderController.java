@@ -1,9 +1,12 @@
 package control;
 
+import dataaccesslayer.DBConnection;
+import dataaccesslayer.DataAccessException;
 import dataaccesslayer.OrderDB;
 import model.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class OrderController {
 
@@ -11,8 +14,8 @@ public class OrderController {
     private OrderDB orderDB;
 
 
-    public OrderController(OrderDB orderDB) {
-        this.orderDB = orderDB;
+    public OrderController() throws DataAccessException {
+        this.orderDB = new OrderDB();
     }
 
     public Order createOrder(int orderID, boolean pickUpStatus, LocalDateTime pickupDate, boolean isPaid, Customer customer, Employee employee) {
@@ -45,9 +48,15 @@ public class OrderController {
 	/**
 	 * Returns orders from DB that is either confirmed or not
 	 */
-	public void getOrdersWithBoolean(boolean isConfirmed) {
-		orderDB.getOrdersWithBoolean(isConfirmed);
+	public ArrayList<Order> getOrdersWithBoolean(boolean isConfirmed) {
+		ArrayList<Order> orders = orderDB.getOrdersWithBoolean(isConfirmed);
+		return orders;
 		
 	}
+
+	/**
+	 * 
+	 */
+	
 
 }

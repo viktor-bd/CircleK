@@ -6,19 +6,13 @@ package gui;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
-import javax.swing.JTextArea;
-import java.awt.GridBagConstraints;
-import javax.swing.BoxLayout;
+import javax.swing.JLabel;
 import javax.swing.JButton;
-import javax.swing.JScrollBar;
-import java.awt.ScrollPane;
+import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
-import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
 import control.OrderController;
@@ -35,6 +29,7 @@ public class ConfirmedOrdersView extends JFrame {
 	private JTable tableConfirmed;
 	private ConfirmedOrderTableModel confirmedOrderTableModel;
 	private OrderController orderController;
+
 
 	/**
 	 * @throws DataAccessException 
@@ -75,6 +70,8 @@ public class ConfirmedOrdersView extends JFrame {
 		tableConfirmed = new JTable();
 		tableConfirmed.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		confirmedOrderTableModel = new ConfirmedOrderTableModel();
+		confirmedOrderTableModel.setData(getOrdersFromDB());
+		tableConfirmed.setModel(confirmedOrderTableModel);
 		scrollPane.setViewportView(tableConfirmed);
 	}
 

@@ -177,10 +177,10 @@ public class OrderDB implements OrderDBIF {
 	}
 
 	public void rejectOrder(Order rejectedOrder) {
-		// TODO implement this
+		
 	}
 
 	public void confirmOrder(Order confirmedOrder) {
-		// TODO implement this
+		
 	}
 }

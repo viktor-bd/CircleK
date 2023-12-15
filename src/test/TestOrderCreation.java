@@ -2,6 +2,7 @@ package test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.DisplayName;
@@ -12,6 +13,7 @@ import model.OrderLine;
 import model.Customer;
 import model.Product;
 import model.Ingredient;
+import model.Employee;
 import control.OrderController;
 import control.PersonController;
 import dataaccesslayer.DataAccessException;
@@ -94,7 +96,7 @@ public class TestOrderCreation {
 		orderController.addOrderLineToOrder(newOrderLine, newOrder);
 		// Step 5. Look up customer 
 		Customer foundCustomer = personController.lookUpCustomerInDB(validPhoneNumber);
-		System.out.println(foundCustomer.getIsBusiness());
+		//System.out.println(foundCustomer.getIsBusiness());
 		// Step 6. Add customer to order
 		orderController.addCustomerToOrder(foundCustomer, newOrder);
 		orderController.testaddEmployeeToOrder(testEmployee,newOrder);
@@ -102,7 +104,8 @@ public class TestOrderCreation {
 		Order foundOrder = orderController.saveOrder(newOrder);
 		// orderController.saveOrderLines(order.getOrderLines)
 		//Assert
-		//assertEquals(foundOrder.getOrderID(), testOrderID);
+	//	assertEquals(foundOrder.getOrderId(), 4);
+	//	assertEquals(foundOrder.getCustomer(), foundCustomer);
 		
 	}
 	@Test

@@ -53,9 +53,13 @@ public class Order {
 	 * @param customer2
 	 * @param employee2
 	 */
-	public Order(boolean pickUpStatus2, LocalDate localDate, boolean isPaid2, Customer customer2,
+	public Order(boolean pickUpStatus2, LocalDateTime localDate, boolean isPaid2, Customer customer2,
 			Employee employee2) {
 		this.date = LocalDateTime.now();
+		this.pickupDate = localDate;
+		this.isPaid = isPaid2;
+		this.customer = customer2;
+		this.employee = employee2;
 		this.orderId = -1;
 	}
 
@@ -64,9 +68,9 @@ public class Order {
 	 * FIXME Separate class?
 	 * @return the formatted current time
 	 */
-	private String getTime() {
+	private String formatTime(Date date) {
 		LocalDateTime now = LocalDateTime.now();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 		String formattedDateTime = now.format(formatter);
 		return formattedDateTime;
 	}

@@ -74,7 +74,9 @@ public class TestOrderCreation {
 		
 		
 		Product testProduct1 = new Product(1001, "Skinke/Ost Sandwich", 45, "Sandwich");
+		Product testProduct2 = new Product(1004, "Smurt Rundstykke m/ ost", 22, "rundstykke");
 
+		
 		Ingredient testIngredient1 = new Ingredient(2, "Salat", 150, null);
 		Ingredient testIngredient2 = new Ingredient(3, "Ost", 200, null);
 		Ingredient testIngredient3 = new Ingredient(5, "Sandwichbræd", 200, null);
@@ -92,8 +94,12 @@ public class TestOrderCreation {
 		// Step 2. Enter product quantity mimmick UI with hardcoded products
 		// Step 3. UI -> OrderController creates OrderLine for each desired product and adds quantity
 		OrderLine newOrderLine = orderController.createOrderLine(testProduct1, 2);
+		OrderLine newOrderLine2 = orderController.createOrderLine(testProduct2, 2);
 		// Step 4. OrderController adds OrderLine(s) to the order
 		orderController.addOrderLineToOrder(newOrderLine, newOrder);
+		orderController.addOrderLineToOrder(newOrderLine2, newOrder);
+		System.out.println("Size of ol" + newOrder.getSizeOfOrderLines());
+		
 		// Step 5. Look up customer 
 		Customer foundCustomer = personController.lookUpCustomerInDB(validPhoneNumber);
 		//System.out.println(foundCustomer.getIsBusiness());

@@ -22,6 +22,12 @@ public class ConfirmedOrderTableModel extends AbstractTableModel {
 		super();
 		this.orders = new ArrayList<Order>();
 	}
+	
+	@Override
+	public String getColumnName(int col) {
+
+		return COLUMN_HEADERS[col];
+	}
 	@Override
 	public int getRowCount() {
 		return orders.size();

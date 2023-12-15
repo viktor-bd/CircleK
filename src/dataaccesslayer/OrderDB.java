@@ -51,7 +51,7 @@ public class OrderDB implements OrderDBIF {
 			// Insert OrderLines into OrderLine table
 			ArrayList<Integer> orderLineID = insertOrderLines(newOrder.getOrderLines());
 			// Insert into JOIN table Order_OrderLine
-			insertOrderOrderLine(orderLineID, orderID);
+			insertIntoOrderOrderLine(orderLineID, orderID);
 
 			DBConnection.commitTransaction();
 
@@ -78,7 +78,22 @@ public class OrderDB implements OrderDBIF {
 
 		}
 
+	}*/
+	private void insertIntoOrderOrderLine(ArrayList<Integer> orderLineID, int orderID) {
+	    System.out.println(orderLineID.size());
+		for (Integer orderLineId : orderLineID) {
+	        try {
+	            insertOrderOrderLine.setInt(1, orderID);
+	            insertOrderOrderLine.setInt(2, orderLineId);
+	            insertOrderOrderLine.executeUpdate();
+	            System.out.println(orderLineId);
+	        } catch (SQLException e) {
+	            // Handle the exception appropriately (e.g., log it)
+	            e.printStackTrace();
+	        }
+	    }
 	}
+
 
 	private ArrayList<Integer> insertOrderLines(ArrayList<OrderLine> orderLines) {
 		// TODO Auto-generated method stub

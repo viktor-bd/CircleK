@@ -79,7 +79,11 @@ public class OrderView extends JFrame {
 		});
 		btnViewOrders.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				confirmedOrdersViewClicked();
+				try {
+					confirmedOrdersViewClicked();
+				} catch (DataAccessException e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
 		btnLogOut.addActionListener(new ActionListener() {
@@ -117,8 +121,9 @@ public class OrderView extends JFrame {
 
 	/**
 	 * Opens a ConfirmedOrdersView when confirmOrdersViewClicked
+	 * @throws DataAccessException 
 	 */
-	private void confirmedOrdersViewClicked() {
+	private void confirmedOrdersViewClicked() throws DataAccessException {
 		ConfirmedOrdersView confirmedOrdersView = new ConfirmedOrdersView();
 		confirmedOrdersView.setVisible(true);
 		clearWindow();

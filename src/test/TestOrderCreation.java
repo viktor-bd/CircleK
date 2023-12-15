@@ -68,7 +68,8 @@ public class TestOrderCreation {
 		System.out.println(testDatePickUpDate);
 		
 		OrderDB orderDB = new OrderDB();
-		OrderController orderController = new OrderController(orderDB);
+		//TODO Add orderDB constructor
+		OrderController orderController = new OrderController();
 		
 		
 		Product testProduct1 = new Product(1001, "Skinke/Ost Sandwich", 45, "Sandwich");

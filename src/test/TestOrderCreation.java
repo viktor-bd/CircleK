@@ -97,7 +97,8 @@ public class TestOrderCreation {
 		// Step 6. Add customer to order
 		orderController.addCustomerToOrder(foundCustomer, newOrder);
 		// Step 7. Finish order creation (save in db) call count on orders in db ++ on id and set id to result
-		// TODO implementer det her orderController.finishOrderCreation(newOrder);
+		Order foundOrder = orderController.saveOrder(newOrder);
+		// orderController.saveOrderLines(order.getOrderLines)
 		//Assert
 		//assertEquals(foundOrder.getOrderID(), testOrderID);
 		

@@ -20,10 +20,10 @@ public class OrderController {
         return newOrder;
     }
 
-    public Order saveOrder(Order order) {
-        orderDB.saveOrder(order); // Call orderDAL to save the order
+    public Order saveOrder(Order order) throws SQLException {
+        orderDB.saveOrder(order); // Call orderDB to save the order
         return order;
-    }
+    }   
 
     public Order addOrderLineToOrder(OrderLine orderLine, Order order) {
         order.addOrderLine(orderLine);

@@ -132,4 +132,22 @@ public class OrderDB implements OrderDBIF {
 		}
 	}
 
+	public void rejectOrder(Order rejectedOrder) {
+		// TODO implement this
+	}
+
+	public void confirmOrder(Order confirmedOrder) {
+		// TODO implement this
+	}
+
+
+	/*
+	 * Obsolete FIXME
+	 * private PreparedStatement getPreparedStatementInsertOrder() throws SQLException {
+		PreparedStatement foundPrepStat = null;
+		String baseQuery = "sql here";
+		foundPrepStat = connection.prepareStatement(baseQuery);
+		return foundPrepStat;
+	}*/
+
 }

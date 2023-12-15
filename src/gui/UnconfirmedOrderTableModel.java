@@ -28,6 +28,12 @@ public class UnconfirmedOrderTableModel extends AbstractTableModel {
 		super();
 		this.orders = new ArrayList<Order>();
 	}
+	
+	@Override
+	public String getColumnName(int col) {
+
+		return COLUMN_HEADERS[col];
+	}
 	@Override
 	public int getRowCount() {
 		return orders.size();
@@ -44,7 +50,7 @@ public class UnconfirmedOrderTableModel extends AbstractTableModel {
 		String result = "";
 		switch (columnIndex) {
 		default:
-			result = "Unknown column: " + columnIndex + ". Valid is 0-3";
+			result = "Unknown column: " + columnIndex + ". Valid is 0-5";
 		case 0:
 			result += order.getOrderId();
 			break;

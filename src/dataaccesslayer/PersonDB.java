@@ -59,4 +59,13 @@ public class PersonDB implements PersonDBIF {
 
 	}
 
+	/**
+	 * @param customerId
+	 * @return
+	 */
+	public Customer findCustomerById(int customerId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -32,7 +32,8 @@ public class OrderDB implements OrderDBIF {
 			// DBConnection.getInstance().getDBcon().prepareStatement(insertOrderQuery);
 			insertOrder = DBConnection.getInstance().getDBcon().prepareStatement(insertOrderQuery,
 					Statement.RETURN_GENERATED_KEYS);
-			insertOrderLine = DBConnection.getInstance().getDBcon().prepareStatement(insertOrderLineQuery, Statement.RETURN_GENERATED_KEYS);
+			insertOrderLine = DBConnection.getInstance().getDBcon().prepareStatement(insertOrderLineQuery,
+					Statement.RETURN_GENERATED_KEYS);
 			insertOrderOrderLine = DBConnection.getInstance().getDBcon().prepareStatement(insertOrderOrderLineQuery);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -41,8 +42,10 @@ public class OrderDB implements OrderDBIF {
 	}
 
 	public void saveOrder(Order newOrder) throws SQLException {
+		System.out.println("ODB SaveOrder 44 " + newOrder.getSizeOfOrderLines());
 		// TODO implement this
 		try {
+			System.out.println("ODB SaveOrder 47 " + newOrder.getSizeOfOrderLines());
 			DBConnection.startTransaction();
 			// Insert Order into Order table
 			// System.out.println(insertOrder.toString()); // Log the SQL query
@@ -62,106 +65,107 @@ public class OrderDB implements OrderDBIF {
 		}
 	}
 
-	/*private void insertOrderOrderLine(ArrayList<Integer> orderLineID, int orderID) {
-		// TODO Auto-generated method stub
-		for (int j = 0; j < orderLineID.size(); j++) {
-
-			try {
-				insertOrderOrderLine.setInt(1, orderID);
-				insertOrderOrderLine.setInt(2, orderLineID.get(j));
-
-				insertOrderOrderLine.executeUpdate();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-		}
-
-	}*/
+	/*
+	 * private void insertOrderOrderLine(ArrayList<Integer> orderLineID, int
+	 * orderID) { // TODO Auto-generated method stub for (int j = 0; j <
+	 * orderLineID.size(); j++) {
+	 * 
+	 * try { insertOrderOrderLine.setInt(1, orderID); insertOrderOrderLine.setInt(2,
+	 * orderLineID.get(j));
+	 * 
+	 * insertOrderOrderLine.executeUpdate(); } catch (SQLException e) { // TODO
+	 * Auto-generated catch block e.printStackTrace(); }
+	 * 
+	 * }
+	 * 
+	 * }
+	 */
 	private void insertIntoOrderOrderLine(ArrayList<Integer> orderLineID, int orderID) {
-	    System.out.println(orderLineID.size());
-		for (Integer orderLineId : orderLineID) {
-	        try {
-	            insertOrderOrderLine.setInt(1, orderID);
-	            insertOrderOrderLine.setInt(2, orderLineId);
-	            insertOrderOrderLine.executeUpdate();
-	            System.out.println(orderLineId);
-	        } catch (SQLException e) {
-	            // Handle the exception appropriately (e.g., log it)
-	            e.printStackTrace();
-	        }
-	    }
-	}
+		try {
+			System.out.println("InsertIntoOrderOL 85 " + orderLineID.size());
 
+			for (Integer orderLineId : orderLineID) {
+
+				insertOrderOrderLine.setInt(1, orderID);
+				insertOrderOrderLine.setInt(2, orderLineId);
+				insertOrderOrderLine.executeUpdate();
+				System.out.println(orderLineId);
+			}
+		} catch (SQLException e) {
+			// Handle the exception appropriately (e.g., log it)
+			e.printStackTrace();
+		}
+	}
+//	for (OrderLine orderLine : orderLines) {
+//	    try {
+//	        // Add the result of insertOrderLine to the existing ArrayList
+//	        orderLineID.addAll(insertOrderLine(orderLine));
+//	    } catch (Exception e) {
+//	        e.printStackTrace();
+//	    }
+//	}
 
 	private ArrayList<Integer> insertOrderLines(ArrayList<OrderLine> orderLines) {
 		// TODO Auto-generated method stub
 		ArrayList<Integer> orderLineID = new ArrayList<>();
-
 		for (OrderLine orderLine : orderLines) {
-			try {
-
-				orderLineID = insertOrderLine(orderLine);
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		    try {
+		        // Add the result of insertOrderLine to the existing ArrayList
+		        orderLineID.addAll(insertOrderLine(orderLine));
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
 		}
 		System.out.println(orderLineID.size() + " insertOrderLines linje 111");
 		return orderLineID;
 	}
 
-	/*private ArrayList<Integer> insertOrderLine(OrderLine orderLine) throws SQLException {
-
-		insertOrderLine.setInt(1, orderLine.getProduct().getSku());
-		insertOrderLine.setInt(2, orderLine.getQuantity());
-
+	/*
+	 * private ArrayList<Integer> insertOrderLine(OrderLine orderLine) throws
+	 * SQLException {
+	 * 
+	 * insertOrderLine.setInt(1, orderLine.getProduct().getSku());
+	 * insertOrderLine.setInt(2, orderLine.getQuantity());
+	 * 
+	 * int rowsAffected = insertOrderLine.executeUpdate();
+	 * 
+	 * if (rowsAffected == 0) { throw new
+	 * SQLException("Inserting order line failed, no rows affected."); }
+	 * ArrayList<Integer> orderLineID = new ArrayList<>(); try (ResultSet
+	 * generatedKeys = insertOrderLine.getGeneratedKeys()) { while
+	 * (generatedKeys.next()) { orderLineID.add(generatedKeys.getInt(1)); } if
+	 * (orderLineID.isEmpty()) { throw new
+	 * SQLException("Inserting order line failed, no ID obtained."); } } return
+	 * orderLineID; }
+	 */
+	private ArrayList<Integer> insertOrderLine(OrderLine orderLine) throws SQLException {
+		insertOrderLine.setInt(2, orderLine.getProduct().getSku());
+		insertOrderLine.setInt(1, orderLine.getQuantity());
+		System.out.println(orderLine.getProduct().getSku() + " " + orderLine.getQuantity());
 		int rowsAffected = insertOrderLine.executeUpdate();
 
 		if (rowsAffected == 0) {
 			throw new SQLException("Inserting order line failed, no rows affected.");
 		}
+
 		ArrayList<Integer> orderLineID = new ArrayList<>();
 		try (ResultSet generatedKeys = insertOrderLine.getGeneratedKeys()) {
 			while (generatedKeys.next()) {
-				orderLineID.add(generatedKeys.getInt(1));
+				int generatedKey = generatedKeys.getInt(1);
+				System.out.println("Generated Key: " + generatedKey);
+				orderLineID.add(generatedKey);
 			}
 			if (orderLineID.isEmpty()) {
 				throw new SQLException("Inserting order line failed, no ID obtained.");
 			}
+
+		} catch (SQLException e) {
+			// Some databases or statements may not support getGeneratedKeys
+			// Handle the exception or log the error
+			e.printStackTrace();
 		}
 		return orderLineID;
-	}*/
-	private ArrayList<Integer> insertOrderLine(OrderLine orderLine) throws SQLException {
-	    insertOrderLine.setInt(2, orderLine.getProduct().getSku());
-	    insertOrderLine.setInt(1, orderLine.getQuantity());
-	    System.out.println(orderLine.getProduct().getSku() + " " + orderLine.getQuantity());
-	    int rowsAffected = insertOrderLine.executeUpdate();
-	   
-	    if (rowsAffected == 0) {
-	        throw new SQLException("Inserting order line failed, no rows affected.");
-	    }
-
-	    ArrayList<Integer> orderLineID = new ArrayList<>();
-	    try (ResultSet generatedKeys = insertOrderLine.getGeneratedKeys()) {
-	        while (generatedKeys.next()) {
-	            int generatedKey = generatedKeys.getInt(1);
-	            System.out.println("Generated Key: " + generatedKey);
-	            orderLineID.add(generatedKey);
-	        }
-	        if (orderLineID.isEmpty()) {
-	            throw new SQLException("Inserting order line failed, no ID obtained.");
-	        }
-	    
-	    } catch (SQLException e) {
-	        // Some databases or statements may not support getGeneratedKeys
-	        // Handle the exception or log the error
-	        e.printStackTrace();
-	    }
-	    return orderLineID;
 	}
-
 
 	private int convertBooleanToInt(boolean bool) {
 		int bit = 0;

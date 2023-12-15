@@ -24,6 +24,7 @@ public class OrderController {
     }
 
     public Order saveOrder(Order order) throws SQLException {
+    	System.out.println("OC SaveOrder 27 " +order.getSizeOfOrderLines());
         orderDB.saveOrder(order); // Call orderDB to save the order
         return order;
     }   

@@ -131,7 +131,37 @@ public class OrderDB implements OrderDBIF {
 			}
 		}
 		return orderLineID;
+	}*/
+	private ArrayList<Integer> insertOrderLine(OrderLine orderLine) throws SQLException {
+	    insertOrderLine.setInt(2, orderLine.getProduct().getSku());
+	    insertOrderLine.setInt(1, orderLine.getQuantity());
+	    System.out.println(orderLine.getProduct().getSku() + " " + orderLine.getQuantity());
+	    int rowsAffected = insertOrderLine.executeUpdate();
+	   
+	    if (rowsAffected == 0) {
+	        throw new SQLException("Inserting order line failed, no rows affected.");
+	    }
+
+	    ArrayList<Integer> orderLineID = new ArrayList<>();
+	    try (ResultSet generatedKeys = insertOrderLine.getGeneratedKeys()) {
+	        while (generatedKeys.next()) {
+	            int generatedKey = generatedKeys.getInt(1);
+	            System.out.println("Generated Key: " + generatedKey);
+	            orderLineID.add(generatedKey);
+	        }
+	        if (orderLineID.isEmpty()) {
+	            throw new SQLException("Inserting order line failed, no ID obtained.");
+	        }
+	    
+	    } catch (SQLException e) {
+	        // Some databases or statements may not support getGeneratedKeys
+	        // Handle the exception or log the error
+	        e.printStackTrace();
+	    }
+	    return orderLineID;
 	}
+
+
 	private int convertBooleanToInt(boolean bool) {
 		int bit = 0;
 		if (bool = true) {

@@ -1,10 +1,14 @@
 package dataaccesslayer;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 
 import dataaccesslayer.DBConnection;
@@ -100,12 +104,21 @@ public class OrderDB implements OrderDBIF {
 		if (booleanCheckPaid == 1) {
 			isPaid = true;
 		}
-
-		Order order = new Order(pickUpStatus, rs.getDate("pickupDate").toLocalDate(), isPaid, customer, employee);
+		LocalDateTime pickupDate = getLocalDateFromSQLDate(rs.getDate("pickupDate"));
+		System.out.println(pickupDate);
+		Order order = new Order(pickUpStatus, pickupDate, isPaid, customer, employee);
+		System.out.println(order.getPickupDate());
 		order.setOrderId(rs.getInt("order_id"));
 		// rs.getInt("customer_id"),
 		// rs.getInt("employee_id")),
 		return order;
 	}
-
+	private LocalDateTime getLocalDateFromSQLDate(Date date) {
+		LocalDateTime localDateTime = null;	
+		if (date != null) {
+		    Instant instant = date.toLocalDate().atStartOfDay(ZoneOffset.UTC).toInstant();
+		    localDateTime = LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
+		}
+		return localDateTime;
+	}
 }

@@ -90,6 +90,9 @@ public class UnconfirmedOrderView extends JFrame {
 		// Get all order ids from the list above
 		ArrayList<Integer> orderIds = new ArrayList<Integer>();
 		orderIds = getOrderIDsFromList(orders);
+		//LOOP CALL TO PERSONCONTROLLER
+		// Use list to find customers in PersonController
+		
 		// Create customers and add to order
 		
 		// Check table design 

@@ -108,11 +108,11 @@ public class OrderDB implements OrderDBIF {
 				e.printStackTrace();
 			}
 		}
+		System.out.println(orderLineID.size() + " insertOrderLines linje 111");
 		return orderLineID;
 	}
 
-
-	private ArrayList<Integer> insertOrderLine(OrderLine orderLine) throws SQLException {
+	/*private ArrayList<Integer> insertOrderLine(OrderLine orderLine) throws SQLException {
 
 		insertOrderLine.setInt(1, orderLine.getProduct().getSku());
 		insertOrderLine.setInt(2, orderLine.getQuantity());
@@ -126,7 +126,8 @@ public class OrderDB implements OrderDBIF {
 		try (ResultSet generatedKeys = insertOrderLine.getGeneratedKeys()) {
 			while (generatedKeys.next()) {
 				orderLineID.add(generatedKeys.getInt(1));
-			} if (orderLineID.isEmpty()){
+			}
+			if (orderLineID.isEmpty()) {
 				throw new SQLException("Inserting order line failed, no ID obtained.");
 			}
 		}
@@ -166,19 +167,18 @@ public class OrderDB implements OrderDBIF {
 		int bit = 0;
 		if (bool = true) {
 			bit = 1;
-		} return bit;
+		}
+		return bit;
 	}
 
 	private int insertOrder(Order newOrder) throws SQLException {
+
 		insertOrder.setDate(1, java.sql.Date.valueOf(newOrder.getDate().toLocalDate()));
-		System.out.println( java.sql.Date.valueOf(newOrder.getDate().toLocalDate()));
-		// insertOrder.setInt(2, 0); // newOrder.isPickUpStatus());
+		System.out.println(java.sql.Date.valueOf(newOrder.getDate().toLocalDate()));
 		insertOrder.setInt(2, convertBooleanToInt(newOrder.isPickUpStatus()));
 		insertOrder.setDate(3, java.sql.Date.valueOf(newOrder.getDate().toLocalDate()));
-		// insertOrder.setInt(4, 0);// Order.isPaid());
-		// insertOrder.setInt(5, 0); // isConfirmed());
 		insertOrder.setInt(4, convertBooleanToInt(newOrder.isPaid()));
-		insertOrder.setInt(5, 0); // A new order is never true
+		insertOrder.setInt(5, 0);
 		insertOrder.setInt(6, newOrder.getCustomer().getCustomerId());
 		insertOrder.setInt(7, newOrder.getEmployee().getEmployeeId());
 
@@ -187,13 +187,15 @@ public class OrderDB implements OrderDBIF {
 		if (rowsAffected == 0) {
 			throw new SQLException("Inserting order failed, no rows affected.");
 		}
+
 		try (ResultSet generatedKeys = insertOrder.getGeneratedKeys()) {
 			if (generatedKeys.next()) {
-				return generatedKeys.getInt(1); // Return the generated order_id
+				int orderId = generatedKeys.getInt(1);
+				System.out.println("Generated Order ID: " + orderId);
+				return orderId;
 			} else {
 				throw new SQLException("Inserting order failed, no ID obtained.");
 			}
-
 		}
 	}
 
@@ -205,14 +207,11 @@ public class OrderDB implements OrderDBIF {
 		// TODO implement this
 	}
 
-
 	/*
-	 * Obsolete FIXME
-	 * private PreparedStatement getPreparedStatementInsertOrder() throws SQLException {
-		PreparedStatement foundPrepStat = null;
-		String baseQuery = "sql here";
-		foundPrepStat = connection.prepareStatement(baseQuery);
-		return foundPrepStat;
-	}*/
+	 * Obsolete FIXME private PreparedStatement getPreparedStatementInsertOrder()
+	 * throws SQLException { PreparedStatement foundPrepStat = null; String
+	 * baseQuery = "sql here"; foundPrepStat =
+	 * connection.prepareStatement(baseQuery); return foundPrepStat; }
+	 */
 
 }

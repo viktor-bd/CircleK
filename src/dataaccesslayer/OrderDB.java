@@ -67,7 +67,6 @@ public class OrderDB implements OrderDBIF {
 
 			// Process the result set and populate the list of orders
 			while (rs.next()) {
-				// Assuming you have a method to create an Order object from ResultSet
 				Order order = buildObject(rs);
 				// Add to list
 				orders.add(order);

@@ -60,7 +60,7 @@ public class TestOrderCreation {
 	}
 	@Test
 	@DisplayName("S01_TC_01: Given valid inputs in order creation will return success")
-	public void givenValidInputInOrderWillReturnSuccess() throws DataAccessException {
+	public void givenValidInputInOrderWillReturnSuccess() throws DataAccessException, SQLException {
 		//Arrange
 		LocalDateTime testDateNow = LocalDateTime.now();
 		LocalDateTime testDatePickUpDate = LocalDateTime.now().plusHours(48);

@@ -47,29 +47,15 @@ public class TestOrderCreation {
 	public void givenInvalidCustomIDWillReturnError() {
 
 	}
+	
 	@Test
 	@DisplayName("S01_TC_01: Given valid inputs in order creation will return success")
 	public void givenValidInputInOrderWillReturnSuccess() throws DataAccessException, SQLException {
-		//Arrange
-		LocalDateTime testDateNow = LocalDateTime.now();
+		// Arrange
 		LocalDateTime testDatePickUpDate = LocalDateTime.now().plusHours(48);
-		System.out.println(testDateNow);
-		System.out.println(testDatePickUpDate);
-		
-		OrderDB orderDB = new OrderDB();
 		OrderController orderController = new OrderController();
-		
-		
 		Product testProduct1 = new Product(1001, "Skinke/Ost Sandwich", 45, "Sandwich");
 		Product testProduct2 = new Product(1004, "Smurt Rundstykke m/ ost", 22, "rundstykke");
-
-		
-		Ingredient testIngredient1 = new Ingredient(2, "Salat", 150, null);
-		Ingredient testIngredient2 = new Ingredient(3, "Ost", 200, null);
-		Ingredient testIngredient3 = new Ingredient(5, "Sandwichbræd", 200, null);
-		Ingredient testIngredient4 = new Ingredient(8, "Skinke", 200, null);
-		Ingredient testIngredient5 = new Ingredient(10, "Mayo", 200, null);
-		
 		PersonDB personDB = new PersonDB();
 		PersonController personController = new PersonController(personDB);
 		String validPhoneNumber = "98765430";
@@ -82,8 +68,7 @@ public class TestOrderCreation {
 		orderController.addOrderLineToOrder(newOrderLine2, newOrder);
 		Customer foundCustomer = personController.lookUpCustomerInDB(validPhoneNumber);
 		orderController.addCustomerToOrder(foundCustomer, newOrder);
-		orderController.testaddEmployeeToOrder(testEmployee,newOrder);
-		// Step 7. Finish order creation (save in db) call count on orders in db ++ on id and set id to result
+		orderController.testaddEmployeeToOrder(testEmployee, newOrder);
 		Order foundOrder = orderController.saveOrder(newOrder);
 		// orderController.saveOrderLines(order.getOrderLines)
 		//Assert

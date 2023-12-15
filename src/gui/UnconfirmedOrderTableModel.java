@@ -19,8 +19,8 @@ public class UnconfirmedOrderTableModel extends AbstractTableModel {
 	
 	private OrderController orderController;
 	private ArrayList<Order> orders;
-	private static final String[] COLUMN_HEADERS = {"Ordre id #", "PickUp Status", 
-			"PickUp Dato", "Betalt", "Kunde", "Medarbejder"};
+	private static final String[] COLUMN_HEADERS = {"Ordre id #", "Dato",
+			"PickUp Dato", "Kunde", "Pris"};
 	/**
 	 * 
 	 */
@@ -50,7 +50,7 @@ public class UnconfirmedOrderTableModel extends AbstractTableModel {
 		String result = "";
 		switch (columnIndex) {
 		default:
-			result = "Unknown column: " + columnIndex + ". Valid is 0-5";
+			result = "Unknown column: " + columnIndex + ". Valid is 0-4";
 		case 0:
 			result += order.getOrderId();
 			break;
@@ -58,17 +58,15 @@ public class UnconfirmedOrderTableModel extends AbstractTableModel {
 			result = order.getDate().toString();
 			break;
 		case 2:
-			result += order.isPickUpStatus();
+			result += order.getPickupDate().toLocalDate();
 			break;
 		case 3: 
-			result += order.getPickupDate();
+			result += "Kunde"; //TODO customer.firstname whatever
 			break;
 		case 4: 
-			result += order.getCustomer();
+			result += "Pris"; //TODO
 			break;
-		case 5: 
-			result += order.getEmployee();
-			break;
+		
 		}
 		return result;
 	}

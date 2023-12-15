@@ -11,7 +11,6 @@ import model.OrderLine;
 
 public class OrderDB implements OrderDBIF {
 	private Connection connection;
-
 	private static final String insertOrderQuery = "INSERT INTO [Order] (date, pickUpStatus, pickupDate, isPaid, isConfirmed, customer_id, employee_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	private static final String insertOrderLineQuery = "INSERT INTO OrderLine (quantity, sku) VALUES (?, ?)";
 	private static final String insertOrderOrderLineQuery = "INSERT INTO Order_OrderLine (order_id, orderline_id) VALUES (?, ?)";
@@ -36,7 +35,6 @@ public class OrderDB implements OrderDBIF {
 			addOrder(newOrder);
 			addOrderLines(newOrder);
 			DBConnection.commitTransaction();
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			DBConnection.rollbackTransaction();
@@ -74,11 +72,9 @@ public class OrderDB implements OrderDBIF {
 		insertOrderLine.setInt(1, orderLine.getQuantity());
 		System.out.println(orderLine.getProduct().getSku() + " " + orderLine.getQuantity());
 		int rowsAffected = insertOrderLine.executeUpdate();
-
 		if (rowsAffected == 0) {
 			throw new SQLException("Inserting order line failed, no rows affected.");
 		}
-
 		ArrayList<Integer> orderLineID = new ArrayList<>();
 		try (ResultSet generatedKeys = insertOrderLine.getGeneratedKeys()) {
 			while (generatedKeys.next()) {
@@ -106,7 +102,6 @@ public class OrderDB implements OrderDBIF {
 	}
 
 	private int insertOrder(Order newOrder) throws SQLException {
-
 		insertOrder.setDate(1, java.sql.Date.valueOf(newOrder.getDate().toLocalDate()));
 		System.out.println(java.sql.Date.valueOf(newOrder.getDate().toLocalDate()));
 		insertOrder.setInt(2, convertBooleanToInt(newOrder.isPickUpStatus()));
@@ -115,13 +110,10 @@ public class OrderDB implements OrderDBIF {
 		insertOrder.setInt(5, 0);
 		insertOrder.setInt(6, newOrder.getCustomer().getCustomerId());
 		insertOrder.setInt(7, newOrder.getEmployee().getEmployeeId());
-
 		int rowsAffected = insertOrder.executeUpdate();
-
 		if (rowsAffected == 0) {
 			throw new SQLException("Inserting order failed, no rows affected.");
 		}
-
 		try (ResultSet generatedKeys = insertOrder.getGeneratedKeys()) {
 			if (generatedKeys.next()) {
 				int orderId = generatedKeys.getInt(1);

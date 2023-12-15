@@ -1,6 +1,7 @@
 package test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -12,18 +13,18 @@ import model.Order;
 import model.OrderLine;
 import model.Customer;
 import model.Product;
-import model.Ingredient;
 import model.Employee;
+
 import control.OrderController;
 import control.PersonController;
+
 import dataaccesslayer.DataAccessException;
 import dataaccesslayer.PersonDB;
-import dataaccesslayer.OrderDB;
 
 public class TestOrderCreation {
 
 	/*
-	 * This test is testing the phone number "88888888" against the database to find
+	 * This test is testing the phone number "98765430" against the database to find
 	 * a customer with the given phone number. A successful test result is achieved
 	 * if the validPhoneNumber is equal to that of the found customer's phone
 	 * number. In the database, phone number is unique.
@@ -60,7 +61,6 @@ public class TestOrderCreation {
 		PersonController personController = new PersonController(personDB);
 		String validPhoneNumber = "98765430";
 		Employee testEmployee = new Employee(1);
-		// Act
 		Order newOrder = orderController.createOrder(0, false, testDatePickUpDate, false, null, null);
 		OrderLine newOrderLine = orderController.createOrderLine(testProduct1, 2);
 		OrderLine newOrderLine2 = orderController.createOrderLine(testProduct2, 2);
@@ -69,13 +69,14 @@ public class TestOrderCreation {
 		Customer foundCustomer = personController.lookUpCustomerInDB(validPhoneNumber);
 		orderController.addCustomerToOrder(foundCustomer, newOrder);
 		orderController.testaddEmployeeToOrder(testEmployee, newOrder);
+
+		// Act	
 		Order foundOrder = orderController.saveOrder(newOrder);
-		// orderController.saveOrderLines(order.getOrderLines)
-		//Assert
-	//	assertEquals(foundOrder.getOrderId(), 4);
-	//	assertEquals(foundOrder.getCustomer(), foundCustomer);
 		
+		// Assert
+		assertTrue(foundOrder.getOrderId() > 0);
 	}
+
 	@Test
 	@DisplayName("S02_TC_01: Given date too close to current date, order creation should return error")
 	public void givenDateTooCloseToCurrentDateWillReturnError() {

@@ -28,13 +28,9 @@ public class OrderDB implements OrderDBIF {
 	public OrderDB() throws DataAccessException {
 		try {
 			connection = DBConnection.getInstance().getDBcon();
-			// insertOrder =
-			// DBConnection.getInstance().getDBcon().prepareStatement(insertOrderQuery);
-			insertOrder = DBConnection.getInstance().getDBcon().prepareStatement(insertOrderQuery,
-					Statement.RETURN_GENERATED_KEYS);
-			insertOrderLine = DBConnection.getInstance().getDBcon().prepareStatement(insertOrderLineQuery,
-					Statement.RETURN_GENERATED_KEYS);
-			insertOrderOrderLine = DBConnection.getInstance().getDBcon().prepareStatement(insertOrderOrderLineQuery);
+			insertOrder = connection.prepareStatement(insertOrderQuery, Statement.RETURN_GENERATED_KEYS);
+			insertOrderLine = connection.prepareStatement(insertOrderLineQuery, Statement.RETURN_GENERATED_KEYS);
+			insertOrderOrderLine = connection.prepareStatement(insertOrderOrderLineQuery);
 		} catch (SQLException e) {
 			throw new DataAccessException(e, "Could not prepare statement");
 		}

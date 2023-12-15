@@ -82,6 +82,7 @@ public class TestOrderCreation {
 		PersonDB personDB = new PersonDB();
 		PersonController personController = new PersonController(personDB);
 		String validPhoneNumber = "98765430";
+		Employee testEmployee = new Employee(1);
 
 		//Act
 		// Step 1. OC creates an Order with desired date
@@ -96,6 +97,7 @@ public class TestOrderCreation {
 		System.out.println(foundCustomer.getIsBusiness());
 		// Step 6. Add customer to order
 		orderController.addCustomerToOrder(foundCustomer, newOrder);
+		orderController.testaddEmployeeToOrder(testEmployee,newOrder);
 		// Step 7. Finish order creation (save in db) call count on orders in db ++ on id and set id to result
 		Order foundOrder = orderController.saveOrder(newOrder);
 		// orderController.saveOrderLines(order.getOrderLines)

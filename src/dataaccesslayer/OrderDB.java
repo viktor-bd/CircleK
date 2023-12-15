@@ -3,6 +3,7 @@ package dataaccesslayer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import dataaccesslayer.DBConnection;
 import dataaccesslayer.DataAccessException;
@@ -30,9 +31,22 @@ import model.Order;
 		}
 	}
 
-    public void rejectOrder(Order rejectedOrder) {
-        //TODO implement this
-    }
+	private ArrayList<Integer> insertOrderLines(ArrayList<OrderLine> orderLines) {
+		// TODO Auto-generated method stub
+		ArrayList<Integer> orderLineID = new ArrayList<>();
+
+		for (OrderLine orderLine : orderLines) {
+			try {
+
+				orderLineID = insertOrderLine(orderLine);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return orderLineID;
+	}
+
 
     public void confirmOrder(Order confirmedOrder) {
         //TODO implement this

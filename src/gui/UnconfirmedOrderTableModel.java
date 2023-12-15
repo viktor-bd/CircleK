@@ -10,7 +10,7 @@ import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import control.OrderController;
 import model.Order;
-import model.Proposition;
+//import model.Proposition;
 
 /**
  * @author Rasmus Larsen, Viktor Dorph, Johannes Jensen, Malik Agerbæk, Shemon Chowdhury 

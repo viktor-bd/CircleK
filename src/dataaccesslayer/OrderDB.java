@@ -19,8 +19,8 @@ public class OrderDB implements OrderDBIF {
 	private Connection connection;
 
 	private static final String insertOrderQuery = "INSERT INTO [Order] (date, pickUpStatus, pickupDate, isPaid, isConfirmed, customer_id, employee_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
-	private static final String insertOrderLineQuery = "INSERT INTO OrderLine (sku, quantity) VALUES ?, ?";
-	private static final String insertOrderOrderLineQuery = "INSERT INTO Order_OrderLine (order_id, orderline_id) VALUES ?, ?";
+	private static final String insertOrderLineQuery = "INSERT INTO OrderLine (quantity, sku) VALUES (?, ?)";
+	private static final String insertOrderOrderLineQuery = "INSERT INTO Order_OrderLine (order_id, orderline_id) VALUES (?, ?)";
 	private PreparedStatement insertOrder;
 	private PreparedStatement insertOrderLine;
 	private PreparedStatement insertOrderOrderLine;
@@ -28,9 +28,11 @@ public class OrderDB implements OrderDBIF {
 	public OrderDB() throws DataAccessException {
 		try {
 			connection = DBConnection.getInstance().getDBcon();
-			//insertOrder = DBConnection.getInstance().getDBcon().prepareStatement(insertOrderQuery);
-			insertOrder = DBConnection.getInstance().getDBcon().prepareStatement(insertOrderQuery, Statement.RETURN_GENERATED_KEYS);
-			insertOrderLine = DBConnection.getInstance().getDBcon().prepareStatement(insertOrderLineQuery);
+			// insertOrder =
+			// DBConnection.getInstance().getDBcon().prepareStatement(insertOrderQuery);
+			insertOrder = DBConnection.getInstance().getDBcon().prepareStatement(insertOrderQuery,
+					Statement.RETURN_GENERATED_KEYS);
+			insertOrderLine = DBConnection.getInstance().getDBcon().prepareStatement(insertOrderLineQuery, Statement.RETURN_GENERATED_KEYS);
 			insertOrderOrderLine = DBConnection.getInstance().getDBcon().prepareStatement(insertOrderOrderLineQuery);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

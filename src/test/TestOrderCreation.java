@@ -22,19 +22,6 @@ import dataaccesslayer.OrderDB;
 
 public class TestOrderCreation {
 
-	/*@Test
-	@DisplayName("S01_TC_01: Given valid input in order, order creation should be successful")
-	public void givenValidInputInOrderWillReturnSuccess() {
-		// TODO implement test logic
-		// Arrange
-		int validProductQuantity = 20;
-		LocalDate validDate = LocalDate.parse("20-12-2023");
-		// TODO detter er en integration test, lav den efter unit tests kører...
-
-		// Act
-		// Assert
-	}*/
-
 	/*
 	 * This test is testing the phone number "88888888" against the database to find
 	 * a customer with the given phone number. A successful test result is achieved
@@ -87,12 +74,8 @@ public class TestOrderCreation {
 		PersonController personController = new PersonController(personDB);
 		String validPhoneNumber = "98765430";
 		Employee testEmployee = new Employee(1);
-
-		//Act
-		// Step 1. OC creates an Order with desired date
-		Order newOrder = orderController.createOrder(0, false, testDatePickUpDate, false, null, null); 
-		// Step 2. Enter product quantity mimmick UI with hardcoded products
-		// Step 3. UI -> OrderController creates OrderLine for each desired product and adds quantity
+		// Act
+		Order newOrder = orderController.createOrder(0, false, testDatePickUpDate, false, null, null);
 		OrderLine newOrderLine = orderController.createOrderLine(testProduct1, 2);
 		OrderLine newOrderLine2 = orderController.createOrderLine(testProduct2, 2);
 		orderController.addOrderLineToOrder(newOrderLine, newOrder);

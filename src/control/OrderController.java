@@ -47,6 +47,9 @@ public class OrderController {
 		order.setCustomer(customer);
 	}
 
+	public void testaddEmployeeToOrder(Employee testEmployee , Order newOrder) {
+		// TODO Auto-generated method stub
+		newOrder.setEmployee(testEmployee);
 	}
 
 }

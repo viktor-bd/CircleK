@@ -100,7 +100,7 @@ public class DatePickerView extends JFrame {
 	public Date getDateFromCalender() {
 		// Retrieve value from calendar
 		desiredDate = dateModel.getValue();
-		System.out.println(desiredDate); // TODO Formatér / slet
+		
 		return desiredDate;
 	}
 	/**

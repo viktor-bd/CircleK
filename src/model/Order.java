@@ -14,6 +14,7 @@ public class Order {
     private boolean pickUpStatus;
     private LocalDateTime pickupDate;
     private boolean isPaid;
+    private boolean isConfirmed;
     private Customer customer;
     private Employee employee;
     private ArrayList<OrderLine> orderLines;
@@ -33,13 +34,14 @@ public class Order {
      */
     public Order(int orderId, boolean pickUpStatus, LocalDateTime pickupDate,
                  boolean isPaid, Customer customer, Employee employee) {
-        this.orderId = orderId;
+        this.orderId = -1; // Hardcoding -1 to differentiate between non persisted (-1) orders and persisted orders (non negative, non null id)
         this.date = LocalDateTime.now();
         this.pickUpStatus = pickUpStatus; // TODO False from creation, manually 
         this.pickupDate = pickupDate;
         this.isPaid = isPaid;
         this.customer = customer;
         this.employee = employee;
+        this.isConfirmed = false;
         orderLines = new ArrayList<OrderLine>();
     }
     
@@ -176,7 +178,7 @@ public class Order {
      *
      * @param The employee creating the order
      */
-    public void setEmployeeId(Employee employee) {
+    public void setEmployee(Employee employee) {
         this.employee = employee;
     }
     /**
@@ -191,5 +193,9 @@ public class Order {
     	return orderLines.size();
     }
     
+    public ArrayList<OrderLine> getOrderLines() {
+    	return orderLines;
+    }
+  
 
 }

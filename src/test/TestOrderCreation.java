@@ -1,34 +1,30 @@
 package test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.time.LocalDate;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import model.Order;
+import model.OrderLine;
 import model.Customer;
+import model.Product;
+import model.Employee;
+
+import control.OrderController;
 import control.PersonController;
+
 import dataaccesslayer.DataAccessException;
 import dataaccesslayer.PersonDB;
 
 public class TestOrderCreation {
 
-	@Test
-	@DisplayName("S01_TC_01: Given valid input in order, order creation should be successful")
-	public void givenValidInputInOrderWillReturnSuccess() {
-		// TODO implement test logic
-		// Arrange
-		int validProductQuantity = 20;
-		LocalDate validDate = LocalDate.parse("20-12-2023");
-		// TODO detter er en integration test, lav den efter unit tests kører...
-
-		// Act
-		// Assert
-	}
-
 	/*
-	 * This test is testing the phone number "88888888" against the database to find
+	 * This test is testing the phone number "98765430" against the database to find
 	 * a customer with the given phone number. A successful test result is achieved
 	 * if the validPhoneNumber is equal to that of the found customer's phone
 	 * number. In the database, phone number is unique.
@@ -42,7 +38,7 @@ public class TestOrderCreation {
 		String validPhoneNumber = "98765430";
 		// Act
 		Customer foundCustomer = personController.lookUpCustomerInDB(validPhoneNumber);
-		System.out.println(foundCustomer.getIsBusiness());
+		
 		// Assert
 		assertEquals(foundCustomer.getPhoneNumber(), validPhoneNumber);
 	}
@@ -51,6 +47,34 @@ public class TestOrderCreation {
 	@DisplayName("S01_TC_02: Given invalid customer ID, order creation should return error")
 	public void givenInvalidCustomIDWillReturnError() {
 
+	}
+	
+	@Test
+	@DisplayName("S01_TC_01: Given valid inputs in order creation will return success")
+	public void givenValidInputInOrderWillReturnSuccess() throws DataAccessException, SQLException {
+		// Arrange
+		LocalDateTime testDatePickUpDate = LocalDateTime.now().plusHours(48);
+		OrderController orderController = new OrderController();
+		Product testProduct1 = new Product(1001, "Skinke/Ost Sandwich", 45, "Sandwich");
+		Product testProduct2 = new Product(1004, "Smurt Rundstykke m/ ost", 22, "rundstykke");
+		PersonDB personDB = new PersonDB();
+		PersonController personController = new PersonController(personDB);
+		String validPhoneNumber = "98765430";
+		Employee testEmployee = new Employee(1);
+		Order newOrder = orderController.createOrder(0, false, testDatePickUpDate, false, null, null);
+		OrderLine newOrderLine = orderController.createOrderLine(testProduct1, 2);
+		OrderLine newOrderLine2 = orderController.createOrderLine(testProduct2, 2);
+		orderController.addOrderLineToOrder(newOrderLine, newOrder);
+		orderController.addOrderLineToOrder(newOrderLine2, newOrder);
+		Customer foundCustomer = personController.lookUpCustomerInDB(validPhoneNumber);
+		orderController.addCustomerToOrder(foundCustomer, newOrder);
+		orderController.testaddEmployeeToOrder(testEmployee, newOrder);
+
+		// Act	
+		Order foundOrder = orderController.saveOrder(newOrder);
+		
+		// Assert
+		assertTrue(foundOrder.getOrderId() > 0);
 	}
 
 	@Test

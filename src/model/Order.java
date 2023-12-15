@@ -14,6 +14,7 @@ public class Order {
     private boolean pickUpStatus;
     private LocalDateTime pickupDate;
     private boolean isPaid;
+    private boolean isConfirmed;
     private Customer customer;
     private Employee employee;
     private ArrayList<OrderLine> orderLines;
@@ -40,6 +41,7 @@ public class Order {
         this.isPaid = isPaid;
         this.customer = customer;
         this.employee = employee;
+        this.isConfirmed = false;
         orderLines = new ArrayList<OrderLine>();
     }
     
@@ -176,7 +178,7 @@ public class Order {
      *
      * @param The employee creating the order
      */
-    public void setEmployeeId(Employee employee) {
+    public void setEmployee(Employee employee) {
         this.employee = employee;
     }
     /**

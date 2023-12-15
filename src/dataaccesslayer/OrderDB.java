@@ -60,6 +60,24 @@ public class OrderDB implements OrderDBIF {
 		}
 	}
 
+	private void insertOrderOrderLine(ArrayList<Integer> orderLineID, int orderID) {
+		// TODO Auto-generated method stub
+		for (int j = 0; j < orderLineID.size(); j++) {
+
+			try {
+				insertOrderOrderLine.setInt(1, orderID);
+				insertOrderOrderLine.setInt(2, orderLineID.get(j));
+				
+				insertOrderOrderLine.executeUpdate();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+
+	}
+
 	private ArrayList<Integer> insertOrderLines(ArrayList<OrderLine> orderLines) {
 		// TODO Auto-generated method stub
 		ArrayList<Integer> orderLineID = new ArrayList<>();

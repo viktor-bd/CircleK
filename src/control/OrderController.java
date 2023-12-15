@@ -11,8 +11,8 @@ public class OrderController {
     private OrderDB orderDB;
 
 
-    public OrderController(OrderDB orderDB) {
-        this.orderDB = orderDB;
+    public OrderController() throws DataAccessException {
+        this.orderDB = new OrderDB();
     }
 
     public Order createOrder(int orderID, boolean pickUpStatus, LocalDateTime pickupDate, boolean isPaid, Customer customer, Employee employee) {

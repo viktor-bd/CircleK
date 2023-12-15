@@ -95,7 +95,7 @@ public class TestOrderCreation {
 		Customer foundCustomer = personController.lookUpCustomerInDB(validPhoneNumber);
 		System.out.println(foundCustomer.getIsBusiness());
 		// Step 6. Add customer to order
-		// TODO implementer det her orderController.addCustomerToOrder(foundCustomer);
+		orderController.addCustomerToOrder(foundCustomer, newOrder);
 		// Step 7. Finish order creation (save in db) call count on orders in db ++ on id and set id to result
 		// TODO implementer det her orderController.finishOrderCreation(newOrder);
 		//Assert

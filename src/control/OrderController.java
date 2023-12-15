@@ -44,7 +44,9 @@ public class OrderController {
 
 	public void addCustomerToOrder(Customer customer, Order order) {
 		// TODO mangler lige logic skal nok skrive det - Viktor
-		
+		order.setCustomer(customer);
+	}
+
 	}
 
 }

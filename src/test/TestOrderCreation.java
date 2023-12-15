@@ -50,7 +50,7 @@ public class TestOrderCreation {
 		String validPhoneNumber = "98765430";
 		// Act
 		Customer foundCustomer = personController.lookUpCustomerInDB(validPhoneNumber);
-		System.out.println(foundCustomer.getIsBusiness());
+		
 		// Assert
 		assertEquals(foundCustomer.getPhoneNumber(), validPhoneNumber);
 	}
@@ -95,15 +95,9 @@ public class TestOrderCreation {
 		// Step 3. UI -> OrderController creates OrderLine for each desired product and adds quantity
 		OrderLine newOrderLine = orderController.createOrderLine(testProduct1, 2);
 		OrderLine newOrderLine2 = orderController.createOrderLine(testProduct2, 2);
-		// Step 4. OrderController adds OrderLine(s) to the order
 		orderController.addOrderLineToOrder(newOrderLine, newOrder);
 		orderController.addOrderLineToOrder(newOrderLine2, newOrder);
-		System.out.println("Size of ol" + newOrder.getSizeOfOrderLines());
-		
-		// Step 5. Look up customer 
 		Customer foundCustomer = personController.lookUpCustomerInDB(validPhoneNumber);
-		//System.out.println(foundCustomer.getIsBusiness());
-		// Step 6. Add customer to order
 		orderController.addCustomerToOrder(foundCustomer, newOrder);
 		orderController.testaddEmployeeToOrder(testEmployee,newOrder);
 		// Step 7. Finish order creation (save in db) call count on orders in db ++ on id and set id to result

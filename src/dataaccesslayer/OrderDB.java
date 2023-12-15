@@ -36,16 +36,12 @@ public class OrderDB implements OrderDBIF {
 					Statement.RETURN_GENERATED_KEYS);
 			insertOrderOrderLine = DBConnection.getInstance().getDBcon().prepareStatement(insertOrderOrderLineQuery);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			throw new DataAccessException(e, "Could not prepare statement");
 		}
 	}
 
 	public void saveOrder(Order newOrder) throws SQLException {
-		System.out.println("ODB SaveOrder 44 " + newOrder.getSizeOfOrderLines());
-		// TODO implement this
 		try {
-			System.out.println("ODB SaveOrder 47 " + newOrder.getSizeOfOrderLines());
 			DBConnection.startTransaction();
 			// Insert Order into Order table
 			// System.out.println(insertOrder.toString()); // Log the SQL query
@@ -60,7 +56,6 @@ public class OrderDB implements OrderDBIF {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("Vi ramte rollback");
 			DBConnection.rollbackTransaction();
 		}
 	}
@@ -106,7 +101,6 @@ public class OrderDB implements OrderDBIF {
 //	}
 
 	private ArrayList<Integer> insertOrderLines(ArrayList<OrderLine> orderLines) {
-		// TODO Auto-generated method stub
 		ArrayList<Integer> orderLineID = new ArrayList<>();
 		for (OrderLine orderLine : orderLines) {
 		    try {
@@ -116,28 +110,9 @@ public class OrderDB implements OrderDBIF {
 		        e.printStackTrace();
 		    }
 		}
-		System.out.println(orderLineID.size() + " insertOrderLines linje 111");
 		return orderLineID;
 	}
 
-	/*
-	 * private ArrayList<Integer> insertOrderLine(OrderLine orderLine) throws
-	 * SQLException {
-	 * 
-	 * insertOrderLine.setInt(1, orderLine.getProduct().getSku());
-	 * insertOrderLine.setInt(2, orderLine.getQuantity());
-	 * 
-	 * int rowsAffected = insertOrderLine.executeUpdate();
-	 * 
-	 * if (rowsAffected == 0) { throw new
-	 * SQLException("Inserting order line failed, no rows affected."); }
-	 * ArrayList<Integer> orderLineID = new ArrayList<>(); try (ResultSet
-	 * generatedKeys = insertOrderLine.getGeneratedKeys()) { while
-	 * (generatedKeys.next()) { orderLineID.add(generatedKeys.getInt(1)); } if
-	 * (orderLineID.isEmpty()) { throw new
-	 * SQLException("Inserting order line failed, no ID obtained."); } } return
-	 * orderLineID; }
-	 */
 	private ArrayList<Integer> insertOrderLine(OrderLine orderLine) throws SQLException {
 		insertOrderLine.setInt(2, orderLine.getProduct().getSku());
 		insertOrderLine.setInt(1, orderLine.getQuantity());
@@ -160,8 +135,7 @@ public class OrderDB implements OrderDBIF {
 			}
 
 		} catch (SQLException e) {
-			// Some databases or statements may not support getGeneratedKeys
-			// Handle the exception or log the error
+
 			e.printStackTrace();
 		}
 		return orderLineID;
@@ -195,7 +169,6 @@ public class OrderDB implements OrderDBIF {
 		try (ResultSet generatedKeys = insertOrder.getGeneratedKeys()) {
 			if (generatedKeys.next()) {
 				int orderId = generatedKeys.getInt(1);
-				System.out.println("Generated Order ID: " + orderId);
 				return orderId;
 			} else {
 				throw new SQLException("Inserting order failed, no ID obtained.");
@@ -210,12 +183,4 @@ public class OrderDB implements OrderDBIF {
 	public void confirmOrder(Order confirmedOrder) {
 		// TODO implement this
 	}
-
-	/*
-	 * Obsolete FIXME private PreparedStatement getPreparedStatementInsertOrder()
-	 * throws SQLException { PreparedStatement foundPrepStat = null; String
-	 * baseQuery = "sql here"; foundPrepStat =
-	 * connection.prepareStatement(baseQuery); return foundPrepStat; }
-	 */
-
 }

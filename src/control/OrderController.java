@@ -40,12 +40,9 @@ public class OrderController {
         return orderLine;
     }
 
-    //TODO orderID skal hentes fra DB via GUI kald til CTRL som går til DAL
-    public void confirmOrder(Order order) {
-        // Logic for confirming an order
-        order.setPickUpStatus(true);
-        // Add logic to update the order directly in the database or perform necessary operations
-    }
+	public void confirmOrder(Order order) {
+		order.setPickUpStatus(true);
+	}
 
 	public void addCustomerToOrder(Customer customer, Order order) {
 		// TODO mangler lige logic skal nok skrive det - Viktor

@@ -77,6 +77,33 @@ public class OrderDB implements OrderDBIF {
 	}
 
 
+	private ArrayList<Integer> insertOrderLine(OrderLine orderLine) throws SQLException {
+
+		insertOrderLine.setInt(1, orderLine.getProduct().getSku());
+		insertOrderLine.setInt(2, orderLine.getQuantity());
+
+		int rowsAffected = insertOrderLine.executeUpdate();
+
+		if (rowsAffected == 0) {
+			throw new SQLException("Inserting order line failed, no rows affected.");
+		}
+		ArrayList<Integer> orderLineID = new ArrayList<>();
+		try (ResultSet generatedKeys = insertOrderLine.getGeneratedKeys()) {
+			while (generatedKeys.next()) {
+				orderLineID.add(generatedKeys.getInt(1));
+			} if (orderLineID.isEmpty()){
+				throw new SQLException("Inserting order line failed, no ID obtained.");
+			}
+		}
+		return orderLineID;
+	}
+	private int convertBooleanToInt(boolean bool) {
+		int bit = 0;
+		if (bool = true) {
+			bit = 1;
+		} return bit;
+	}
+
 	private int insertOrder(Order newOrder) throws SQLException {
 		insertOrder.setDate(1, java.sql.Date.valueOf(newOrder.getDate().toLocalDate()));
 		System.out.println( java.sql.Date.valueOf(newOrder.getDate().toLocalDate()));

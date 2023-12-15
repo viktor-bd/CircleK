@@ -98,7 +98,7 @@ public class OrderDB implements OrderDBIF {
 		int booleanCheckPaid = rs.getInt("isPaid");
 		boolean isPaid = false;
 		if (booleanCheckPaid == 1) {
-			pickUpStatus = true;
+			isPaid = true;
 		}
 
 		Order order = new Order(pickUpStatus, rs.getDate("pickupDate").toLocalDate(), isPaid, customer, employee);

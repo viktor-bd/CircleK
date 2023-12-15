@@ -28,7 +28,10 @@ public class PersonController {
 		Customer customerFound = personDB.lookUpCustomerInDB(validPhoneNumber);
 		return customerFound;
 	}
-
+	public Customer findCustomerByCustomerId(int customerId) {
+		Customer customer = personDB.findCustomerById(customerId);
+		
+	}
 	
 
 }

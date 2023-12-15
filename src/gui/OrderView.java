@@ -19,6 +19,8 @@ import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 
+import dataaccesslayer.DataAccessException;
+
 /**
  * @author Rasmus Larsen, Viktor Dorph, Johannes Jensen, Malik Agerbæk, Shemon
  *         Chowdhury
@@ -67,7 +69,12 @@ public class OrderView extends JFrame {
 		btnCreateOrder.addActionListener(this::btnCreateOrderClicked);
 		btnConfirmDenyOrders.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				confirmDenyClicked();
+				try {
+					confirmDenyClicked();
+				} catch (DataAccessException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		btnViewOrders.addActionListener(new ActionListener() {
@@ -117,7 +124,7 @@ public class OrderView extends JFrame {
 		clearWindow();
 	}
 
-	public void confirmDenyClicked() {
+	public void confirmDenyClicked() throws DataAccessException {
 		UnconfirmedOrderView unconfirmedView = new UnconfirmedOrderView();
 		unconfirmedView.setVisible(true);
 		clearWindow();

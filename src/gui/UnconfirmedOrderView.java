@@ -35,7 +35,7 @@ public class UnconfirmedOrderView extends JFrame {
 	 * @throws DataAccessException 
 	 */
 	public UnconfirmedOrderView() throws DataAccessException {
-		orderController = new OrderController(new OrderDB());
+		orderController = new OrderController();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Bekræft ordrer");
 		setBounds(100, 100, 500, 300);
@@ -82,9 +82,24 @@ public class UnconfirmedOrderView extends JFrame {
 		tableUnconfirmedOrders = new JTable();
 		tableUnconfirmedOrders.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		unconfirmedOrderTableModel = new UnconfirmedOrderTableModel();
+		// createCustomer
+		unconfirmedOrderTableModel.setData(getOrdersFromDB());
+		tableUnconfirmedOrders.setModel(unconfirmedOrderTableModel);
 		scrollPane.setViewportView(tableUnconfirmedOrders);
-		
-		
+		//TODO Thread for update table
+		// Setting up a thread for updating
+//		exec = Executors.newSingleThreadScheduledExecutor();
+//		exec.scheduleAtFixedRate(new Runnable() {
+//		    @Override
+//		    public void run() {
+//		        TableModel.setData(getDataMethod());
+//		        TableModel.revalidate();
+//		        TableModel.repaint();
+//		    }
+//		}, 0, 5, TimeUnit.SECONDS);
+//		import java.util.concurrent.Executors;
+//		import java.util.concurrent.ScheduledExecutorService;
+//		import java.util.concurrent.TimeUnit;
 		
 		// TODO Auto-generated constructor stub
 	}
@@ -131,8 +146,7 @@ public class UnconfirmedOrderView extends JFrame {
 		
 	}
 	public ArrayList<Order> getOrdersFromDB() {
-		orderController.getOrders();
-		return null;
+		return orderController.getOrdersWithBoolean(false);
 		
 	}
 }

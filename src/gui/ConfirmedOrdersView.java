@@ -22,7 +22,9 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
 import control.OrderController;
+import dataaccesslayer.DataAccessException;
 import dataaccesslayer.OrderDB;
+import model.Order;
 
 /**
  * @author Rasmus Larsen, Viktor Dorph, Johannes Jensen, Malik Agerbæk, Shemon
@@ -35,10 +37,11 @@ public class ConfirmedOrdersView extends JFrame {
 	private OrderController orderController;
 
 	/**
+	 * @throws DataAccessException 
 	 * 
 	 */
-	public ConfirmedOrdersView() {
-		orderController = new OrderController(new OrderDB());
+	public ConfirmedOrdersView() throws DataAccessException {
+		orderController = new OrderController();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Bekræftede ordrer");
 		setBounds(100, 100, 500, 300);
@@ -107,7 +110,7 @@ public class ConfirmedOrdersView extends JFrame {
 	}
 	
 	public ArrayList<Order> getOrdersFromDB() {
-		orderController.getOrdersWithBoolean();
+		return orderController.getOrdersWithBoolean(true);
 	}
 	
 }

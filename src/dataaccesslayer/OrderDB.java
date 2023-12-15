@@ -67,15 +67,10 @@ public class OrderDB implements OrderDBIF {
 		}
 	}
 
-	private ArrayList<Integer> insertOrderLines(ArrayList<OrderLine> orderLines) {
+	private ArrayList<Integer> insertOrderLines(ArrayList<OrderLine> orderLines) throws SQLException {
 		ArrayList<Integer> orderLineID = new ArrayList<>();
 		for (OrderLine orderLine : orderLines) {
-		    try {
-		        // Add the result of insertOrderLine to the existing ArrayList
-		        orderLineID.addAll(insertOrderLine(orderLine));
-		    } catch (Exception e) {
-		        e.printStackTrace();
-		    }
+			orderLineID.addAll(insertOrderLine(orderLine));
 		}
 		return orderLineID;
 	}

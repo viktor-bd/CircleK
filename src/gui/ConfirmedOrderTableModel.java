@@ -49,10 +49,10 @@ public class ConfirmedOrderTableModel extends AbstractTableModel {
 			result += order.getOrderId();
 			break;
 		case 1:
-			result = order.getDate().toString();
+			result += order.isPickUpStatus();
 			break;
 		case 2:
-			result += order.isPickUpStatus();
+			result = order.getDate().toString();
 			break;
 		case 3: 
 			result += order.getPickupDate();

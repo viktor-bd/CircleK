@@ -82,8 +82,12 @@ public class UnconfirmedOrderView extends JFrame {
 		tableUnconfirmedOrders = new JTable();
 		tableUnconfirmedOrders.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		unconfirmedOrderTableModel = new UnconfirmedOrderTableModel();
-		// createCustomer
-		unconfirmedOrderTableModel.setData(getOrdersFromDB());
+		// Creating Array for setData
+		ArrayList<Order> orders = getOrdersFromDB();
+		// Create customers and add to order
+		
+		// Check table design 
+		unconfirmedOrderTableModel.setData(orders);
 		tableUnconfirmedOrders.setModel(unconfirmedOrderTableModel);
 		scrollPane.setViewportView(tableUnconfirmedOrders);
 		//TODO Thread for update table

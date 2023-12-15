@@ -16,6 +16,7 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
 import control.OrderController;
+import control.PersonController;
 import dataaccesslayer.DataAccessException;
 import dataaccesslayer.OrderDB;
 import model.Order;
@@ -29,12 +30,14 @@ public class UnconfirmedOrderView extends JFrame {
 	private JTable tableUnconfirmedOrders;
 	private UnconfirmedOrderTableModel unconfirmedOrderTableModel;
 	private OrderController orderController;
+	private PersonController personController;
 
 	/**
 	 * Creates and sets the view
 	 * @throws DataAccessException 
 	 */
 	public UnconfirmedOrderView() throws DataAccessException {
+		personController = new PersonController();
 		orderController = new OrderController();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Bekræft ordrer");
@@ -84,6 +87,9 @@ public class UnconfirmedOrderView extends JFrame {
 		unconfirmedOrderTableModel = new UnconfirmedOrderTableModel();
 		// Creating Array for setData
 		ArrayList<Order> orders = getOrdersFromDB();
+		// Get all order ids from the list above
+		ArrayList<Integer> orderIds = new ArrayList<Integer>();
+		orderIds = getOrderIDsFromList(orders);
 		// Create customers and add to order
 		
 		// Check table design 
@@ -153,4 +159,13 @@ public class UnconfirmedOrderView extends JFrame {
 		return orderController.getOrdersWithBoolean(false);
 		
 	}
-}
+	public ArrayList<Integer> getOrderIDsFromList(ArrayList<Order> orders) {
+		ArrayList<Integer> orderIds = new ArrayList<Integer>();
+		for(Order o : orders) {
+			int orderId = o.getOrderId();	
+			orderIds.add(orderId);
+			}
+		
+		return orderIds;
+	}
+ }

@@ -44,7 +44,7 @@ public class TestOrderCreation {
 	public void givenValidPhoneNumberWillReturnCustomer() throws DataAccessException {
 		// Arrange
 		PersonDB personDB = new PersonDB();
-		PersonController personController = new PersonController(personDB);
+		PersonController personController = new PersonController();
 		String validPhoneNumber = "98765430";
 		// Act
 		Customer foundCustomer = personController.lookUpCustomerInDB(validPhoneNumber);
@@ -81,7 +81,7 @@ public class TestOrderCreation {
 		Ingredient testIngredient5 = new Ingredient(10, "Mayo", 200, null);
 		
 		PersonDB personDB = new PersonDB();
-		PersonController personController = new PersonController(personDB);
+		PersonController personController = new PersonController();
 		String validPhoneNumber = "98765430";
 
 		//Act

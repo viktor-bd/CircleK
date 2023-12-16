@@ -54,7 +54,7 @@ public class PersonDB implements PersonDBIF {
 		}
 		customer.setIsBusiness(isBusiness);
 
-		System.out.println("Object succesfully created " + customer.getFirstName());
+		
 		return customer;
 
 	}

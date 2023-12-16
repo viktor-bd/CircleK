@@ -29,8 +29,9 @@ public class PersonController {
 		return customerFound;
 	}
 	public Customer findCustomerByCustomerId(int customerId) {
+		Customer c = null;
 		Customer customer = personDB.findCustomerById(customerId);
-		
+		return c;
 	}
 	
 

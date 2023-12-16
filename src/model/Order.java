@@ -13,6 +13,7 @@ import java.util.Date;
  */
 
 public class Order {
+<<<<<<< HEAD
 	private int orderId;
 	private LocalDateTime date;
 	private boolean pickUpStatus;
@@ -77,6 +78,47 @@ public class Order {
 	/**
 	 * Returns the current time in the specified format. FIXME Separate class?
 	 * 
+=======
+    private int orderId;
+    private LocalDateTime date;
+    private boolean pickUpStatus;
+    private LocalDateTime pickupDate;
+    private boolean isPaid;
+    private boolean isConfirmed;
+    private Customer customer;
+    private Employee employee;
+    private ArrayList<OrderLine> orderLines;
+    private static final int minimumProducts = 20; // Minimum number of products to order as per special requirement skal det være her eller i Order?
+
+    /**
+     * TODO Check if orderID should be initialized in constructor or set on confirmation of order
+     * Constructs an Order object with the specified values.
+     *
+     * @param orderId     The unique numeric identifier for the order.
+     * @param date        The date when the order was created.
+     * @param pickUpStatus The status of the order for pickup (true if ready, false if not ready). This is only for Circle K mostly (whether or not it needs to be handled)
+     * @param pickupDate  The date the customer requested the order be to be ready
+     * @param isPaid      The status of the order, whether its paid or not. True if paid, false if non-paid.
+     * @param customerId  The unique identifier of the customer associated with the order. 
+     * @param employeeId  The unique identifier of the employee associated with handling the order. 
+     */
+    public Order(int orderId, boolean pickUpStatus, LocalDateTime pickupDate,
+                 boolean isPaid, Customer customer, Employee employee) {
+        this.orderId = -1; // Hardcoding -1 to differentiate between non persisted (-1) orders and persisted orders (non negative, non null id)
+        this.date = LocalDateTime.now();
+        this.pickUpStatus = pickUpStatus; // TODO False from creation, manually 
+        this.pickupDate = pickupDate;
+        this.isPaid = isPaid;
+        this.customer = customer;
+        this.employee = employee;
+        this.isConfirmed = false;
+        orderLines = new ArrayList<OrderLine>();
+    }
+    
+    /**
+	 * Returns the current time in the specified format.
+	 * FIXME Separate class?
+>>>>>>> master
 	 * @return the formatted current time
 	 */
 	private String formatTime(Date date) {
@@ -195,6 +237,7 @@ public class Order {
 		this.customer = c;
 	}
 
+<<<<<<< HEAD
 	/**
 	 * Gets the unique identifier of the employee associated with handling the
 	 * order.
@@ -204,6 +247,32 @@ public class Order {
 	public Employee getEmployee() {
 		return employee;
 	}
+=======
+    /**
+     * Sets the unique identifier of the employee associated with handling the order.
+     *
+     * @param The employee creating the order
+     */
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+    /**
+     * Adds orderLines to Order
+     * @param the orderLine to be added
+     */
+    public void addOrderLine(OrderLine ol) {
+    	orderLines.add(ol);
+    }
+    
+    public int getSizeOfOrderLines() {
+    	return orderLines.size();
+    }
+    
+    public ArrayList<OrderLine> getOrderLines() {
+    	return orderLines;
+    }
+  
+>>>>>>> master
 
 	/**
 	 * Sets the unique identifier of the employee associated with handling the

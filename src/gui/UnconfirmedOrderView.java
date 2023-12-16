@@ -22,7 +22,8 @@ import dataaccesslayer.OrderDB;
 import model.Order;
 
 /**
- * @author Rasmus Larsen, Viktor Dorph, Johannes Jensen, Malik Agerbæk, Shemon Chowdhury 
+ * @author Rasmus Larsen, Viktor Dorph, Johannes Jensen, Malik Agerbæk, Shemon
+ *         Chowdhury
  *
  */
 public class UnconfirmedOrderView extends JFrame {
@@ -34,7 +35,8 @@ public class UnconfirmedOrderView extends JFrame {
 
 	/**
 	 * Creates and sets the view
-	 * @throws DataAccessException 
+	 * 
+	 * @throws DataAccessException
 	 */
 	public UnconfirmedOrderView() throws DataAccessException {
 		personController = new PersonController();
@@ -42,15 +44,15 @@ public class UnconfirmedOrderView extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Bekræft ordrer");
 		setBounds(100, 100, 500, 300);
-		
+
 		JPanel panel = new JPanel();
 		getContentPane().add(panel, BorderLayout.CENTER);
 		panel.setLayout(null);
-		
+
 		JLabel lblUnconfirmedOrders = new JLabel("Ordrer til godkendelse");
 		lblUnconfirmedOrders.setBounds(0, 0, 331, 22);
 		panel.add(lblUnconfirmedOrders);
-		
+
 		JButton btnBackToMenu = new JButton("Tilbage");
 		btnBackToMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -59,7 +61,7 @@ public class UnconfirmedOrderView extends JFrame {
 		});
 		btnBackToMenu.setBounds(331, 23, 103, 23);
 		panel.add(btnBackToMenu);
-		
+
 		JButton btnConfirmOrder = new JButton("Godkend ordre");
 		btnConfirmOrder.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -68,7 +70,7 @@ public class UnconfirmedOrderView extends JFrame {
 		});
 		btnConfirmOrder.setBounds(331, 238, 103, 23);
 		panel.add(btnConfirmOrder);
-		
+
 		JButton btnRejectOrder = new JButton("Afvis ordre");
 		btnRejectOrder.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -77,45 +79,46 @@ public class UnconfirmedOrderView extends JFrame {
 		});
 		btnRejectOrder.setBounds(331, 214, 103, 23);
 		panel.add(btnRejectOrder);
-		
+
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(0, 21, 331, 240);
 		panel.add(scrollPane);
-		
+
 		tableUnconfirmedOrders = new JTable();
 		tableUnconfirmedOrders.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		unconfirmedOrderTableModel = new UnconfirmedOrderTableModel();
-		// Creating Array for setData
+		// Creating Array for setData to tableModel
 		ArrayList<Order> orders = getOrdersFromDB();
 		// Get all order ids from the list above
 		ArrayList<Integer> orderIds = new ArrayList<Integer>();
 		orderIds = getOrderIDsFromList(orders);
-		//LOOP CALL TO PERSONCONTROLLER
-		// Use list to find customers in PersonController
-		
+		// Loop call to PersonController with orderIds
+		// Use list to find customers in PersonController with PersonDB
+
 		// Create customers and add to order
-		
-		// Check table design 
+
+		// Check table design
 		unconfirmedOrderTableModel.setData(orders);
 		tableUnconfirmedOrders.setModel(unconfirmedOrderTableModel);
 		scrollPane.setViewportView(tableUnconfirmedOrders);
-		//TODO Thread for update table
+
+		//FIXME Thread for update table
 		// Setting up a thread for updating
-//		exec = Executors.newSingleThreadScheduledExecutor();
-//		exec.scheduleAtFixedRate(new Runnable() {
-//		    @Override
-//		    public void run() {
-//		        TableModel.setData(getDataMethod());
-//		        TableModel.revalidate();
-//		        TableModel.repaint();
-//		    }
-//		}, 0, 5, TimeUnit.SECONDS);
-//		import java.util.concurrent.Executors;
-//		import java.util.concurrent.ScheduledExecutorService;
-//		import java.util.concurrent.TimeUnit;
-		
-		// TODO Auto-generated constructor stub
+		//		exec = Executors.newSingleThreadScheduledExecutor();
+		//		exec.scheduleAtFixedRate(new Runnable() {
+		//		    @Override
+		//		    public void run() {
+		//		        TableModel.setData(getDataMethod());
+		//		        TableModel.revalidate();
+		//		        TableModel.repaint();
+		//		    }
+		//		}, 0, 5, TimeUnit.SECONDS);
+		//		import java.util.concurrent.Executors;
+		//		import java.util.concurrent.ScheduledExecutorService;
+		//		import java.util.concurrent.TimeUnit;
+
 	}
+
 	/**
 	 * The selected order will be rejected on click
 	 */
@@ -123,30 +126,33 @@ public class UnconfirmedOrderView extends JFrame {
 		// TODO Show active order
 
 		// The active order is removed
-		
+
 		// GUI updates to show new state
-		
+
 	}
+
 	/**
 	 * The selected order will be confirmed on click
 	 */
 	protected void confirmOrderClicked() {
 		// TODO Show active order
-		
+
 		// The active is order is created using the CreateOrder function
-		
+
 		// GUI updates to show new state
-		
+
 	}
+
 	/**
 	 * Go back to menu from OrderView
 	 */
 	private void backToMenuClicked() {
-		
+
 		OrderView orderView = new OrderView();
-			orderView.run(orderView);
-			clearWindow();
+		orderView.run(orderView);
+		clearWindow();
 	}
+
 	/**
 	 * Close current window
 	 */
@@ -154,21 +160,23 @@ public class UnconfirmedOrderView extends JFrame {
 		this.setVisible(false);
 		this.dispose();
 	}
-	
+
 	public void display() {
-		
+
 	}
+
 	public ArrayList<Order> getOrdersFromDB() {
-		return orderController.getOrdersWithBoolean(false);
-		
+		return orderController.getUnconfirmedOrders();
+
 	}
+
 	public ArrayList<Integer> getOrderIDsFromList(ArrayList<Order> orders) {
 		ArrayList<Integer> orderIds = new ArrayList<Integer>();
-		for(Order o : orders) {
-			int orderId = o.getOrderId();	
+		for (Order o : orders) {
+			int orderId = o.getOrderId();
 			orderIds.add(orderId);
-			}
-		
+		}
+
 		return orderIds;
 	}
- }
+}

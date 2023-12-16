@@ -89,8 +89,9 @@ public class OrderDB implements OrderDBIF {
 		if (booleanCheckPaid == 1) {
 			isPaid = true;
 		}
+		LocalDateTime date = getLocalDateFromSQLDate(rs.getDate("date"));
 		LocalDateTime pickupDate = getLocalDateFromSQLDate(rs.getDate("pickupDate"));		
-		Order order = new Order(pickUpStatus, pickupDate, isPaid, customer, employee);
+		Order order = new Order(date, pickUpStatus, pickupDate, isPaid, customer, employee);
 		order.setOrderId(rs.getInt("order_id"));
 		return order;
 	}
@@ -168,7 +169,7 @@ public class OrderDB implements OrderDBIF {
 	}
 
 	private int insertOrder(Order newOrder) throws SQLException {
-		insertOrder.setDate(1, java.sql.Date.valueOf(newOrder.getDate().toLocalDate()));
+		insertOrder.setDate(1, java.sql.Date.valueOf(LocalDateTime.now().toLocalDate()));
 		System.out.println(java.sql.Date.valueOf(newOrder.getDate().toLocalDate()));
 		insertOrder.setInt(2, convertBooleanToInt(newOrder.isPickUpStatus()));
 		insertOrder.setDate(3, java.sql.Date.valueOf(newOrder.getDate().toLocalDate()));

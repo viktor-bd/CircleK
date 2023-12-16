@@ -5,10 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import model.Order;
 import model.OrderLine;
 import model.Customer;
@@ -20,9 +18,9 @@ import control.PersonController;
 
 import dataaccesslayer.DataAccessException;
 import dataaccesslayer.PersonDB;
+import dataaccesslayer.OrderDB;
 
 public class TestOrderCreation {
-
 	/*
 	 * This test is testing the phone number "98765430" against the database to find
 	 * a customer with the given phone number. A successful test result is achieved
@@ -34,11 +32,11 @@ public class TestOrderCreation {
 	public void givenValidPhoneNumberWillReturnCustomer() throws DataAccessException {
 		// Arrange
 		PersonDB personDB = new PersonDB();
-		PersonController personController = new PersonController(personDB);
+		PersonController personController = new PersonController();
 		String validPhoneNumber = "98765430";
 		// Act
 		Customer foundCustomer = personController.lookUpCustomerInDB(validPhoneNumber);
-		
+
 		// Assert
 		assertEquals(foundCustomer.getPhoneNumber(), validPhoneNumber);
 	}
@@ -48,7 +46,7 @@ public class TestOrderCreation {
 	public void givenInvalidCustomIDWillReturnError() {
 
 	}
-	
+
 	@Test
 	@DisplayName("S01_TC_01: Given valid inputs in order creation will return success")
 	public void givenValidInputInOrderWillReturnSuccess() throws DataAccessException, SQLException {
@@ -58,7 +56,7 @@ public class TestOrderCreation {
 		Product testProduct1 = new Product(1001, "Skinke/Ost Sandwich", 45, "Sandwich");
 		Product testProduct2 = new Product(1004, "Smurt Rundstykke m/ ost", 22, "rundstykke");
 		PersonDB personDB = new PersonDB();
-		PersonController personController = new PersonController(personDB);
+		PersonController personController = new PersonController();
 		String validPhoneNumber = "98765430";
 		Employee testEmployee = new Employee(1);
 		Order newOrder = orderController.createOrder(0, false, testDatePickUpDate, false, null, null);
@@ -70,9 +68,9 @@ public class TestOrderCreation {
 		orderController.addCustomerToOrder(foundCustomer, newOrder);
 		orderController.testaddEmployeeToOrder(testEmployee, newOrder);
 
-		// Act	
+		// Act
 		Order foundOrder = orderController.saveOrder(newOrder);
-		
+
 		// Assert
 		assertTrue(foundOrder.getOrderId() > 0);
 	}

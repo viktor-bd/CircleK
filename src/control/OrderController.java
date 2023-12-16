@@ -3,9 +3,9 @@ package control;
 import dataaccesslayer.DataAccessException;
 import dataaccesslayer.OrderDB;
 import model.*;
-
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class OrderController {
 
@@ -46,6 +46,22 @@ public class OrderController {
 
 	public void testaddEmployeeToOrder(Employee testEmployee, Order newOrder) {
 		newOrder.setEmployee(testEmployee);
+	}
+
+	/**
+	 * Returns orders from DB that is either confirmed or not
+	 */
+	private ArrayList<Order> getOrdersWithBoolean(boolean isConfirmed) {
+		ArrayList<Order> orders = orderDB.getOrdersWithBoolean(isConfirmed);
+		return orders;
+	}
+
+	public ArrayList<Order> getConfirmedOrders() {
+		return getOrdersWithBoolean(true);
+	}
+
+	public ArrayList<Order> getUnconfirmedOrders() {
+		return getOrdersWithBoolean(false);
 	}
 
 }

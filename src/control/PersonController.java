@@ -15,11 +15,12 @@ public class PersonController {
 	private PersonDB personDB;
 
 	/**
+	 * @throws DataAccessException 
 	 * 
 	 */
-	public PersonController(PersonDB personDB) {
+	public PersonController() throws DataAccessException {
 		// TODO Auto-generated constructor stub
-		this.personDB = personDB;
+		this.personDB = new PersonDB();
 	}
 
 	public Customer lookUpCustomerInDB(String validPhoneNumber) throws DataAccessException {
@@ -27,7 +28,11 @@ public class PersonController {
 		Customer customerFound = personDB.lookUpCustomerInDB(validPhoneNumber);
 		return customerFound;
 	}
-
+	public Customer findCustomerByCustomerId(int customerId) {
+		Customer c = null;
+		Customer customer = personDB.findCustomerById(customerId);
+		return c;
+	}
 	
 
 }

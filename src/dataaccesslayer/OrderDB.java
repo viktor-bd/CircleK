@@ -1,22 +1,28 @@
 package dataaccesslayer;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
+import model.Customer;
+import model.Employee;
+import java.sql.Statement;
 import model.Order;
 import model.OrderLine;
 
 public class OrderDB implements OrderDBIF {
-	private Connection connection;
 	private static final String insertOrderQuery = "INSERT INTO [Order] (date, pickUpStatus, pickupDate, isPaid, isConfirmed, customer_id, employee_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	private static final String insertOrderLineQuery = "INSERT INTO OrderLine (quantity, sku) VALUES (?, ?)";
 	private static final String insertOrderOrderLineQuery = "INSERT INTO Order_OrderLine (order_id, orderline_id) VALUES (?, ?)";
 	private PreparedStatement insertOrder;
 	private PreparedStatement insertOrderLine;
 	private PreparedStatement insertOrderOrderLine;
+	private Connection connection;
 
 	public OrderDB() throws DataAccessException {
 		try {
@@ -27,6 +33,72 @@ public class OrderDB implements OrderDBIF {
 		} catch (SQLException e) {
 			throw new DataAccessException(e, "Could not prepare statement");
 		}
+	}
+
+	/**
+	 * Should return the orders from the database that is either confirmed or not
+	 * 
+	 * @param isConfirmed
+	 */
+
+	public ArrayList<Order> getOrdersWithBoolean(boolean isConfirmed) {
+		ArrayList<Order> orders = new ArrayList<Order>();
+		ResultSet rs;
+		int bit = 0;
+		if (isConfirmed) {
+			bit = 1;
+		}
+		try {
+			// Construct the SQL query dynamically based on the isConfirmed parameter
+			String selectQuery = "SELECT * FROM [dbo].[Order] WHERE isConfirmed = ?";
+			PreparedStatement selectAll = DBConnection.getInstance().getDBcon().prepareStatement(selectQuery);
+			selectAll.setInt(1, bit);
+
+			// Execute the query
+			rs = selectAll.executeQuery();
+
+			// Process the result set and populate the list of orders
+			while (rs.next()) {
+				Order order = buildObject(rs);
+				// Add to list
+				orders.add(order);
+			}
+
+			// Close the result set
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace(); // Handle the exception appropriately
+		}
+
+		return orders;
+	}
+
+	/*
+	 * Builds the Order Object from the ResultSet
+	 */
+	private Order buildObject(ResultSet rs) throws SQLException {
+		// placeholder Customer and Employee
+		Customer customer = null;
+		Employee employee = null;
+		// Converting bit to boolean for PickUpStatus
+		int booleanCheck = rs.getInt("pickUpStatus");
+		boolean pickUpStatus = false;
+		if (booleanCheck == 1) {
+			pickUpStatus = true;
+		}
+		int booleanCheckPaid = rs.getInt("isPaid");
+		boolean isPaid = false;
+		if (booleanCheckPaid == 1) {
+			isPaid = true;
+		}
+		LocalDateTime pickupDate = getLocalDateFromSQLDate(rs.getDate("pickupDate"));
+		System.out.println(pickupDate);
+		Order order = new Order(pickUpStatus, pickupDate, isPaid, customer, employee);
+		System.out.println(order.getPickupDate());
+		order.setOrderId(rs.getInt("order_id"));
+		// rs.getInt("customer_id"),
+		// rs.getInt("employee_id")),
+		return order;
 	}
 
 	public void saveOrder(Order newOrder) throws SQLException {
@@ -124,11 +196,20 @@ public class OrderDB implements OrderDBIF {
 		}
 	}
 
+	private LocalDateTime getLocalDateFromSQLDate(Date date) {
+		LocalDateTime localDateTime = null;
+		if (date != null) {
+			Instant instant = date.toLocalDate().atStartOfDay(ZoneOffset.UTC).toInstant();
+			localDateTime = LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
+		}
+		return localDateTime;
+	}
+
 	public void rejectOrder(Order rejectedOrder) {
-		
+
 	}
 
 	public void confirmOrder(Order confirmedOrder) {
-		
+
 	}
 }

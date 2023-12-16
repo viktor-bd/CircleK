@@ -6,16 +6,19 @@ package gui;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
-import javax.swing.JTextArea;
-import java.awt.GridBagConstraints;
-import javax.swing.BoxLayout;
+import javax.swing.JLabel;
 import javax.swing.JButton;
-import javax.swing.JScrollBar;
-import java.awt.ScrollPane;
+import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+
+import control.OrderController;
+import dataaccesslayer.DataAccessException;
+import dataaccesslayer.OrderDB;
+import model.Order;
 
 /**
  * @author Rasmus Larsen, Viktor Dorph, Johannes Jensen, Malik Agerbæk, Shemon
@@ -23,11 +26,17 @@ import java.awt.event.ActionEvent;
  *
  */
 public class ConfirmedOrdersView extends JFrame {
+	private JTable tableConfirmed;
+	private ConfirmedOrderTableModel confirmedOrderTableModel;
+	private OrderController orderController;
+
 
 	/**
+	 * @throws DataAccessException 
 	 * 
 	 */
-	public ConfirmedOrdersView() {
+	public ConfirmedOrdersView() throws DataAccessException {
+		orderController = new OrderController();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Bekræftede ordrer");
 		setBounds(100, 100, 500, 300);
@@ -45,10 +54,6 @@ public class ConfirmedOrdersView extends JFrame {
 		btnReadyForPickup.setBounds(326, 227, 98, 23);
 		panel.add(btnReadyForPickup);
 
-		ScrollPane scrollPane = new ScrollPane();
-		scrollPane.setBounds(10, 10, 297, 241);
-		panel.add(scrollPane);
-
 		JButton btnBackToMenu = new JButton("Tilbage");
 		btnBackToMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -57,6 +62,17 @@ public class ConfirmedOrdersView extends JFrame {
 		});
 		btnBackToMenu.setBounds(321, 11, 103, 23);
 		panel.add(btnBackToMenu);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 26, 296, 224);
+		panel.add(scrollPane);
+		
+		tableConfirmed = new JTable();
+		tableConfirmed.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		confirmedOrderTableModel = new ConfirmedOrderTableModel();
+		confirmedOrderTableModel.setData(getOrdersFromDB());
+		tableConfirmed.setModel(confirmedOrderTableModel);
+		scrollPane.setViewportView(tableConfirmed);
 	}
 
 	/**
@@ -85,4 +101,13 @@ public class ConfirmedOrdersView extends JFrame {
 		this.setVisible(false);
 		this.dispose();
 	}
+	
+	public void display() {
+		
+	}
+	
+	public ArrayList<Order> getOrdersFromDB() {
+		return orderController.getConfirmedOrders();
+	}
+	
 }

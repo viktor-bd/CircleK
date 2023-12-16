@@ -24,11 +24,13 @@ public class PersonController {
 	}
 
 	public Customer lookUpCustomerInDB(String validPhoneNumber) throws DataAccessException {
-		// TODO Auto-generated method stub
-		Customer customerFound = personDB.lookUpCustomerInDB(validPhoneNumber);
-		return customerFound;
+		return personDB.lookUpCustomerInDBWithPhoneNumber(validPhoneNumber);
+
 	}
 	public Customer findCustomerByCustomerId(int customerId) {
+		return personDB.findCustomerWithCustomerId(customerId);
+	}
+
 	public Customer getCustomerFromOrderId(int orderId) throws SQLException {
 		return personDB.getCustomerWithOrderId(orderId);
 	}

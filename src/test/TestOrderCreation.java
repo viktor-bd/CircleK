@@ -35,9 +35,12 @@ public class TestOrderCreation {
 		foundOrder.setEmployee(foundEmployee);
 		System.out.println(foundEmployee.getFirstName());
 		System.out.println(foundCustomer.getFirstName());
-		// Act
 		//foundOrder.setIsConfirmed(true);
+		
+		// Act
+		orderController.updateOrderToConfirmed(foundOrder);
 		// Assert
+		// 
 	}
 	
 	/*

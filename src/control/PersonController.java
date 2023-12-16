@@ -3,9 +3,12 @@
  */
 package control;
 
+import java.sql.SQLException;
+
 import dataaccesslayer.DataAccessException;
 import dataaccesslayer.PersonDB;
 import model.Customer;
+import model.Employee;
 
 /**
  * @author 

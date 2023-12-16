@@ -55,10 +55,10 @@ public class Order {
      * @param customer
      * @param employee
      */
-    public Order(boolean pickUpStatus, LocalDateTime pickupDate,
+    public Order(LocalDateTime date, boolean pickUpStatus, LocalDateTime pickupDate,
             boolean isPaid, Customer customer, Employee employee) {
    this.orderId = -1; // Hardcoding -1 to differentiate between non persisted (-1) orders and persisted orders (non negative, non null id)
-   this.date = LocalDateTime.now();
+   this.date = date;
    this.pickUpStatus = pickUpStatus; // TODO False from creation, manually 
    this.pickupDate = pickupDate;
    this.isPaid = isPaid;

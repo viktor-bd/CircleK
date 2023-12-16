@@ -107,7 +107,7 @@ public class ConfirmedOrdersView extends JFrame {
 	}
 	
 	public ArrayList<Order> getOrdersFromDB() {
-		return orderController.getOrdersWithBoolean(true);
+		return orderController.getConfirmedOrders();
 	}
 	
 }

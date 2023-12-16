@@ -21,7 +21,6 @@ public class OrderController {
 		return newOrder;
 	}
 
-
 	public Order saveOrder(Order order) throws SQLException {
 		orderDB.saveOrder(order);
 		return order;
@@ -56,11 +55,13 @@ public class OrderController {
 		ArrayList<Order> orders = orderDB.getOrdersWithBoolean(isConfirmed);
 		return orders;
 	}
+
 	public ArrayList<Order> getConfirmedOrders() {
 		return getOrdersWithBoolean(true);
 	}
+
 	public ArrayList<Order> getUnconfirmedOrders() {
 		return getOrdersWithBoolean(false);
 	}
-	
+
 }

@@ -21,7 +21,6 @@ public class PersonDB implements PersonDBIF {
 			findCustomerByPhoneNumber = DBConnection.getInstance().getDBcon()
 					.prepareStatement(findCustomerByPhoneNumberQuery);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			throw new DataAccessException(e, "Could not prepare statement");
 		}
 	}
@@ -54,11 +53,8 @@ public class PersonDB implements PersonDBIF {
 		}
 		customer.setIsBusiness(isBusiness);
 
-		
 		return customer;
-
 	}
-
 	/**
 	 * @param customerId
 	 * @return
@@ -67,5 +63,4 @@ public class PersonDB implements PersonDBIF {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 }

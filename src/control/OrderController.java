@@ -1,10 +1,9 @@
 package control;
 
-import dataaccesslayer.DBConnection;
 import dataaccesslayer.DataAccessException;
 import dataaccesslayer.OrderDB;
 import model.*;
-
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -22,8 +21,9 @@ public class OrderController {
 		return newOrder;
 	}
 
-	public Order saveOrder(Order order) {
-		orderDB.saveOrder(order); // Call orderDAL to save the order
+
+	public Order saveOrder(Order order) throws SQLException {
+		orderDB.saveOrder(order);
 		return order;
 	}
 
@@ -37,12 +37,16 @@ public class OrderController {
 		return orderLine;
 	}
 
-	// TODO orderID skal hentes fra DB via GUI kald til CTRL som går til DAL
 	public void confirmOrder(Order order) {
-		// Logic for confirming an order
 		order.setPickUpStatus(true);
-		// Add logic to update the order directly in the database or perform necessary
-		// operations
+	}
+
+	public void addCustomerToOrder(Customer customer, Order order) {
+		order.setCustomer(customer);
+	}
+
+	public void testaddEmployeeToOrder(Employee testEmployee, Order newOrder) {
+		newOrder.setEmployee(testEmployee);
 	}
 
 	/**

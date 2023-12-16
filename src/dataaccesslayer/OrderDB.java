@@ -77,10 +77,8 @@ public class OrderDB implements OrderDBIF {
 	 * Builds the Order Object from the ResultSet
 	 */
 	private Order buildObject(ResultSet rs) throws SQLException {
-		// placeholder Customer and Employee
 		Customer customer = null;
 		Employee employee = null;
-		// Converting bit to boolean for PickUpStatus
 		int booleanCheck = rs.getInt("pickUpStatus");
 		boolean pickUpStatus = false;
 		if (booleanCheck == 1) {
@@ -91,16 +89,12 @@ public class OrderDB implements OrderDBIF {
 		if (booleanCheckPaid == 1) {
 			isPaid = true;
 		}
-		LocalDateTime pickupDate = getLocalDateFromSQLDate(rs.getDate("pickupDate"));
-		System.out.println(pickupDate);
+		LocalDateTime pickupDate = getLocalDateFromSQLDate(rs.getDate("pickupDate"));		
 		Order order = new Order(pickUpStatus, pickupDate, isPaid, customer, employee);
-		System.out.println(order.getPickupDate());
 		order.setOrderId(rs.getInt("order_id"));
-		// rs.getInt("customer_id"),
-		// rs.getInt("employee_id")),
 		return order;
 	}
-
+	
 	public void saveOrder(Order newOrder) throws SQLException {
 		try {
 			DBConnection.startTransaction();
@@ -211,5 +205,31 @@ public class OrderDB implements OrderDBIF {
 
 	public void confirmOrder(Order confirmedOrder) {
 
+	}
+	public Order getOrderWithOrderId(int orderId) {
+		Order foundOrder = null;
+		ResultSet rs;
+			try {
+			// Construct the SQL query dynamically based on the isConfirmed parameter
+			//String selectQuery = "";
+				 String selectOrderQuery = "SELECT * FROM [dbo].[Order] WHERE order_id = ?";
+			
+				PreparedStatement selectAll = connection.prepareStatement(selectOrderQuery);
+			selectAll.setInt(1, orderId);
+
+			// Execute the query
+			rs = selectAll.executeQuery();
+
+			// Process the result set and populate the list of orders
+			while (rs.next()) {
+				foundOrder = buildObject(rs);							
+			}
+			// Close the result set
+			rs.close();
+			
+		} catch (SQLException e) {
+			e.printStackTrace(); // Handle the exception appropriately
+		}
+		return foundOrder;
 	}
 }

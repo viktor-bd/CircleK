@@ -10,9 +10,11 @@ import java.util.ArrayList;
 public class OrderController {
 
 	private OrderDB orderDB;
+	private PersonController personController;
 
 	public OrderController() throws DataAccessException {
 		this.orderDB = new OrderDB();
+		this.personController = new PersonController();
 	}
 
 	public Order createOrder(int orderID, boolean pickUpStatus, LocalDateTime pickupDate, boolean isPaid,
@@ -63,5 +65,25 @@ public class OrderController {
 	public ArrayList<Order> getUnconfirmedOrders() {
 		return getOrdersWithBoolean(false);
 	}
+	/**
+	 * 
+	 * @param orderId integer
+	 * @return a single order from DB based on orderId
+	 */
+	public Order getUnconfirmedOrder(int orderId) {
+		
+		return orderDB.getOrderWithOrderId(orderId);
+	}
+
+	public Customer getCustomerFromOrderId(int orderId) throws SQLException {
+		return personController.getCustomerFromOrderId(orderId);
+		
+	}
+
+	public Employee getEmployeeFromOrderId(int orderId) throws SQLException {
+		return personController.getEmployeeFromOrderId(orderId);
+	}
+
+
 
 }

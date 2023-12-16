@@ -3,9 +3,12 @@
  */
 package control;
 
+import java.sql.SQLException;
+
 import dataaccesslayer.DataAccessException;
 import dataaccesslayer.PersonDB;
 import model.Customer;
+import model.Employee;
 
 /**
  * @author 
@@ -24,14 +27,19 @@ public class PersonController {
 	}
 
 	public Customer lookUpCustomerInDB(String validPhoneNumber) throws DataAccessException {
-		// TODO Auto-generated method stub
-		Customer customerFound = personDB.lookUpCustomerInDB(validPhoneNumber);
-		return customerFound;
+		return personDB.lookUpCustomerInDBWithPhoneNumber(validPhoneNumber);
+
 	}
 	public Customer findCustomerByCustomerId(int customerId) {
-		Customer c = null;
-		Customer customer = personDB.findCustomerById(customerId);
-		return c;
+		return personDB.findCustomerWithCustomerId(customerId);
+	}
+
+	public Customer getCustomerFromOrderId(int orderId) throws SQLException {
+		return personDB.getCustomerWithOrderId(orderId);
+	}
+
+	public Employee getEmployeeFromOrderId(int orderId) throws SQLException {
+		return personDB.getEmployeeWithOrderId(orderId);
 	}
 	
 

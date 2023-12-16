@@ -84,6 +84,7 @@ public class OrderController {
 		return personController.getEmployeeFromOrderId(orderId);
 	}
 
-
-
+	public void updateOrderToConfirmed(Order foundOrder) {
+		foundOrder.checkOrder();		
+	}
 }

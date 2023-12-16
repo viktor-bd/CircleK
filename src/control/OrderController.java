@@ -63,5 +63,25 @@ public class OrderController {
 	public ArrayList<Order> getUnconfirmedOrders() {
 		return getOrdersWithBoolean(false);
 	}
+	/**
+	 * 
+	 * @param orderId integer
+	 * @return a single order from DB based on orderId
+	 */
+	public Order getUnconfirmedOrder(int orderId) {
+		
+		return orderDB.getOrderWithOrderId(orderId);
+	}
+
+	public Customer getCustomerFromOrderId(int orderId) throws SQLException {
+		return personController.getCustomerFromOrderId(orderId);
+		
+	}
+
+	public Employee getEmployeeFromOrderId(int orderId) throws SQLException {
+		return personController.getEmployeeFromOrderId(orderId);
+	}
+
+
 
 }

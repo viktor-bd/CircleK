@@ -212,4 +212,30 @@ public class OrderDB implements OrderDBIF {
 	public void confirmOrder(Order confirmedOrder) {
 
 	}
+	public Order getOrderWithOrderId(int orderId) {
+		Order foundOrder = null;
+		ResultSet rs;
+			try {
+			// Construct the SQL query dynamically based on the isConfirmed parameter
+			//String selectQuery = "";
+				 String selectOrderQuery = "SELECT * FROM [dbo].[Order] WHERE order_id = ?";
+			
+				PreparedStatement selectAll = connection.prepareStatement(selectOrderQuery);
+			selectAll.setInt(1, orderId);
+
+			// Execute the query
+			rs = selectAll.executeQuery();
+
+			// Process the result set and populate the list of orders
+			while (rs.next()) {
+				foundOrder = buildObject(rs);							
+			}
+			// Close the result set
+			rs.close();
+			
+		} catch (SQLException e) {
+			e.printStackTrace(); // Handle the exception appropriately
+		}
+		return foundOrder;
+	}
 }

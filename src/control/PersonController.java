@@ -29,9 +29,12 @@ public class PersonController {
 		return customerFound;
 	}
 	public Customer findCustomerByCustomerId(int customerId) {
-		Customer c = null;
-		Customer customer = personDB.findCustomerById(customerId);
-		return c;
+	public Customer getCustomerFromOrderId(int orderId) throws SQLException {
+		return personDB.getCustomerWithOrderId(orderId);
+	}
+
+	public Employee getEmployeeFromOrderId(int orderId) throws SQLException {
+		return personDB.getEmployeeWithOrderId(orderId);
 	}
 	
 

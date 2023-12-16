@@ -77,10 +77,8 @@ public class OrderDB implements OrderDBIF {
 	 * Builds the Order Object from the ResultSet
 	 */
 	private Order buildObject(ResultSet rs) throws SQLException {
-		// placeholder Customer and Employee
 		Customer customer = null;
 		Employee employee = null;
-		// Converting bit to boolean for PickUpStatus
 		int booleanCheck = rs.getInt("pickUpStatus");
 		boolean pickUpStatus = false;
 		if (booleanCheck == 1) {
@@ -91,16 +89,12 @@ public class OrderDB implements OrderDBIF {
 		if (booleanCheckPaid == 1) {
 			isPaid = true;
 		}
-		LocalDateTime pickupDate = getLocalDateFromSQLDate(rs.getDate("pickupDate"));
-		System.out.println(pickupDate);
+		LocalDateTime pickupDate = getLocalDateFromSQLDate(rs.getDate("pickupDate"));		
 		Order order = new Order(pickUpStatus, pickupDate, isPaid, customer, employee);
-		System.out.println(order.getPickupDate());
 		order.setOrderId(rs.getInt("order_id"));
-		// rs.getInt("customer_id"),
-		// rs.getInt("employee_id")),
 		return order;
 	}
-
+	
 	public void saveOrder(Order newOrder) throws SQLException {
 		try {
 			DBConnection.startTransaction();

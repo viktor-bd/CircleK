@@ -20,7 +20,7 @@ public class PersonDB implements PersonDBIF {
 	private PreparedStatement findEmployeeByOrderId;
 	private PreparedStatement findCustomerByOrderId;
 
-	public PersonDB() throws DataAccessException {
+	public PersonDB() throws DataAccessException {		
 		try {
 			connection = DBConnection.getInstance().getDBcon();
 			findCustomerByPhoneNumber = connection.prepareStatement(findCustomerByPhoneNumberQuery);

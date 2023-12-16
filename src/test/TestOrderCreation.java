@@ -49,10 +49,10 @@ public class TestOrderCreation {
 	@Test
 	@DisplayName("S04_TC_01: Given valid phone number of existing customer, return found customer")
 	public void givenValidPhoneNumberWillReturnCustomer() throws DataAccessException {
-		// Arrange
-		PersonDB personDB = new PersonDB();
+		// Arrange		
 		PersonController personController = new PersonController();
 		String validPhoneNumber = "98765430";
+		
 		// Act
 		Customer foundCustomer = personController.lookUpCustomerInDB(validPhoneNumber);
 

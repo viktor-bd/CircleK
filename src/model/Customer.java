@@ -9,7 +9,7 @@ package model;
  *
  */
 public class Customer extends Person {
-	private int customerId; // TODO Same as employeeID, check whether its needed to duplicate to
+	private int customerId; 
 							// differentiate: Fix constructor if wanted
 	private Boolean isBusiness; // Allow null, 1 for business, 0 for private
 

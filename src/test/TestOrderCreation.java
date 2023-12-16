@@ -74,7 +74,6 @@ public class TestOrderCreation {
 		OrderController orderController = new OrderController();
 		Product testProduct1 = new Product(1001, "Skinke/Ost Sandwich", 45, "Sandwich");
 		Product testProduct2 = new Product(1004, "Smurt Rundstykke m/ ost", 22, "rundstykke");
-		PersonDB personDB = new PersonDB();
 		PersonController personController = new PersonController();
 		String validPhoneNumber = "98765430";
 		Employee testEmployee = new Employee(1);

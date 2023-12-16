@@ -31,14 +31,14 @@ public class PersonDB implements PersonDBIF {
 		}
 	}
 
-	public Customer lookUpCustomerInDB(String validPhoneNumber) throws DataAccessException {
+	public Customer lookUpCustomerInDBWithPhoneNumber(String validPhoneNumber) throws DataAccessException {
 
 		try {
 			findCustomerByPhoneNumber.setString(1, validPhoneNumber);
 			ResultSet resultSet = findCustomerByPhoneNumber.executeQuery();
 			Customer customer = null;
 			if (resultSet.next()) {
-				customer = buildObject(resultSet);
+				customer = buildCustomerObject(resultSet);
 				customer.setPhoneNumber(validPhoneNumber);
 			}
 			return customer;
@@ -58,7 +58,6 @@ public class PersonDB implements PersonDBIF {
 			isBusiness = true;
 		}
 		customer.setIsBusiness(isBusiness);
-
 		return customer;
 	}
 	
@@ -78,7 +77,7 @@ public class PersonDB implements PersonDBIF {
 	 * @param customerId
 	 * @return
 	 */
-	public Customer findCustomerById(int customerId) {
+	public Customer findCustomerWithCustomerId(int customerId) {
 		// TODO Auto-generated method stub
 		return null;
 	}

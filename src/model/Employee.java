@@ -8,13 +8,14 @@ package model;
  *
  */
 public class Employee extends Person {
-    private int employeeId; //TODO CHECK IF WE NEED TO DUPLICATE PERSONID TO EMPLOYEE ID
+    private int employeeId; 
     private boolean isManager; // true for manager, false for salesassistent
 
     // Constructor
     public Employee(int personId, String firstName, String lastName, String phoneNumber,
                     String zipcode, String email, String address, boolean isManager) {
         super(personId, firstName, lastName, phoneNumber, zipcode, email, address);
+        this.employeeId = personId;
         this.isManager = isManager;
     }
 

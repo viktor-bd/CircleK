@@ -10,9 +10,11 @@ import java.util.ArrayList;
 public class OrderController {
 
 	private OrderDB orderDB;
+	private PersonController personController;
 
 	public OrderController() throws DataAccessException {
 		this.orderDB = new OrderDB();
+		this.personController = new PersonController();
 	}
 
 	public Order createOrder(int orderID, boolean pickUpStatus, LocalDateTime pickupDate, boolean isPaid,

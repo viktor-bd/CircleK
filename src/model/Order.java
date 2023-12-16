@@ -232,5 +232,25 @@ public class Order {
 	public void setIsConfirmed(boolean confirmed) {
 		this.isConfirmed = confirmed;
 	}
+	public boolean checkOrder() {
+		Boolean isPossible = false;
+		if(
+		isCustomerOk() &&
+		isEmployeeOk() &&
+		isDateDifferenceOk()) {
+		isPossible = true;	
+		}
+		return isPossible;		
+	}
+	private boolean isDateDifferenceOk() {
+		return this.date.plusHours(48).isBefore(this.pickupDate);
+	}
 
+	private boolean isEmployeeOk() {
+	    return this.employee != null;
+	}
+
+	private boolean isCustomerOk() {
+	    return this.customer != null;
+	}
 }

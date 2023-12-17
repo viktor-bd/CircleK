@@ -102,37 +102,42 @@ public class OrderDB implements OrderDBIF {
 		LocalDateTime pickupDate = getLocalDateFromSQLDate(rs.getDate("pickupDate"));
 		Order order = new Order(date, pickUpStatus, pickupDate, isPaid, customer, employee);
 		order.setOrderId(rs.getInt("order_id"));
-		order.setIsConfirmed(convertIntToBoolean(rs.getInt("isConfirmed")));		
-		ArrayList<OrderLine> orderLines = buildOrderLineObject(rs, products);
-		for(OrderLine orderLine : orderLines) {
-			order.addOrderLine(orderLine);
-		}
+		order.setIsConfirmed(convertIntToBoolean(rs.getInt("isConfirmed")));
+		ArrayList<OrderLine> orderLines = buildOrderLineObject(order, products);
+		order.addOrderLines(orderLines);
 		return order;
 	}
 
-	
-
-	private ArrayList<OrderLine> buildOrderLineObject(ResultSet rs, List<Product> products) throws SQLException {
+	private ArrayList<OrderLine> buildOrderLineObject(Order order, List<Product> products) throws SQLException {
 		ArrayList<OrderLine> orderLines = new ArrayList<>();
-		while(rs.next()) {
-		int quantity = rs.getInt("quantity");
-		int sku = rs.getInt("sku");
-		
-		Product product = findProductBySku(products, sku);
-		OrderLine orderLine = new OrderLine(quantity, product);
-		orderLines.add(orderLine);
-		
+
+		try {
+			selectOrderOnOrderLine.setInt(1, order.getOrderId());
+			ResultSet rs = selectOrderOnOrderLine.executeQuery();
+
+			while (rs.next()) {
+				int quantity = rs.getInt("quantity");
+				int sku = rs.getInt("sku");
+				int orderLineId = rs.getInt("orderline_id");
+				Product product = searchListOfProductsForProductWithGivenSku(products, sku);
+				OrderLine orderLine = new OrderLine(quantity, product);
+				orderLine.setOrderLineId(orderLineId);
+
+				orderLines.add(orderLine);
+			}
+		} catch (SQLException e) {
+
 		}
-		return null;
+		return orderLines;
 	}
 
-	private Product findProductBySku(List<Product> products, int sku) {
-	    for (Product product : products) {
-	        if (product.getSku() == sku) {
-	            return product;
-	        }
-	    }
-	    return null; 
+	private Product searchListOfProductsForProductWithGivenSku(List<Product> products, int sku) {
+		for (Product product : products) {
+			if (product.getSku() == sku) {
+				return product;
+			}
+		}
+		return null;
 	}
 
 	public void saveOrder(Order newOrder) throws SQLException {
@@ -259,15 +264,7 @@ public class OrderDB implements OrderDBIF {
 		Order foundOrder = null;
 		ResultSet rs;
 		try {
-	        String selectOrderQuery = "SELECT DISTINCT " +
-	                "o.*," +
-	                "ol.orderline_id," +
-	                "ol.quantity," +
-	                "ol.sku " +
-	                "FROM [dbo].[Order] o " +
-	                "JOIN [dbo].[Order_OrderLine] oo ON o.order_id = oo.order_id " +
-	                "JOIN OrderLine ol ON oo.orderline_id = ol.orderline_id " +
-	                "WHERE o.order_id = ?";
+			String selectOrderQuery = "SELECT DISTINCT o.*, ol.orderline_id, ol.quantity, ol.sku FROM [dbo].[Order] o JOIN [dbo].[Order_OrderLine] oo ON o.order_id = oo.order_id JOIN OrderLine ol ON oo.orderline_id = ol.orderline_id WHERE o.order_id = ?";
 			PreparedStatement selectOrder = connection.prepareStatement(selectOrderQuery);
 			selectOrder.setInt(1, orderId);
 			rs = selectOrder.executeQuery();

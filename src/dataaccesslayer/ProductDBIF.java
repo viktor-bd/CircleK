@@ -13,7 +13,6 @@ import model.Product;
  */
 public interface ProductDBIF {
 	List<Product> findAllProducts() throws DataAccessException;
-	
-	Product getProductBySku(int sku) throws DataAccessException;
-	
+	Product getProductBySku(int sku) throws DataAccessException;	
 }
+

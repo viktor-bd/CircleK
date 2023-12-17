@@ -33,14 +33,15 @@ public class TestOrderCreation {
 		Customer foundCustomer = orderController.getCustomerFromOrderId(foundOrder.getOrderId());
 		foundOrder.setCustomer(foundCustomer);
 		Employee foundEmployee = orderController.getEmployeeFromOrderId(foundOrder.getOrderId());
-		foundOrder.setEmployee(foundEmployee);		
-
-		// Act		
-		orderController.updateOrderToConfirmed(foundOrder);		
+		foundOrder.setEmployee(foundEmployee);	
+		
+		// Act
+		orderController.updateOrderToConfirmed(foundOrder);	
 		Order updatedOrder = orderController.getOrderWithOrderId(4);
 				
 		// Assert		
 		assertEquals(true, updatedOrder.isConfirmed());
+
 	}
 	
 	@Test

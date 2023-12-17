@@ -83,6 +83,7 @@ public class ProductDB implements ProductDBIF {
 			e.printStackTrace();
 		}
 		return product;
+
 	}
 
 	public ArrayList<Ingredient> findIngredientByProductSku(int sku) throws DataAccessException {
@@ -119,3 +120,4 @@ public class ProductDB implements ProductDBIF {
 
 	}
 }
+

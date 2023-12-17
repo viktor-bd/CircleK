@@ -4,7 +4,9 @@
 package control;
 
 import java.util.ArrayList;
+
 import java.util.List;
+
 
 import dataaccesslayer.DataAccessException;
 import dataaccesslayer.ProductDB;
@@ -23,10 +25,12 @@ public class ProductController {
 	 */
 	public ProductController() throws DataAccessException {
 		this.productDB = new ProductDB();
+
 	}
 	public ArrayList<Product> findAllProductFromDB() throws DataAccessException {
 		return (ArrayList<Product>) productDB.findAllProducts();
 	}
+
 
 	public List<Product> getProductsBySkuList(List<Integer> skus) throws DataAccessException {
 	    List<Product> products = new ArrayList<>();
@@ -39,6 +43,6 @@ public class ProductController {
 	public Product getProductBySku(int sku) throws DataAccessException {
 	    return productDB.getProductBySku(sku);
 	}
-
-
+  }
 }
+

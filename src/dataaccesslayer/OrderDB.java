@@ -14,6 +14,7 @@ import model.Employee;
 import java.sql.Statement;
 import model.Order;
 import model.OrderLine;
+import model.Product;
 
 public class OrderDB implements OrderDBIF {
 	private static final String insertOrderQuery = "INSERT INTO [Order] (date, pickUpStatus, pickupDate, isPaid, isConfirmed, customer_id, employee_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -62,7 +63,7 @@ public class OrderDB implements OrderDBIF {
 
 			// Process the result set and populate the list of orders
 			while (rs.next()) {
-				Order order = buildObject(rs);
+				Order order = buildObject(rs, null); // intet product sendt med
 				// Add to list
 				orders.add(order);
 			}
@@ -79,7 +80,7 @@ public class OrderDB implements OrderDBIF {
 	/*
 	 * Builds the Order Object from the ResultSet
 	 */
-	private Order buildObject(ResultSet rs) throws SQLException {
+	private Order buildObject(ResultSet rs, Product product) throws SQLException {
 		Customer customer = null;
 		Employee employee = null;
 		int booleanCheck = rs.getInt("pickUpStatus");

@@ -239,25 +239,24 @@ public class OrderDB implements OrderDBIF {
 		Order foundOrder = null;
 		ResultSet rs;
 		try {
-			// Construct the SQL query dynamically based on the isConfirmed parameter
-			// String selectQuery = "";
-			String selectOrderQuery = "SELECT * FROM [dbo].[Order] WHERE order_id = ?";
-
-			PreparedStatement selectAll = connection.prepareStatement(selectOrderQuery);
-			selectAll.setInt(1, orderId);
-
-			// Execute the query
-			rs = selectAll.executeQuery();
-
-			// Process the result set and populate the list of orders
+	        String selectOrderQuery = "SELECT DISTINCT " +
+	                "o.*," +
+	                "ol.orderline_id," +
+	                "ol.quantity," +
+	                "ol.sku " +
+	                "FROM [dbo].[Order] o " +
+	                "JOIN [dbo].[Order_OrderLine] oo ON o.order_id = oo.order_id " +
+	                "JOIN OrderLine ol ON oo.orderline_id = ol.orderline_id " +
+	                "WHERE o.order_id = ?";
+			PreparedStatement selectOrder = connection.prepareStatement(selectOrderQuery);
+			selectOrder.setInt(1, orderId);
+			rs = selectOrder.executeQuery();
 			while (rs.next()) {
 				foundOrder = buildObject(rs);
 			}
-			// Close the result set
 			rs.close();
-
 		} catch (SQLException e) {
-			e.printStackTrace(); // Handle the exception appropriately
+			e.printStackTrace();
 		}
 		return foundOrder;
 	}

@@ -65,26 +65,37 @@ public class OrderController {
 	public ArrayList<Order> getUnconfirmedOrders() {
 		return getOrdersWithBoolean(false);
 	}
+
 	/**
 	 * 
 	 * @param orderId integer
 	 * @return a single order from DB based on orderId
 	 */
-	public Order getUnconfirmedOrder(int orderId) {
-		
+	public Order getOrderWithOrderId(int orderId) {
+
 		return orderDB.getOrderWithOrderId(orderId);
 	}
 
 	public Customer getCustomerFromOrderId(int orderId) throws SQLException {
 		return personController.getCustomerFromOrderId(orderId);
-		
+
 	}
 
 	public Employee getEmployeeFromOrderId(int orderId) throws SQLException {
 		return personController.getEmployeeFromOrderId(orderId);
 	}
 
-	public void updateOrderToConfirmed(Order foundOrder) {
-		foundOrder.checkOrder();		
+	public void updateOrderToConfirmed(Order foundOrder) throws SQLException {
+		if (foundOrder.checkOrder()) {
+			foundOrder.setIsConfirmed(true);
+			insertUpdatedOrder(foundOrder);
+		} else {
+			System.err.println("Ordre kunne ikke godkendes");
+		}
+	}
+
+	public void insertUpdatedOrder(Order foundOrder) throws SQLException {
+		orderDB.insertUpdatedOrder(foundOrder);
+
 	}
 }

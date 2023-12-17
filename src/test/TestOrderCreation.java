@@ -17,32 +17,33 @@ import control.OrderController;
 import control.PersonController;
 
 import dataaccesslayer.DataAccessException;
-import dataaccesslayer.PersonDB;
-import dataaccesslayer.OrderDB;
-// test af commit rebase
+
 public class TestOrderCreation {
-	
+	/*
+	 * This test is testing a valid order and its confirmation process.
+	 * A successful test result is achieved if the order successfully is set to confirmed
+	 * and persisted in the database.
+	 */
 	@Test
 	@DisplayName("S?_TC?: Given order will update order confirmation status")
 	public void givenValidOrderWillSetConfirmedTrueShouldReturnOrder() throws DataAccessException, SQLException {
 		// Arrange
 		OrderController orderController = new OrderController();
-		System.out.println("Get unc order");
-		Order foundOrder = orderController.getUnconfirmedOrder(1);
+		Order foundOrder = orderController.getOrderWithOrderId(4);
 		Customer foundCustomer = orderController.getCustomerFromOrderId(foundOrder.getOrderId());
 		foundOrder.setCustomer(foundCustomer);
 		Employee foundEmployee = orderController.getEmployeeFromOrderId(foundOrder.getOrderId());
-		foundOrder.setEmployee(foundEmployee);
-		System.out.println(foundEmployee.getFirstName());
-		System.out.println(foundCustomer.getFirstName());
-		//foundOrder.setIsConfirmed(true);
+		foundOrder.setEmployee(foundEmployee);	
 		
 		// Act
-		orderController.updateOrderToConfirmed(foundOrder);
-		// Assert
-		// 
+		orderController.updateOrderToConfirmed(foundOrder);	
+		Order updatedOrder = orderController.getOrderWithOrderId(4);
+				
+		// Assert		
+		assertEquals(true, updatedOrder.isConfirmed());
+
 	}
-	
+
 	/*
 	 * This test is testing the phone number "98765430" against the database to find
 	 * a customer with the given phone number. A successful test result is achieved
@@ -52,10 +53,10 @@ public class TestOrderCreation {
 	@Test
 	@DisplayName("S04_TC_01: Given valid phone number of existing customer, return found customer")
 	public void givenValidPhoneNumberWillReturnCustomer() throws DataAccessException {
-		// Arrange		
+		// Arrange
 		PersonController personController = new PersonController();
 		String validPhoneNumber = "98765430";
-		
+
 		// Act
 		Customer foundCustomer = personController.lookUpCustomerInDB(validPhoneNumber);
 

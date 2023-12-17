@@ -19,9 +19,11 @@ public class OrderDB implements OrderDBIF {
 	private static final String insertOrderQuery = "INSERT INTO [Order] (date, pickUpStatus, pickupDate, isPaid, isConfirmed, customer_id, employee_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	private static final String insertOrderLineQuery = "INSERT INTO OrderLine (quantity, sku) VALUES (?, ?)";
 	private static final String insertOrderOrderLineQuery = "INSERT INTO Order_OrderLine (order_id, orderline_id) VALUES (?, ?)";
+	private static final String updateOrderQuery = "UPDATE [Order] SET isConfirmed = 1 WHERE order_id = ?";
 	private PreparedStatement insertOrder;
 	private PreparedStatement insertOrderLine;
 	private PreparedStatement insertOrderOrderLine;
+	private PreparedStatement updateOrder;
 	private Connection connection;
 
 	public OrderDB() throws DataAccessException {
@@ -30,6 +32,7 @@ public class OrderDB implements OrderDBIF {
 			insertOrder = connection.prepareStatement(insertOrderQuery, Statement.RETURN_GENERATED_KEYS);
 			insertOrderLine = connection.prepareStatement(insertOrderLineQuery, Statement.RETURN_GENERATED_KEYS);
 			insertOrderOrderLine = connection.prepareStatement(insertOrderOrderLineQuery);
+			updateOrder = connection.prepareStatement(updateOrderQuery);
 		} catch (SQLException e) {
 			throw new DataAccessException(e, "Could not prepare statement");
 		}
@@ -90,12 +93,13 @@ public class OrderDB implements OrderDBIF {
 			isPaid = true;
 		}
 		LocalDateTime date = getLocalDateFromSQLDate(rs.getDate("date"));
-		LocalDateTime pickupDate = getLocalDateFromSQLDate(rs.getDate("pickupDate"));		
+		LocalDateTime pickupDate = getLocalDateFromSQLDate(rs.getDate("pickupDate"));
 		Order order = new Order(date, pickUpStatus, pickupDate, isPaid, customer, employee);
 		order.setOrderId(rs.getInt("order_id"));
+		order.setIsConfirmed(convertIntToBoolean(rs.getInt("isConfirmed")));
 		return order;
 	}
-	
+
 	public void saveOrder(Order newOrder) throws SQLException {
 		try {
 			DBConnection.startTransaction();
@@ -159,7 +163,14 @@ public class OrderDB implements OrderDBIF {
 		}
 		return orderLineID;
 	}
-
+	
+	private boolean convertIntToBoolean(int bit) {
+		boolean bool = false;
+		if(bit == 1) {
+			bool = true;
+		}
+		return bool;
+	}
 	private int convertBooleanToInt(boolean bool) {
 		int bit = 0;
 		if (bool = true) {
@@ -207,15 +218,17 @@ public class OrderDB implements OrderDBIF {
 	public void confirmOrder(Order confirmedOrder) {
 
 	}
+
 	public Order getOrderWithOrderId(int orderId) {
+		// TODO Extract prep and string to top of class
 		Order foundOrder = null;
 		ResultSet rs;
-			try {
+		try {
 			// Construct the SQL query dynamically based on the isConfirmed parameter
-			//String selectQuery = "";
-				 String selectOrderQuery = "SELECT * FROM [dbo].[Order] WHERE order_id = ?";
-			
-				PreparedStatement selectAll = connection.prepareStatement(selectOrderQuery);
+			// String selectQuery = "";
+			String selectOrderQuery = "SELECT * FROM [dbo].[Order] WHERE order_id = ?";
+
+			PreparedStatement selectAll = connection.prepareStatement(selectOrderQuery);
 			selectAll.setInt(1, orderId);
 
 			// Execute the query
@@ -223,14 +236,19 @@ public class OrderDB implements OrderDBIF {
 
 			// Process the result set and populate the list of orders
 			while (rs.next()) {
-				foundOrder = buildObject(rs);							
+				foundOrder = buildObject(rs);
 			}
 			// Close the result set
 			rs.close();
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace(); // Handle the exception appropriately
 		}
 		return foundOrder;
+	}
+
+	public void insertUpdatedOrder(Order foundOrder) throws SQLException {
+		updateOrder.setInt(1, foundOrder.getOrderId());
+		updateOrder.executeUpdate();
 	}
 }

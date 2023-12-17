@@ -212,6 +212,9 @@ public class Order {
     public void addOrderLine(OrderLine ol) {
     	orderLines.add(ol);
     }
+    public void addOrderLines(ArrayList<OrderLine> newOrderLines) {
+    	orderLines = newOrderLines;
+    }
     
     public int getSizeOfOrderLines() {
     	return orderLines.size();

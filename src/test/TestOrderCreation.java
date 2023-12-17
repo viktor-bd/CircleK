@@ -42,6 +42,15 @@ public class TestOrderCreation {
 		// Assert		
 		assertEquals(true, updatedOrder.isConfirmed());
 	}
+	
+	@Test
+	@DisplayName("Placeholder")
+	public void givenOrderIdShouldReturnOrderLinesFromOrder() throws DataAccessException {
+		// Arrange
+		OrderController orderController = new OrderController();
+		Order foundOrder = orderController.getOrderWithOrderId(1);
+		
+	}
 
 	/*
 	 * This test is testing the phone number "98765430" against the database to find

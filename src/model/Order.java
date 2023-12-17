@@ -18,8 +18,8 @@ public class Order {
     private LocalDateTime pickupDate;
     private boolean isPaid;
     private boolean isConfirmed;
-    private Customer customer;
-    private Employee employee;
+   	private Customer customer;
+	private Employee employee;
     private ArrayList<OrderLine> orderLines;
     private static final int minimumProducts = 20; // Minimum number of products to order as per special requirement skal det være her eller i Order?
 

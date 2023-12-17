@@ -35,6 +35,7 @@ public class TestOrderCreation {
 		// Act
 		orderController.updateOrderToConfirmed(foundOrder);
 		boolean isConfirmedTrue = foundOrder.isConfirmed();
+
 		// Assert
 		assertTrue(isConfirmedFalse != isConfirmedTrue);
 	}

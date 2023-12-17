@@ -19,9 +19,11 @@ public class OrderDB implements OrderDBIF {
 	private static final String insertOrderQuery = "INSERT INTO [Order] (date, pickUpStatus, pickupDate, isPaid, isConfirmed, customer_id, employee_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	private static final String insertOrderLineQuery = "INSERT INTO OrderLine (quantity, sku) VALUES (?, ?)";
 	private static final String insertOrderOrderLineQuery = "INSERT INTO Order_OrderLine (order_id, orderline_id) VALUES (?, ?)";
+	private static final String updateOrderQuery = "UPDATE [Order] SET isConfirmed = 1 WHERE order_id = ?";
 	private PreparedStatement insertOrder;
 	private PreparedStatement insertOrderLine;
 	private PreparedStatement insertOrderOrderLine;
+	private PreparedStatement updateOrder;
 	private Connection connection;
 
 	public OrderDB() throws DataAccessException {
@@ -30,6 +32,7 @@ public class OrderDB implements OrderDBIF {
 			insertOrder = connection.prepareStatement(insertOrderQuery, Statement.RETURN_GENERATED_KEYS);
 			insertOrderLine = connection.prepareStatement(insertOrderLineQuery, Statement.RETURN_GENERATED_KEYS);
 			insertOrderOrderLine = connection.prepareStatement(insertOrderOrderLineQuery);
+			updateOrder = connection.prepareStatement(updateOrderQuery);
 		} catch (SQLException e) {
 			throw new DataAccessException(e, "Could not prepare statement");
 		}
@@ -232,5 +235,10 @@ public class OrderDB implements OrderDBIF {
 			e.printStackTrace(); // Handle the exception appropriately
 		}
 		return foundOrder;
+	}
+
+	public void insertUpdatedOrder(Order foundOrder) throws SQLException {
+		updateOrder.setInt(1, foundOrder.getOrderId());
+		updateOrder.executeUpdate();
 	}
 }

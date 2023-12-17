@@ -84,7 +84,15 @@ public class OrderController {
 		return personController.getEmployeeFromOrderId(orderId);
 	}
 
-	public void updateOrderToConfirmed(Order foundOrder) {
-		foundOrder.checkOrder();		
+	public void updateOrderToConfirmed(Order foundOrder) throws SQLException {
+		if(foundOrder.checkOrder()) {
+			foundOrder.setIsConfirmed(true);
+			insertUpdatedOrder(foundOrder);
+		} else {
+		System.err.println("Ordre kunne ikke godkendes");
+		}
+	}
+	public void insertUpdatedOrder(Order foundOrder) throws SQLException {
+		orderDB.insertUpdatedOrder(foundOrder);
 	}
 }

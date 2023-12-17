@@ -6,6 +6,7 @@ package gui;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import dataaccesslayer.DataAccessException;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.UtilDateModel;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
@@ -46,7 +47,11 @@ public class DatePickerView extends JFrame {
 		JButton btnCreateOrder = new JButton("Opret ordre");
 		btnCreateOrder.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				createOrderClicked();
+				try {
+					createOrderClicked();
+				} catch (DataAccessException e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
 		btnCreateOrder.setBounds(151, 227, 101, 23);
@@ -104,9 +109,10 @@ public class DatePickerView extends JFrame {
 	}
 	/**
 	 * Handles operations when create order is clicked
+	 * @throws DataAccessException 
 	 * 
 	 */
-	public void createOrderClicked() {
+	public void createOrderClicked() throws DataAccessException {
 		// Retrieve value from calendar
 		getDateFromCalender();
 		openProductView();
@@ -115,8 +121,9 @@ public class DatePickerView extends JFrame {
 	}
 	/**
 	 * Opens a ProductView with the two dates, creation date and desired date
+	 * @throws DataAccessException 
 	 */
-	public void openProductView() {
+	public void openProductView() throws DataAccessException {
 		ProductView productView = new ProductView(currentDate, desiredDate);
 		productView.setVisible(true);
 	}

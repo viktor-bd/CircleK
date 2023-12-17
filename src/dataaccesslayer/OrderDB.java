@@ -9,6 +9,8 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.List;
+
 import model.Customer;
 import model.Employee;
 import java.sql.Statement;
@@ -63,7 +65,7 @@ public class OrderDB implements OrderDBIF {
 
 			// Process the result set and populate the list of orders
 			while (rs.next()) {
-				Order order = buildObject(rs, null); // intet product sendt med
+				Order order = buildOrderObject(rs, null); // intet product sendt med
 				// Add to list
 				orders.add(order);
 			}
@@ -80,7 +82,7 @@ public class OrderDB implements OrderDBIF {
 	/*
 	 * Builds the Order Object from the ResultSet
 	 */
-	private Order buildObject(ResultSet rs, Product product) throws SQLException {
+	private Order buildOrderObject(ResultSet rs, List<Product> products) throws SQLException {
 		Customer customer = null;
 		Employee employee = null;
 		int booleanCheck = rs.getInt("pickUpStatus");
@@ -98,7 +100,7 @@ public class OrderDB implements OrderDBIF {
 		Order order = new Order(date, pickUpStatus, pickupDate, isPaid, customer, employee);
 		order.setOrderId(rs.getInt("order_id"));
 		order.setIsConfirmed(convertIntToBoolean(rs.getInt("isConfirmed")));		
-		ArrayList<OrderLine> orderLines = buildOrderLineObject(rs, product);
+		ArrayList<OrderLine> orderLines = buildOrderLineObject(rs, products);
 		for(OrderLine orderLine : orderLines) {
 			order.addOrderLine(orderLine);
 		}
@@ -107,13 +109,27 @@ public class OrderDB implements OrderDBIF {
 
 	
 
-	private ArrayList<OrderLine> buildOrderLineObject(ResultSet rs, Product product) throws SQLException {
+	private ArrayList<OrderLine> buildOrderLineObject(ResultSet rs, List<Product> products) throws SQLException {
 		ArrayList<OrderLine> orderLines = new ArrayList<>();
 		while(rs.next()) {
 		int quantity = rs.getInt("quantity");
+		int sku = rs.getInt("sku");
+		
+		Product product = findProductBySku(products, sku);
+		OrderLine orderLine = new OrderLine(quantity, product);
+		orderLines.add(orderLine);
 		
 		}
 		return null;
+	}
+
+	private Product findProductBySku(List<Product> products, int sku) {
+	    for (Product product : products) {
+	        if (product.getSku() == sku) {
+	            return product;
+	        }
+	    }
+	    return null; 
 	}
 
 	public void saveOrder(Order newOrder) throws SQLException {
@@ -235,7 +251,7 @@ public class OrderDB implements OrderDBIF {
 
 	}
 
-	public Order getOrderWithOrderId(int orderId) {
+	public Order getOrderWithOrderId(int orderId, List<Product> products) {
 		// TODO Extract prep and string to top of class
 		Order foundOrder = null;
 		ResultSet rs;
@@ -253,7 +269,7 @@ public class OrderDB implements OrderDBIF {
 			selectOrder.setInt(1, orderId);
 			rs = selectOrder.executeQuery();
 			while (rs.next()) {
-				foundOrder = buildObject(rs);
+				foundOrder = buildOrderObject(rs, products);
 			}
 			rs.close();
 		} catch (SQLException e) {

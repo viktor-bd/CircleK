@@ -229,6 +229,9 @@ public class Order {
 	public void setEmployeeId(Employee employee) {
 		this.employee = employee;
 	}
+	 public boolean isConfirmed() {
+			return isConfirmed;
+		}
 	public void setIsConfirmed(boolean confirmed) {
 		this.isConfirmed = confirmed;
 	}

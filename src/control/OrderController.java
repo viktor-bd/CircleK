@@ -71,7 +71,7 @@ public class OrderController {
 	 * @param orderId integer
 	 * @return a single order from DB based on orderId
 	 */
-	public Order getUnconfirmedOrder(int orderId) {
+	public Order getOrderWithOrderId(int orderId) {
 
 		return orderDB.getOrderWithOrderId(orderId);
 	}

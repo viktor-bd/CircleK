@@ -235,6 +235,7 @@ public class Order {
 	public void setIsConfirmed(boolean confirmed) {
 		this.isConfirmed = confirmed;
 	}
+
 	public boolean checkOrder() {
 		Boolean isPossible = false;
 		if(

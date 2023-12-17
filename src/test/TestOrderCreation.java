@@ -19,9 +19,9 @@ import control.PersonController;
 import dataaccesslayer.DataAccessException;
 import dataaccesslayer.PersonDB;
 import dataaccesslayer.OrderDB;
-// test af commit rebase
+
 public class TestOrderCreation {
-	
+
 	@Test
 	@DisplayName("S?_TC?: Given order will update order confirmation status")
 	public void givenValidOrderWillSetConfirmedTrueShouldReturnOrder() throws DataAccessException, SQLException {
@@ -36,14 +36,14 @@ public class TestOrderCreation {
 		System.out.println(foundEmployee.getFirstName());
 		System.out.println(foundCustomer.getFirstName());
 		boolean isConfirmedFalse = foundOrder.isConfirmed();
-		
+
 		// Act
 		orderController.updateOrderToConfirmed(foundOrder);
 		boolean isConfirmedTrue = foundOrder.isConfirmed();
 		// Assert
 		assertTrue(isConfirmedFalse != isConfirmedTrue);
 	}
-	
+
 	/*
 	 * This test is testing the phone number "98765430" against the database to find
 	 * a customer with the given phone number. A successful test result is achieved
@@ -53,10 +53,10 @@ public class TestOrderCreation {
 	@Test
 	@DisplayName("S04_TC_01: Given valid phone number of existing customer, return found customer")
 	public void givenValidPhoneNumberWillReturnCustomer() throws DataAccessException {
-		// Arrange		
+		// Arrange
 		PersonController personController = new PersonController();
 		String validPhoneNumber = "98765430";
-		
+
 		// Act
 		Customer foundCustomer = personController.lookUpCustomerInDB(validPhoneNumber);
 

@@ -44,5 +44,3 @@ public class ProductController {
 	    return productDB.getProductBySku(sku);
 	}
   }
-}
-

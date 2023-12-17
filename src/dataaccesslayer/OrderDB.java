@@ -203,14 +203,15 @@ public class OrderDB implements OrderDBIF {
 		}
 		return orderLineID;
 	}
-	
+
 	private boolean convertIntToBoolean(int bit) {
 		boolean bool = false;
-		if(bit == 1) {
+		if (bit == 1) {
 			bool = true;
 		}
 		return bool;
 	}
+
 	private int convertBooleanToInt(boolean bool) {
 		int bit = 0;
 		if (bool = true) {

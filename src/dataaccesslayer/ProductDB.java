@@ -21,17 +21,17 @@ import model.Product;
 public class ProductDB implements ProductDBIF {
 	private Connection connection;
 	private static final String findAllProductsQ = "SELECT * From dbo.Product";
-	private static final String findProductBySkuQ = "SELECT * FROM dbo.Product WHERE sku = ?";
+	private static final String getProductBySkuQ = "SELECT * FROM dbo.Product WHERE sku = ?";
 	private static final String findAllIngredientsOfProductQ = "SELECT I.name, I.purchasePrice, I.supplier_id, I.ingredient_id, recipe.product_sku FROM dbo.Ingredient AS I INNER JOIN Ingredient_Product_Recipe AS recipe ON I.ingredient_id = recipe.ingredient_id WHERE recipe.product_sku = ?";
 	private PreparedStatement findAllProducts;
-	private PreparedStatement findProductBySku;
+	private PreparedStatement getProductBySku;
 	private PreparedStatement findAllIngredientsOfProduct;
 
 	public ProductDB() throws DataAccessException {
 		try {
 			connection = DBConnection.getInstance().getDBcon();
 			findAllProducts = connection.prepareStatement(findAllProductsQ);
-			findProductBySku = connection.prepareStatement(findProductBySkuQ);
+			getProductBySku = connection.prepareStatement(getProductBySkuQ);
 			findAllIngredientsOfProduct = connection.prepareStatement(findAllIngredientsOfProductQ);
 		} catch (SQLException e) {
 			throw new DataAccessException(e, "Could not prepare statement");
@@ -72,8 +72,18 @@ public class ProductDB implements ProductDBIF {
 	}
 
 	@Override
-	public Product findProductBySku(int sku) throws DataAccessException {
-		return null;
+	public Product getProductBySku(int sku) throws DataAccessException {
+		Product product = null;
+		try {
+			ResultSet rs = getProductBySku.executeQuery();
+			while(rs.next()) {
+				product = buildProductObject(rs);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return product;
+
 	}
 
 	public ArrayList<Ingredient> findIngredientByProductSku(int sku) throws DataAccessException {
@@ -109,5 +119,5 @@ public class ProductDB implements ProductDBIF {
 		return ingredient;
 
 	}
-
 }
+

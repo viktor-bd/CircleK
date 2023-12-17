@@ -6,15 +6,18 @@ import model.*;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 public class OrderController {
 
 	private OrderDB orderDB;
 	private PersonController personController;
+	private ProductController productController;
 
 	public OrderController() throws DataAccessException {
 		this.orderDB = new OrderDB();
 		this.personController = new PersonController();
+		this.productController = new ProductController();
 	}
 
 	public Order createOrder(int orderID, boolean pickUpStatus, LocalDateTime pickupDate, boolean isPaid,
@@ -70,11 +73,13 @@ public class OrderController {
 	 * 
 	 * @param orderId integer
 	 * @return a single order from DB based on orderId
+	 * @throws DataAccessException 
 	 */
-	public Order getOrderWithOrderId(int orderId) {
-
-		return orderDB.getOrderWithOrderId(orderId);
+	public Order getOrderWithOrderId(int orderId) throws DataAccessException {
+	    List<Product> products = productController.findAllProductFromDB();
+	    return orderDB.getOrderWithOrderId(orderId, products);
 	}
+
 
 	public Customer getCustomerFromOrderId(int orderId) throws SQLException {
 		return personController.getCustomerFromOrderId(orderId);

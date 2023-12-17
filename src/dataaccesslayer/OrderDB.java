@@ -9,21 +9,26 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.List;
+
 import model.Customer;
 import model.Employee;
 import java.sql.Statement;
 import model.Order;
 import model.OrderLine;
+import model.Product;
 
 public class OrderDB implements OrderDBIF {
 	private static final String insertOrderQuery = "INSERT INTO [Order] (date, pickUpStatus, pickupDate, isPaid, isConfirmed, customer_id, employee_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	private static final String insertOrderLineQuery = "INSERT INTO OrderLine (quantity, sku) VALUES (?, ?)";
 	private static final String insertOrderOrderLineQuery = "INSERT INTO Order_OrderLine (order_id, orderline_id) VALUES (?, ?)";
 	private static final String updateOrderQuery = "UPDATE [Order] SET isConfirmed = 1 WHERE order_id = ?";
+	private static final String selectOrderOnOrderLineQuery = "SELECT ool.order_id, ol.* FROM OrderLine ol JOIN Order_OrderLine ool ON ol.orderline_id = ool.orderline_id WHERE order_id = ?";
 	private PreparedStatement insertOrder;
 	private PreparedStatement insertOrderLine;
 	private PreparedStatement insertOrderOrderLine;
 	private PreparedStatement updateOrder;
+	private PreparedStatement selectOrderOnOrderLine;
 	private Connection connection;
 
 	public OrderDB() throws DataAccessException {
@@ -32,6 +37,7 @@ public class OrderDB implements OrderDBIF {
 			insertOrder = connection.prepareStatement(insertOrderQuery, Statement.RETURN_GENERATED_KEYS);
 			insertOrderLine = connection.prepareStatement(insertOrderLineQuery, Statement.RETURN_GENERATED_KEYS);
 			insertOrderOrderLine = connection.prepareStatement(insertOrderOrderLineQuery);
+			selectOrderOnOrderLine = connection.prepareStatement(selectOrderOnOrderLineQuery);
 			updateOrder = connection.prepareStatement(updateOrderQuery);
 		} catch (SQLException e) {
 			throw new DataAccessException(e, "Could not prepare statement");
@@ -62,7 +68,7 @@ public class OrderDB implements OrderDBIF {
 
 			// Process the result set and populate the list of orders
 			while (rs.next()) {
-				Order order = buildObject(rs);
+				Order order = buildOrderObject(rs, null); // intet product sendt med
 				// Add to list
 				orders.add(order);
 			}
@@ -79,7 +85,7 @@ public class OrderDB implements OrderDBIF {
 	/*
 	 * Builds the Order Object from the ResultSet
 	 */
-	private Order buildObject(ResultSet rs) throws SQLException {
+	private Order buildOrderObject(ResultSet rs, List<Product> products) throws SQLException {
 		Customer customer = null;
 		Employee employee = null;
 		int booleanCheck = rs.getInt("pickUpStatus");
@@ -97,7 +103,41 @@ public class OrderDB implements OrderDBIF {
 		Order order = new Order(date, pickUpStatus, pickupDate, isPaid, customer, employee);
 		order.setOrderId(rs.getInt("order_id"));
 		order.setIsConfirmed(convertIntToBoolean(rs.getInt("isConfirmed")));
+		ArrayList<OrderLine> orderLines = buildOrderLineObject(order, products);
+		order.addOrderLines(orderLines);
 		return order;
+	}
+
+	private ArrayList<OrderLine> buildOrderLineObject(Order order, List<Product> products) throws SQLException {
+		ArrayList<OrderLine> orderLines = new ArrayList<>();
+
+		try {
+			selectOrderOnOrderLine.setInt(1, order.getOrderId());
+			ResultSet rs = selectOrderOnOrderLine.executeQuery();
+
+			while (rs.next()) {
+				int quantity = rs.getInt("quantity");
+				int sku = rs.getInt("sku");
+				int orderLineId = rs.getInt("orderline_id");
+				Product product = searchListOfProductsForProductWithGivenSku(products, sku);
+				OrderLine orderLine = new OrderLine(quantity, product);
+				orderLine.setOrderLineId(orderLineId);
+
+				orderLines.add(orderLine);
+			}
+		} catch (SQLException e) {
+
+		}
+		return orderLines;
+	}
+
+	private Product searchListOfProductsForProductWithGivenSku(List<Product> products, int sku) {
+		for (Product product : products) {
+			if (product.getSku() == sku) {
+				return product;
+			}
+		}
+		return null;
 	}
 
 	public void saveOrder(Order newOrder) throws SQLException {
@@ -163,14 +203,15 @@ public class OrderDB implements OrderDBIF {
 		}
 		return orderLineID;
 	}
-	
+
 	private boolean convertIntToBoolean(int bit) {
 		boolean bool = false;
-		if(bit == 1) {
+		if (bit == 1) {
 			bool = true;
 		}
 		return bool;
 	}
+
 	private int convertBooleanToInt(boolean bool) {
 		int bit = 0;
 		if (bool = true) {
@@ -219,30 +260,21 @@ public class OrderDB implements OrderDBIF {
 
 	}
 
-	public Order getOrderWithOrderId(int orderId) {
+	public Order getOrderWithOrderId(int orderId, List<Product> products) {
 		// TODO Extract prep and string to top of class
 		Order foundOrder = null;
 		ResultSet rs;
 		try {
-			// Construct the SQL query dynamically based on the isConfirmed parameter
-			// String selectQuery = "";
-			String selectOrderQuery = "SELECT * FROM [dbo].[Order] WHERE order_id = ?";
-
-			PreparedStatement selectAll = connection.prepareStatement(selectOrderQuery);
-			selectAll.setInt(1, orderId);
-
-			// Execute the query
-			rs = selectAll.executeQuery();
-
-			// Process the result set and populate the list of orders
+			String selectOrderQuery = "SELECT DISTINCT o.*, ol.orderline_id, ol.quantity, ol.sku FROM [dbo].[Order] o JOIN [dbo].[Order_OrderLine] oo ON o.order_id = oo.order_id JOIN OrderLine ol ON oo.orderline_id = ol.orderline_id WHERE o.order_id = ?";
+			PreparedStatement selectOrder = connection.prepareStatement(selectOrderQuery);
+			selectOrder.setInt(1, orderId);
+			rs = selectOrder.executeQuery();
 			while (rs.next()) {
-				foundOrder = buildObject(rs);
+				foundOrder = buildOrderObject(rs, products);
 			}
-			// Close the result set
 			rs.close();
-
 		} catch (SQLException e) {
-			e.printStackTrace(); // Handle the exception appropriately
+			e.printStackTrace();
 		}
 		return foundOrder;
 	}

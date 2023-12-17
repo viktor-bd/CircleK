@@ -102,20 +102,20 @@ public class UnconfirmedOrderView extends JFrame {
 		tableUnconfirmedOrders.setModel(unconfirmedOrderTableModel);
 		scrollPane.setViewportView(tableUnconfirmedOrders);
 
-		//FIXME Thread for update table
-		// Setting up a thread for updating
-		//		exec = Executors.newSingleThreadScheduledExecutor();
-		//		exec.scheduleAtFixedRate(new Runnable() {
-		//		    @Override
-		//		    public void run() {
-		//		        TableModel.setData(getDataMethod());
-		//		        TableModel.revalidate();
-		//		        TableModel.repaint();
-		//		    }
-		//		}, 0, 5, TimeUnit.SECONDS);
-		//		import java.util.concurrent.Executors;
-		//		import java.util.concurrent.ScheduledExecutorService;
-		//		import java.util.concurrent.TimeUnit;
+//		FIXME Thread for update table
+//		 Setting up a thread for updating
+//				exec = Executors.newSingleThreadScheduledExecutor();
+//				exec.scheduleAtFixedRate(new Runnable() {
+//				    @Override
+//				    public void run() {
+//				        TableModel.setData(getDataMethod());
+//				        TableModel.revalidate();
+//				        TableModel.repaint();
+//				    }
+//				}, 0, 5, TimeUnit.SECONDS);
+//				import java.util.concurrent.Executors;
+//				import java.util.concurrent.ScheduledExecutorService;
+//				import java.util.concurrent.TimeUnit;
 
 	}
 

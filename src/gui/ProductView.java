@@ -40,6 +40,7 @@ public class ProductView extends JFrame {
 	private JTextField textField_Product_7;
 	private JTable tableProducts;
 	private ArrayList<JTextField> productTextFields;
+	private ProductTableModel  productsTableModel;
 
 	/**
 	 * @throws DataAccessException
@@ -70,7 +71,7 @@ public class ProductView extends JFrame {
 	
 
 //		tableProducts.setDefaultRenderer(Object.class, new CellRenderer());
-		ProductTableModel productsTableModel = new ProductTableModel();
+		productsTableModel = new ProductTableModel();
 		productsTableModel.setData(productController.findAllProductFromDB());
 		tableProducts.setModel(productsTableModel);
 		TableColumn column1 = tableProducts.getColumnModel().getColumn(0);
@@ -176,10 +177,19 @@ public class ProductView extends JFrame {
 	 * 
 	 */
 	protected void addOrderLinesClicked() {
-		// TODO Auto-generated method stub
+		getInfoFromTable();
 
 	}
 
+	/**
+	 * 
+	 */
+	private void getInfoFromTable() {
+		System.out.println(productsTableModel.getList().size());
+		System.out.println(tableProducts.getModel().getValueAt(0, 1));
+		System.out.println(tableProducts.getModel().getValueAt(1, 1));
+		System.out.println(tableProducts.getModel().getValueAt(2, 1));
+	}
 	public void addCustomerClicked() {
 		FindCustomerView findCustomerView = new FindCustomerView();
 		findCustomerView.setVisible(true);

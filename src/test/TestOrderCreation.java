@@ -19,7 +19,11 @@ import control.PersonController;
 import dataaccesslayer.DataAccessException;
 
 public class TestOrderCreation {
-
+	/*
+	 * This test is testing a valid order and its confirmation process.
+	 * A successful test result is achieved if the order successfully is set to confirmed
+	 * and persisted in the database.
+	 */
 	@Test
 	@DisplayName("S?_TC?: Given order will update order confirmation status")
 	public void givenValidOrderWillSetConfirmedTrueShouldReturnOrder() throws DataAccessException, SQLException {

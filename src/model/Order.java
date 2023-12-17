@@ -252,20 +252,6 @@ public class Order {
 		return this.date.plusHours(48).isBefore(this.pickupDate);
 	}
 
-  public boolean checkOrder() {
-		Boolean isPossible = false;
-		if(
-		isCustomerOk() &&
-		isEmployeeOk() &&
-		isDateDifferenceOk()) {
-		isPossible = true;	
-		}
-		return isPossible;		
-	}
-	private boolean isDateDifferenceOk() {
-		return this.date.plusHours(48).isBefore(this.pickupDate);
-	}
-
 	private boolean isEmployeeOk() {
 	    return this.employee != null;
 	}

@@ -107,9 +107,11 @@ public class Product {
             throw new IllegalArgumentException("Produkt type kan kun være Sandwich eller Rundstykke");
         }
     }
+    public ArrayList<Ingredient> getIngredients(){
+    	return ingredients;
+    }
 
 	public void setIngredients(ArrayList<Ingredient> ingredients) {
-		this.ingredients = ingredients;
-		
+		this.ingredients = ingredients;		
 	}
 }

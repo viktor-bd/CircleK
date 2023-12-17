@@ -211,6 +211,7 @@ public class OrderDB implements OrderDBIF {
 
 	}
 	public Order getOrderWithOrderId(int orderId) {
+		// TODO Extract prep and string to top of class
 		Order foundOrder = null;
 		ResultSet rs;
 			try {

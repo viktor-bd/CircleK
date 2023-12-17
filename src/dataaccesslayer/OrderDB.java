@@ -96,8 +96,22 @@ public class OrderDB implements OrderDBIF {
 		LocalDateTime pickupDate = getLocalDateFromSQLDate(rs.getDate("pickupDate"));
 		Order order = new Order(date, pickUpStatus, pickupDate, isPaid, customer, employee);
 		order.setOrderId(rs.getInt("order_id"));
-		order.setIsConfirmed(convertIntToBoolean(rs.getInt("isConfirmed")));
+		ArrayList<OrderLine> orderLines = buildOrderLineObject(rs, product);
+		for(OrderLine orderLine : orderLines) {
+			order.addOrderLine(orderLine);
+		}
 		return order;
+	}
+
+	
+
+	private ArrayList<OrderLine> buildOrderLineObject(ResultSet rs, Product product) throws SQLException {
+		ArrayList<OrderLine> orderLines = new ArrayList<>();
+		while(rs.next()) {
+		int quantity = rs.getInt("quantity");
+		
+		}
+		return null;
 	}
 
 	public void saveOrder(Order newOrder) throws SQLException {

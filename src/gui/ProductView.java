@@ -51,7 +51,7 @@ public class ProductView extends JFrame {
 	 * @throws DataAccessException
 	 * 
 	 */
-	// TODO Indsæt date med i constructor
+	
 	public ProductView(Date creationDate, Date desiredDateofCustomer) throws DataAccessException {
 		this.setVisible(false);
 		productController = new ProductController();

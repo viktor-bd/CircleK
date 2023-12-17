@@ -21,8 +21,10 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
+import control.OrderController;
 import control.ProductController;
 import dataaccesslayer.DataAccessException;
+import model.OrderLine;
 
 /**
  * @author Rasmus Larsen, Viktor Dorph, Johannes Jensen, Malik Agerbæk, Shemon
@@ -41,6 +43,9 @@ public class ProductView extends JFrame {
 	private JTable tableProducts;
 	private ArrayList<JTextField> productTextFields;
 	private ProductTableModel  productsTableModel;
+	private ProductController productController;
+	private OrderController orderController;
+	private JTable tableOrderLines;
 
 	/**
 	 * @throws DataAccessException
@@ -49,7 +54,8 @@ public class ProductView extends JFrame {
 	// TODO Indsæt date med i constructor
 	public ProductView(Date creationDate, Date desiredDateofCustomer) throws DataAccessException {
 		this.setVisible(false);
-		ProductController productController = new ProductController();
+		productController = new ProductController();
+		orderController = new OrderController();
 		setTitle("Opret ordre forespørgsel");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 500, 300);
@@ -97,7 +103,11 @@ public class ProductView extends JFrame {
 		JButton btnNewButton = new JButton("Tilføj linjer");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				addOrderLinesClicked();
+				try {
+					addOrderLinesClicked();
+				} catch (DataAccessException e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
 		btnNewButton.setBounds(184, 125, 83, 23);
@@ -106,6 +116,9 @@ public class ProductView extends JFrame {
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBounds(267, 28, 118, 207);
 		panel.add(scrollPane_1);
+		
+		tableOrderLines = new JTable();
+		scrollPane_1.setViewportView(tableOrderLines);
 
 		textField = new JTextField();
 		textField.setBounds(296, 236, 89, 14);
@@ -174,21 +187,41 @@ public class ProductView extends JFrame {
 		this.setVisible(true);
 	}
 	/**
+	 * @throws DataAccessException 
 	 * 
 	 */
-	protected void addOrderLinesClicked() {
-		getInfoFromTable();
-
+	protected void addOrderLinesClicked() throws DataAccessException {
+		int[] intGetQuantityFromTabel = getQuantityFromTable();
+		ArrayList<OrderLine> orderLinesToTable = orderController.createOrderLinesFromView(intGetQuantityFromTabel, productController.findAllProductFromDB());
+		ProductOrderLinesTableModel productOrderLinesTableModel = new ProductOrderLinesTableModel();
+		productOrderLinesTableModel.setData(orderLinesToTable);
+		tableOrderLines.setModel(productsTableModel);
 	}
+//	productsTableModel = new ProductTableModel();
+//	productsTableModel.setData(productController.findAllProductFromDB());
+//	tableProducts.setModel(productsTableModel);
+//	TableColumn column1 = tableProducts.getColumnModel().getColumn(0);
+//    column1.setPreferredWidth(145);
+//
+//    // Adjust the width of the second column (index 1) to 45
+//    TableColumn column2 = tableProducts.getColumnModel().getColumn(1);
+//    column2.setPreferredWidth(30);
+//	scrollPane.setViewportView(tableProducts);
 
 	/**
 	 * 
 	 */
-	private void getInfoFromTable() {
+	private int[] getQuantityFromTable() {
+		int[] intGetQuantityFromTabel = new int[productsTableModel.getList().size()] ;
 		System.out.println(productsTableModel.getList().size());
-		System.out.println(tableProducts.getModel().getValueAt(0, 1));
-		System.out.println(tableProducts.getModel().getValueAt(1, 1));
-		System.out.println(tableProducts.getModel().getValueAt(2, 1));
+		for (int i = 0; i < productsTableModel.getList().size(); i++) {
+			int j = (int) tableProducts.getModel().getValueAt(i, 1);
+			intGetQuantityFromTabel[i] = j;
+		}
+		for (int value : intGetQuantityFromTabel) {
+		    System.out.println(value);
+		}
+		return intGetQuantityFromTabel;
 	}
 	public void addCustomerClicked() {
 		FindCustomerView findCustomerView = new FindCustomerView();

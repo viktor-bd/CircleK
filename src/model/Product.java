@@ -25,7 +25,8 @@ public class Product {
         this.sku = sku;
         this.name = name;
         this.salesPrice = salesPrice;
-        this.ingredients = new ArrayList<Ingredient>();
+        this.ingredients = new ArrayList<>();
+
         if ("sandwich".equalsIgnoreCase(productType.toLowerCase().trim()) || "rundstykke".equalsIgnoreCase(productType.toLowerCase().trim())) {
             this.productType = productType;
         } else {

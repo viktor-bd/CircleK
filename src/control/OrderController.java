@@ -75,9 +75,15 @@ public class OrderController {
 	 * @return a single order from DB based on orderId
 	 * @throws DataAccessException 
 	 */
+<<<<<<< Updated upstream
 	public Order getOrderWithOrderId(int orderId) throws DataAccessException {
 	    List<Product> products = productController.findAllProductFromDB();
 	    return orderDB.getOrderWithOrderId(orderId, products);
+=======
+	public Order getUnconfirmedOrder(int orderId) {
+
+		return orderDB.getOrderWithOrderId(orderId);
+>>>>>>> Stashed changes
 	}
 
 
@@ -90,6 +96,7 @@ public class OrderController {
 		return personController.getEmployeeFromOrderId(orderId);
 	}
 
+<<<<<<< Updated upstream
 	public void updateOrderToConfirmed(Order foundOrder) throws SQLException {
 		if (foundOrder.checkOrder()) {
 			foundOrder.setIsConfirmed(true);
@@ -102,5 +109,24 @@ public class OrderController {
 	public void insertUpdatedOrder(Order foundOrder) throws SQLException {
 		orderDB.insertUpdatedOrder(foundOrder);
 
+=======
+	public void updateOrderToConfirmed(Order foundOrder) {
+		foundOrder.checkOrder();
+	}
+
+	/**
+	 * @param intGetQuantityFromTabel
+	 * @param findAllProductFromDB
+	 */
+	public ArrayList<OrderLine> createOrderLinesFromView(int[] intQuantities, ArrayList<Product> products) {
+		ArrayList<OrderLine> orderLinesToBeAddedToOrder = new ArrayList<OrderLine>();
+		ArrayList<Product> OrderLineProducts = products;
+		int[] intArray = intQuantities;
+		for (int i = 0; i < products.size(); i++) {
+			OrderLine ol = createOrderLine(products.get(i), intArray[i]);
+			orderLinesToBeAddedToOrder.add(ol);
+		}
+		return orderLinesToBeAddedToOrder;
+>>>>>>> Stashed changes
 	}
 }

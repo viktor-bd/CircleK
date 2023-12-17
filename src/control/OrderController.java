@@ -96,5 +96,6 @@ public class OrderController {
 
 	public void insertUpdatedOrder(Order foundOrder) throws SQLException {
 		orderDB.insertUpdatedOrder(foundOrder);
+
 	}
 }

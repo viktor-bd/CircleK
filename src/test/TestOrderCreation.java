@@ -49,8 +49,10 @@ public class TestOrderCreation {
 		// Arrange
 		OrderController orderController = new OrderController();
 		Order foundOrder = orderController.getOrderWithOrderId(1);
-		Product product = foundOrder.getOrderLines().get(1).getProduct();
-		System.out.println(product.getName());
+		System.out.println(foundOrder.getSizeOfOrderLines());
+		Product product = foundOrder.getOrderLines().get(0).getProduct();
+		System.out.println("product.getName()" + product.getName());
+		System.out.println(product.getIngredients().get(0).getName());
 	}
 
 	/*

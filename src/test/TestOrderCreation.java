@@ -17,8 +17,6 @@ import control.OrderController;
 import control.PersonController;
 
 import dataaccesslayer.DataAccessException;
-import dataaccesslayer.PersonDB;
-import dataaccesslayer.OrderDB;
 
 public class TestOrderCreation {
 

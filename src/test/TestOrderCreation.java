@@ -25,14 +25,11 @@ public class TestOrderCreation {
 	public void givenValidOrderWillSetConfirmedTrueShouldReturnOrder() throws DataAccessException, SQLException {
 		// Arrange
 		OrderController orderController = new OrderController();
-		System.out.println("Get unc order");
 		Order foundOrder = orderController.getUnconfirmedOrder(4);
 		Customer foundCustomer = orderController.getCustomerFromOrderId(foundOrder.getOrderId());
 		foundOrder.setCustomer(foundCustomer);
 		Employee foundEmployee = orderController.getEmployeeFromOrderId(foundOrder.getOrderId());
 		foundOrder.setEmployee(foundEmployee);
-		System.out.println(foundEmployee.getFirstName());
-		System.out.println(foundCustomer.getFirstName());
 		boolean isConfirmedFalse = foundOrder.isConfirmed();
 
 		// Act

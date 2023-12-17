@@ -93,12 +93,12 @@ public class OrderDB implements OrderDBIF {
 			isPaid = true;
 		}
 		LocalDateTime date = getLocalDateFromSQLDate(rs.getDate("date"));
-		LocalDateTime pickupDate = getLocalDateFromSQLDate(rs.getDate("pickupDate"));		
+		LocalDateTime pickupDate = getLocalDateFromSQLDate(rs.getDate("pickupDate"));
 		Order order = new Order(date, pickUpStatus, pickupDate, isPaid, customer, employee);
 		order.setOrderId(rs.getInt("order_id"));
 		return order;
 	}
-	
+
 	public void saveOrder(Order newOrder) throws SQLException {
 		try {
 			DBConnection.startTransaction();
@@ -210,16 +210,17 @@ public class OrderDB implements OrderDBIF {
 	public void confirmOrder(Order confirmedOrder) {
 
 	}
+
 	public Order getOrderWithOrderId(int orderId) {
 		// TODO Extract prep and string to top of class
 		Order foundOrder = null;
 		ResultSet rs;
-			try {
+		try {
 			// Construct the SQL query dynamically based on the isConfirmed parameter
-			//String selectQuery = "";
-				 String selectOrderQuery = "SELECT * FROM [dbo].[Order] WHERE order_id = ?";
-			
-				PreparedStatement selectAll = connection.prepareStatement(selectOrderQuery);
+			// String selectQuery = "";
+			String selectOrderQuery = "SELECT * FROM [dbo].[Order] WHERE order_id = ?";
+
+			PreparedStatement selectAll = connection.prepareStatement(selectOrderQuery);
 			selectAll.setInt(1, orderId);
 
 			// Execute the query
@@ -227,11 +228,11 @@ public class OrderDB implements OrderDBIF {
 
 			// Process the result set and populate the list of orders
 			while (rs.next()) {
-				foundOrder = buildObject(rs);							
+				foundOrder = buildObject(rs);
 			}
 			// Close the result set
 			rs.close();
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace(); // Handle the exception appropriately
 		}

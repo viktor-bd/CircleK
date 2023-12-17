@@ -20,7 +20,7 @@ public class PersonDB implements PersonDBIF {
 	private PreparedStatement findEmployeeByOrderId;
 	private PreparedStatement findCustomerByOrderId;
 
-	public PersonDB() throws DataAccessException {		
+	public PersonDB() throws DataAccessException {
 		try {
 			connection = DBConnection.getInstance().getDBcon();
 			findCustomerByPhoneNumber = connection.prepareStatement(findCustomerByPhoneNumberQuery);
@@ -60,7 +60,7 @@ public class PersonDB implements PersonDBIF {
 		customer.setIsBusiness(isBusiness);
 		return customer;
 	}
-	
+
 	private Employee buildEmployeeObject(ResultSet resultSet) throws SQLException {
 		int isManagerInteger = resultSet.getInt("isManager");
 		boolean isManager = false;
@@ -72,7 +72,7 @@ public class PersonDB implements PersonDBIF {
 				resultSet.getString("email"), resultSet.getString("address"), isManager);
 		return employee;
 	}
-	
+
 	/**
 	 * @param customerId
 	 * @return
@@ -82,14 +82,14 @@ public class PersonDB implements PersonDBIF {
 		return null;
 	}
 
-	public Customer getCustomerWithOrderId(int orderId) throws SQLException {			
+	public Customer getCustomerWithOrderId(int orderId) throws SQLException {
 		return lookUpCustomerInDBWithOrderId(orderId);
 	}
 
 	public Employee getEmployeeWithOrderId(int orderId) throws SQLException {
 		return lookUpEmployeeInDBWithOrderId(orderId);
 	}
-	
+
 	private Employee lookUpEmployeeInDBWithOrderId(int orderId) throws SQLException {
 		findEmployeeByOrderId.setInt(1, orderId);
 		ResultSet resultSet = findEmployeeByOrderId.executeQuery();
@@ -100,13 +100,13 @@ public class PersonDB implements PersonDBIF {
 		return employee;
 	}
 
-	private Customer lookUpCustomerInDBWithOrderId(int orderId) throws SQLException {	
+	private Customer lookUpCustomerInDBWithOrderId(int orderId) throws SQLException {
 		findCustomerByOrderId.setInt(1, orderId);
 		ResultSet resultSet = findCustomerByOrderId.executeQuery();
 		Customer customer = null;
 		if (resultSet.next()) {
 			customer = buildCustomerObject(resultSet);
-			}
-		return customer;		
-}
+		}
+		return customer;
+	}
 }

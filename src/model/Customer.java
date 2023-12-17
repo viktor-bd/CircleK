@@ -9,8 +9,8 @@ package model;
  *
  */
 public class Customer extends Person {
-	private int customerId; 
-							// differentiate: Fix constructor if wanted
+	private int customerId;
+	// differentiate: Fix constructor if wanted
 	private Boolean isBusiness; // Allow null, 1 for business, 0 for private
 
 	// Constructor

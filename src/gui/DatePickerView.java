@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import dataaccesslayer.DataAccessException;
+import model.Employee;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.UtilDateModel;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
@@ -19,6 +20,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JFormattedTextField;
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.awt.event.ActionEvent;
 
 /**
@@ -30,12 +33,15 @@ public class DatePickerView extends JFrame {
 	private UtilDateModel dateModel;
 	private Date currentDate;
 	private Date desiredDate;
+	private LocalDateTime desiredDateConverted;
+	private LocalDateTime currentDateConverted;
+	private Employee employee;
 
 	/**
 	 * 
 	 */
-	public DatePickerView() {
-
+	public DatePickerView(Employee employee) {
+		this.employee = employee;
 		setTitle("Vælg dato");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 500, 300);
@@ -90,6 +96,7 @@ public class DatePickerView extends JFrame {
 	private void setData() {
 		// Current date and time
 		currentDate = new Date();
+		currentDateConverted = LocalDateTime.ofInstant(currentDate.toInstant(), ZoneId.systemDefault());
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(currentDate);
 
@@ -102,10 +109,12 @@ public class DatePickerView extends JFrame {
 	/**
 	 * Retrives date of DatePicker from user
 	 */
-	public Date getDateFromCalender() {
+	public LocalDateTime getDateFromCalender() {
 		// Retrieve value from calendar
 		desiredDate = dateModel.getValue();
-		return desiredDate;
+		desiredDateConverted = LocalDateTime.ofInstant(desiredDate.toInstant(), ZoneId.systemDefault());
+		
+		return desiredDateConverted;
 	}
 	/**
 	 * Handles operations when create order is clicked
@@ -124,7 +133,7 @@ public class DatePickerView extends JFrame {
 	 * @throws DataAccessException 
 	 */
 	public void openProductView() throws DataAccessException {
-		ProductView productView = new ProductView(currentDate, desiredDate);
+		ProductView productView = new ProductView(currentDateConverted, desiredDateConverted, null);
 		productView.setVisible(true);
 	}
 

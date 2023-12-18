@@ -41,6 +41,14 @@ public class PersonController {
 	public Employee getEmployeeFromOrderId(int orderId) throws SQLException {
 		return personDB.getEmployeeWithOrderId(orderId);
 	}
+
+	/**
+	 * @param id
+	 * @return
+	 */
+	public Employee findEmployeeByEmployeeId(int id) throws SQLException{
+		return personDB.findEmployeeByEmployeeId(id);
+	}
 	
 
 }

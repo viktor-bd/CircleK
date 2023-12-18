@@ -242,6 +242,28 @@ public class OrderDB implements OrderDBIF {
 			}
 		}
 	}
+	public int insertOrderFromGUI(Order newOrder) throws SQLException {
+		insertOrder.setDate(1, java.sql.Date.valueOf(newOrder.getDate().toLocalDate()));
+		System.out.println(java.sql.Date.valueOf(newOrder.getDate().toLocalDate()));
+		insertOrder.setInt(2, convertBooleanToInt(newOrder.isPickUpStatus()));
+		insertOrder.setDate(3, java.sql.Date.valueOf(newOrder.getPickupDate().toLocalDate()));
+		insertOrder.setInt(4, convertBooleanToInt(newOrder.isPaid()));
+		insertOrder.setInt(5, 0);
+		insertOrder.setInt(6, newOrder.getCustomer().getCustomerId());
+		insertOrder.setInt(7, newOrder.getEmployee().getEmployeeId());
+		int rowsAffected = insertOrder.executeUpdate();
+		if (rowsAffected == 0) {
+			throw new SQLException("Inserting order failed, no rows affected.");
+		}
+		try (ResultSet generatedKeys = insertOrder.getGeneratedKeys()) {
+			if (generatedKeys.next()) {
+				int orderId = generatedKeys.getInt(1);
+				return orderId;
+			} else {
+				throw new SQLException("Inserting order failed, no ID obtained.");
+			}
+		}
+	}
 
 	private LocalDateTime getLocalDateFromSQLDate(Date date) {
 		LocalDateTime localDateTime = null;

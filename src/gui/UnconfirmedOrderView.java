@@ -32,13 +32,15 @@ public class UnconfirmedOrderView extends JFrame {
 	private UnconfirmedOrderTableModel unconfirmedOrderTableModel;
 	private OrderController orderController;
 	private PersonController personController;
+	private OrderView orderView;
 
 	/**
 	 * Creates and sets the view
 	 * 
 	 * @throws DataAccessException
 	 */
-	public UnconfirmedOrderView() throws DataAccessException {
+	public UnconfirmedOrderView(OrderView orderView) throws DataAccessException {
+		this.orderView = orderView;
 		personController = new PersonController();
 		orderController = new OrderController();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -147,8 +149,6 @@ public class UnconfirmedOrderView extends JFrame {
 	 * Go back to menu from OrderView
 	 */
 	private void backToMenuClicked() {
-
-		OrderView orderView = new OrderView();
 		orderView.run(orderView);
 		clearWindow();
 	}

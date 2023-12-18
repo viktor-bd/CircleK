@@ -267,7 +267,7 @@ public class Order {
 	}
 
 	private boolean isDateDifferenceOk() {
-		return this.date.plusHours(48).isBefore(this.pickupDate);
+		return !this.date.plusHours(48).isAfter(this.pickupDate);
 	}
 
 	private boolean isEmployeeOk() {

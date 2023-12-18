@@ -40,33 +40,32 @@ public class UnconfirmedOrderTableModel extends AbstractTableModel {
 	public int getColumnCount() {
 		return COLUMN_HEADERS.length;
 	}
-
+	// Changed this to not break but all return so we can reach order
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		Order order = orders.get(rowIndex);
 
-		String result = "";
+		
 		switch (columnIndex) {
 		default:
-			result = "Unknown column: " + columnIndex + ". Valid is 0-4";
+			return "Unknown column: " + columnIndex + ". Valid is 0-4";
 		case 0:
-			result += order.getOrderId();
-			break;
+			return order.getOrderId();
+
 		case 1:
-			result = order.getDate().toString();
-			break;
+			return order.getDate().toString();
+
 		case 2:
-			result += order.getPickupDate().toLocalDate();
-			break;
+			return order.getPickupDate().toLocalDate();
+
 		case 3:
-			result += "Kunde"; // TODO customer.firstname whatever
-			break;
+			return order.getCustomer();
+
 		case 4:
-			result += "Pris"; // TODO
-			break;
+			return order.getPrice();
+			
 
 		}
-		return result;
 	}
 
 	public ArrayList<Order> getOrders() {

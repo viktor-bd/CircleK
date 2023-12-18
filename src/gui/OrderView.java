@@ -20,6 +20,7 @@ import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 
 import dataaccesslayer.DataAccessException;
+import model.Employee;
 
 /**
  * @author Rasmus Larsen, Viktor Dorph, Johannes Jensen, Malik Agerbæk, Shemon
@@ -34,11 +35,13 @@ public class OrderView extends JFrame {
 	private JDatePanelImpl datePanel;
 	private Component datePicker;
 	private JLabel lblEmployee;
+	private Employee employee;
 
 	/**
 	 * Creation of frame
 	 */
-	public OrderView() {
+	public OrderView(Employee emp) {
+		this.employee = emp;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
 		setTitle("Startskærm");
@@ -62,6 +65,10 @@ public class OrderView extends JFrame {
 		btnCreateOrder = new JButton("Opret ordre");
 		btnCreateOrder.setBounds(186, 47, 89, 23);
 		panel.add(btnCreateOrder);
+
+		JLabel lbl_Employee = new JLabel(employee.getFirstName() + " " + employee.getEmployeeId());
+		lbl_Employee.setBounds(0, 0, 46, 14);
+		panel.add(lbl_Employee);
 
 		lblEmployee = new JLabel("");
 		lblEmployee.setBounds(0, 5, 145, 21);
@@ -88,7 +95,11 @@ public class OrderView extends JFrame {
 		});
 		btnLogOut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				logOutClicked();
+				try {
+					logOutClicked();
+				} catch (DataAccessException e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
 
@@ -114,29 +125,30 @@ public class OrderView extends JFrame {
 	 * Opens a DatePickerView when createOrderClicked
 	 */
 	private void openDatePickerView() {
-		DatePickerView dpv = new DatePickerView();
+		DatePickerView dpv = new DatePickerView(employee);
 		dpv.setVisible(true);
 		clearWindow();
 	}
 
 	/**
 	 * Opens a ConfirmedOrdersView when confirmOrdersViewClicked
-	 * @throws DataAccessException 
+	 * 
+	 * @throws DataAccessException
 	 */
 	private void confirmedOrdersViewClicked() throws DataAccessException {
-		ConfirmedOrdersView confirmedOrdersView = new ConfirmedOrdersView();
+		ConfirmedOrdersView confirmedOrdersView = new ConfirmedOrdersView(employee);
 		confirmedOrdersView.setVisible(true);
 		clearWindow();
 	}
 
 	public void confirmDenyClicked() throws DataAccessException {
-		UnconfirmedOrderView unconfirmedView = new UnconfirmedOrderView();
+		UnconfirmedOrderView unconfirmedView = new UnconfirmedOrderView(this);
 		unconfirmedView.setVisible(true);
 		clearWindow();
 	}
 
 	// Resets to loginscreen and clears the employee logged in
-	public void logOutClicked() {
+	public void logOutClicked() throws DataAccessException {
 		EmployeeLoginView employeeLogin = new EmployeeLoginView();
 		employeeLogin.resetEmployee();
 		employeeLogin.setVisible(true);
@@ -157,5 +169,13 @@ public class OrderView extends JFrame {
 	private void updateDisplay() {
 		this.revalidate();
 		this.repaint();
+	}
+
+	/**
+	 * 
+	 */
+	public void openWindow() {
+		this.setVisible(true);
+
 	}
 }

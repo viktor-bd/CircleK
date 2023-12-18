@@ -6,6 +6,8 @@ package gui;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -24,6 +26,8 @@ import javax.swing.table.TableColumnModel;
 import control.OrderController;
 import control.ProductController;
 import dataaccesslayer.DataAccessException;
+import model.Employee;
+import model.Order;
 import model.OrderLine;
 
 /**
@@ -46,16 +50,20 @@ public class ProductView extends JFrame {
 	private ProductController productController;
 	private OrderController orderController;
 	private JTable tableOrderLines;
+	private ArrayList<OrderLine> orderLinesToTable;
+	private Order order;
 
 	/**
 	 * @throws DataAccessException
 	 * 
 	 */
 	
-	public ProductView(Date creationDate, Date desiredDateofCustomer) throws DataAccessException {
+	public ProductView(LocalDateTime creationDate, LocalDateTime desiredDateofCustomer, Employee employee) throws DataAccessException {
 		this.setVisible(false);
 		productController = new ProductController();
 		orderController = new OrderController();
+		order = orderController.createOrderNoOrderIDOnlyDate(creationDate, false, desiredDateofCustomer, false, null, null);
+		this.orderLinesToTable = new ArrayList<>();
 		setTitle("Opret ordre forespørgsel");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 500, 300);
@@ -113,12 +121,12 @@ public class ProductView extends JFrame {
 		btnNewButton.setBounds(184, 125, 83, 23);
 		panel.add(btnNewButton);
 
-		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(267, 28, 118, 207);
-		panel.add(scrollPane_1);
+		JScrollPane scrollPane_OrderLines = new JScrollPane();
+		scrollPane_OrderLines.setBounds(267, 28, 118, 207);
+		panel.add(scrollPane_OrderLines);
 		
 		tableOrderLines = new JTable();
-		scrollPane_1.setViewportView(tableOrderLines);
+		scrollPane_OrderLines.setViewportView(tableOrderLines);
 
 		textField = new JTextField();
 		textField.setBounds(296, 236, 89, 14);
@@ -129,14 +137,26 @@ public class ProductView extends JFrame {
 		btnAddCustomer.setBounds(385, 28, 89, 23);
 		btnAddCustomer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				addCustomerClicked();
+				addCustomerClicked(order);
 			}
 		});
 		panel.add(btnAddCustomer);
 
-		JButton btnNewButton_2 = new JButton("Godkend ");
-		btnNewButton_2.setBounds(385, 220, 89, 30);
-		panel.add(btnNewButton_2);
+		JButton btnConfirmOrderCreation = new JButton("Godkend ");
+		btnConfirmOrderCreation.setBounds(385, 220, 89, 30);
+		btnConfirmOrderCreation.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					confirmOrder();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+				
+			}
+		});
+		panel.add(btnConfirmOrderCreation);
 
 		JButton btnNewButton_3 = new JButton("Tilbage");
 		btnNewButton_3.setBounds(385, 51, 89, 23);
@@ -183,6 +203,36 @@ public class ProductView extends JFrame {
 
 		init();
 	}
+	/**
+	 * @throws SQLException 
+	 * 
+	 */
+	protected void confirmOrder() throws SQLException {
+		// Read orderLines, add to order.
+		order.addOrderLines(orderLinesToTable);
+		// Read employee
+		order.setEmployee(null);
+		// Call DB to check for orderID
+//		orderController.checkOrderID
+		// Check if customer, emp, "products" != null
+		if (checkOrderBeforeConfirmation(order)) {
+			int orderId = orderController.insertOrderFromGui(order);
+		}
+		// Call to OrderCtr -> Other CTR -> DB Insert (1st Order, 2nd OrderLine, 3rd OrderOrderLine?)
+	
+	}
+	/**
+	 * 
+	 */
+	private boolean checkOrderBeforeConfirmation(Order order) {
+		boolean ready = false;
+		if(order.getCustomer() != null && order.getEmployee() != null) {
+			ready = true;
+		}
+		return ready;
+		
+		
+	}
 	private void init() {
 		this.setVisible(true);
 	}
@@ -192,7 +242,7 @@ public class ProductView extends JFrame {
 	 */
 	protected void addOrderLinesClicked() throws DataAccessException {
 		int[] intGetQuantityFromTabel = getQuantityFromTable();
-		ArrayList<OrderLine> orderLinesToTable = orderController.createOrderLinesFromView(intGetQuantityFromTabel, productController.findAllProductFromDB());
+		orderLinesToTable = orderController.createOrderLinesFromView(intGetQuantityFromTabel, productController.findAllProductFromDB());
 		ProductOrderLinesTableModel productOrderLinesTableModel = new ProductOrderLinesTableModel();
 		productOrderLinesTableModel.setData(orderLinesToTable);
 		tableOrderLines.setModel(productsTableModel);
@@ -223,8 +273,8 @@ public class ProductView extends JFrame {
 		}
 		return intGetQuantityFromTabel;
 	}
-	public void addCustomerClicked() {
-		FindCustomerView findCustomerView = new FindCustomerView();
+	public void addCustomerClicked(Order o) {
+		FindCustomerView findCustomerView = new FindCustomerView(o);
 		findCustomerView.setVisible(true);
 	}
 }

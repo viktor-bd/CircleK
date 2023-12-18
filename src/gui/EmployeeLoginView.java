@@ -113,12 +113,11 @@ public class EmployeeLoginView extends JFrame {
 		int employeeId = getEmployeeIdFromLogIn();
 		try {
 			employee = findEmployee(employeeId);
-			System.out.println(employee.getFirstName());
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
-		// TODO REMOVE EMPLOYEEHARDCODE
 		if (employee != null) {
 			OrderView orderView = new OrderView(employee);
 			orderView.openWindow();

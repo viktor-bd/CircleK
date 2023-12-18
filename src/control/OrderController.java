@@ -42,6 +42,10 @@ public class OrderController {
 		return order;
 	}
 
+	public ArrayList<Integer> addOrderLinesToDB(Order order) throws SQLException {
+		return orderDB.insertOrderLines(order.getOrderLines());
+	}
+
 	public OrderLine createOrderLine(Product product, int quantity) {
 		OrderLine orderLine = new OrderLine(quantity, product);
 		return orderLine;
@@ -142,5 +146,14 @@ public class OrderController {
 	public Employee getEmployeeFromEmployeeId(int id) throws SQLException {
 		return personController.findEmployeeByEmployeeId(id);
 
+	}
+
+	/**
+	 * @param orderLineIds
+	 * @param orderId
+	 * @throws SQLException
+	 */
+	public void insertOrderIDandOrderLinesIDsIntoDB(ArrayList<Integer> orderLineIds, int orderId) throws SQLException {
+		orderDB.insertOrderIdAndOrderLinesIdsIntoDB(orderLineIds, orderId);
 	}
 }

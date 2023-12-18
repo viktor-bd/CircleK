@@ -24,11 +24,13 @@ public class OrderDB implements OrderDBIF {
 	private static final String insertOrderOrderLineQuery = "INSERT INTO Order_OrderLine (order_id, orderline_id) VALUES (?, ?)";
 	private static final String updateOrderQuery = "UPDATE [Order] SET isConfirmed = 1 WHERE order_id = ?";
 	private static final String selectOrderOnOrderLineQuery = "SELECT ool.order_id, ol.* FROM OrderLine ol JOIN Order_OrderLine ool ON ol.orderline_id = ool.orderline_id WHERE order_id = ?";
+	private static final String insertIntoOrderOrderLineQ = "INSERT INTO Order_OrderLine (order_id, orderline_id) VALUES (?, ?)";
 	private PreparedStatement insertOrder;
 	private PreparedStatement insertOrderLine;
 	private PreparedStatement insertOrderOrderLine;
 	private PreparedStatement updateOrder;
 	private PreparedStatement selectOrderOnOrderLine;
+	private PreparedStatement insertIntoOrderOrderLine;
 	private Connection connection;
 
 	public OrderDB() throws DataAccessException {
@@ -38,6 +40,7 @@ public class OrderDB implements OrderDBIF {
 			insertOrderLine = connection.prepareStatement(insertOrderLineQuery, Statement.RETURN_GENERATED_KEYS);
 			insertOrderOrderLine = connection.prepareStatement(insertOrderOrderLineQuery);
 			selectOrderOnOrderLine = connection.prepareStatement(selectOrderOnOrderLineQuery);
+			insertIntoOrderOrderLine = connection.prepareStatement(insertIntoOrderOrderLineQ);
 			updateOrder = connection.prepareStatement(updateOrderQuery);
 		} catch (SQLException e) {
 			throw new DataAccessException(e, "Could not prepare statement");
@@ -77,9 +80,10 @@ public class OrderDB implements OrderDBIF {
 		} catch (SQLException e) {
 			e.printStackTrace(); // Handle the exception appropriately
 		}
-		
+
 		return orders;
 	}
+
 	/*
 	 * Builds the Order Object from the ResultSet
 	 */
@@ -103,6 +107,7 @@ public class OrderDB implements OrderDBIF {
 		order.setIsConfirmed(convertIntToBoolean(rs.getInt("isConfirmed")));
 		return order;
 	}
+
 	/*
 	 * Builds the Order Object from the ResultSet
 	 */
@@ -191,7 +196,7 @@ public class OrderDB implements OrderDBIF {
 		}
 	}
 
-	private ArrayList<Integer> insertOrderLines(ArrayList<OrderLine> orderLines) throws SQLException {
+	public ArrayList<Integer> insertOrderLines(ArrayList<OrderLine> orderLines) throws SQLException {
 		ArrayList<Integer> orderLineID = new ArrayList<>();
 		for (OrderLine orderLine : orderLines) {
 			orderLineID.addAll(insertOrderLine(orderLine));
@@ -263,6 +268,7 @@ public class OrderDB implements OrderDBIF {
 			}
 		}
 	}
+
 	public int insertOrderFromGUI(Order newOrder) throws SQLException {
 		insertOrder.setDate(1, java.sql.Date.valueOf(newOrder.getDate().toLocalDate()));
 		System.out.println(java.sql.Date.valueOf(newOrder.getDate().toLocalDate()));
@@ -326,5 +332,19 @@ public class OrderDB implements OrderDBIF {
 	public void insertUpdatedOrder(Order foundOrder) throws SQLException {
 		updateOrder.setInt(1, foundOrder.getOrderId());
 		updateOrder.executeUpdate();
+	}
+
+	/**
+	 * @param orderLineIds
+	 * @param orderId
+	 * @throws SQLException
+	 */
+	public void insertOrderIdAndOrderLinesIdsIntoDB(ArrayList<Integer> orderLineIds, int orderId) throws SQLException {
+		for (Integer orderLineId : orderLineIds) {
+			insertIntoOrderOrderLine.setInt(1, orderId);
+			insertIntoOrderOrderLine.setInt(2, orderLineId);
+			insertIntoOrderOrderLine.executeUpdate();
+		}
+
 	}
 }

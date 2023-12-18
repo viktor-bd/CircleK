@@ -212,15 +212,45 @@ public class ProductView extends JFrame {
 	protected void confirmOrder() throws SQLException {
 		// Read orderLines, add to order.
 		order.addOrderLines(orderLinesToTable);
-		System.out.println(employee.getFirstName());
 		order.setEmployee(this.employee);
 		if (checkOrderBeforeConfirmation(order)) {
 			int orderId = orderController.insertOrderFromGui(order);
+			order.setOrderId(orderId);
 		}
+		// insert orderlines into orderline (DB)
+		ArrayList<Integer> orderLineIds = insertOrderLinesWithOrderId(order);
+		// insert into OrderOrderLines
+		insertIntoOrderOrderLine(orderLineIds, order.getOrderId());
 		OrderView orderView = new OrderView(this.employee);
+		closeWindow();
 		orderView.setVisible(true);
 		// Call to OrderCtr -> Other CTR -> DB Insert (1st Order, 2nd OrderLine, 3rd OrderOrderLine?)
 	
+	}
+	/**
+	 * 
+	 */
+	private void closeWindow() {
+		this.setVisible(false);
+		
+	}
+	/**
+	 * @param i 
+	 * @param orderLineIds 
+	 * @throws SQLException 
+	 * 
+	 */
+	private void insertIntoOrderOrderLine(ArrayList<Integer> orderLineIds, int orderId) throws SQLException {
+		orderController.insertOrderIDandOrderLinesIDsIntoDB(orderLineIds, orderId);
+		
+	}
+	/**
+	 * @param order2
+	 * @throws SQLException 
+	 */
+	private ArrayList<Integer> insertOrderLinesWithOrderId(Order order) throws SQLException {
+		return orderController.addOrderLinesToDB(order);
+		
 	}
 	/**
 	 * 
@@ -269,9 +299,9 @@ public class ProductView extends JFrame {
 			int j = (int) tableProducts.getModel().getValueAt(i, 1);
 			intGetQuantityFromTabel[i] = j;
 		}
-		for (int value : intGetQuantityFromTabel) {
-		    System.out.println(value);
-		}
+//		for (int value : intGetQuantityFromTabel) {
+//		    System.out.println(value);
+//		}
 		return intGetQuantityFromTabel;
 	}
 	public void addCustomerClicked(Order o) {

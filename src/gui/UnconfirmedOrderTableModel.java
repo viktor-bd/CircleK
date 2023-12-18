@@ -59,7 +59,7 @@ public class UnconfirmedOrderTableModel extends AbstractTableModel {
 			return order.getPickupDate().toLocalDate();
 
 		case 3:
-			return order.getCustomer();
+			return order.getCustomer().getLastName();
 
 		case 4:
 			return order.getPrice();

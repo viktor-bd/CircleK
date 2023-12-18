@@ -13,6 +13,7 @@ import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -23,6 +24,8 @@ import control.PersonController;
 import dataaccesslayer.DataAccessException;
 import dataaccesslayer.OrderDB;
 import model.Order;
+import model.Customer;
+import model.Employee;
 
 /**
  * @author Rasmus Larsen, Viktor Dorph, Johannes Jensen, Malik Agerbæk, Shemon
@@ -35,14 +38,15 @@ public class UnconfirmedOrderView extends JFrame {
 	private UnconfirmedOrderTableModel unconfirmedOrderTableModel;
 	private OrderController orderController;
 	private PersonController personController;
-	private OrderView orderView;
+	private OrderView orderView;	
 
 	/**
 	 * Creates and sets the view
 	 * 
 	 * @throws DataAccessException
+	 * @throws SQLException 
 	 */
-	public UnconfirmedOrderView(OrderView orderView) throws DataAccessException {
+	public UnconfirmedOrderView(OrderView orderView) throws DataAccessException, SQLException {
 		this.orderView = orderView;
 		personController = new PersonController();
 		orderController = new OrderController();
@@ -106,15 +110,44 @@ public class UnconfirmedOrderView extends JFrame {
 		unconfirmedOrderTableModel = new UnconfirmedOrderTableModel();
 		// Creating Array for setData to tableModel
 		ArrayList<Order> orders = getOrdersFromDB();
-//		orderController.getCustomerFromOrderId(orders.get(1).getOrderId());
+		// orderController.getCustomerFromOrderId(orders.get(0).getOrderId());
 		// Get all order ids from the list above
 		ArrayList<Integer> orderIds = new ArrayList<Integer>();
 		orderIds = getOrderIDsFromList(orders);
 		// Loop call to PersonController with orderIds
+		/*ArrayList<Object> customers = new ArrayList<Object>(); // Må vi import Customer namespace?
+		for (Integer currentOrderId : orderIds) {
+			Object currentCustomer = orderController.getCustomerFromOrderId(currentOrderId);
+			customers.add(currentCustomer);
+		}*/
+		HashMap<Integer, Customer> orderIdCustomerHashMap = new HashMap<Integer, Customer>();	
+		HashMap<Integer, Employee> orderIdEmployeeHashMap = new HashMap<Integer, Employee>();
+		for (Integer currentOrderId : orderIds) {
+		    Customer currentCustomer = orderController.getCustomerFromOrderId(currentOrderId);
+		    Employee currentEmployee = orderController.getEmployeeFromOrderId(currentOrderId);
+		    
+		    orderIdCustomerHashMap.put(currentOrderId, currentCustomer);
+		    orderIdEmployeeHashMap.put(currentOrderId, currentEmployee);
+		    
+		    Order currentOrder = null;
+		    for (Order order : orders) {
+		        if (order.getOrderId() == currentOrderId) {
+		            currentOrder = order;
+		            break;
+		        }
+		    }
+		    
+		    if (currentOrder != null) {
+		        orderController.addCustomerToOrder(currentCustomer, currentOrder);
+		        orderController.testaddEmployeeToOrder(currentEmployee, currentOrder);
+		    }
+		}		
+		
 		// Use list to find customers in PersonController with PersonDB
-
+		
 		// Create customers and add to order
-
+		
+		
 		// Check table design
 		unconfirmedOrderTableModel.setData(orders);
 		tableUnconfirmedOrders.setModel(unconfirmedOrderTableModel);

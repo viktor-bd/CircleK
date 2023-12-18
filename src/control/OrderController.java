@@ -25,8 +25,9 @@ public class OrderController {
 		Order newOrder = new Order(orderID, pickUpStatus, pickupDate, isPaid, customer, employee);
 		return newOrder;
 	}
-	public Order createOrderNoOrderIDOnlyDate(LocalDateTime date, boolean pickUpStatus, LocalDateTime pickupDate, boolean isPaid,
-			Customer customer, Employee employee) {
+
+	public Order createOrderNoOrderIDOnlyDate(LocalDateTime date, boolean pickUpStatus, LocalDateTime pickupDate,
+			boolean isPaid, Customer customer, Employee employee) {
 		Order newOrder = new Order(date, pickUpStatus, pickupDate, false, null, null);
 		return newOrder;
 	}
@@ -49,9 +50,11 @@ public class OrderController {
 	public void confirmOrder(Order order) {
 		order.setPickUpStatus(true);
 	}
+
 	public Customer findCustomerByPhone(String phoneNumber) throws DataAccessException {
 		return personController.lookUpCustomerInDB(phoneNumber);
 	}
+
 	public void addCustomerToOrder(Customer customer, Order order) {
 		order.setCustomer(customer);
 	}
@@ -63,17 +66,17 @@ public class OrderController {
 	/**
 	 * Returns orders from DB that is either confirmed or not
 	 */
-	private ArrayList<Order> getOrdersWithBoolean(boolean isConfirmed) {
-		ArrayList<Order> orders = orderDB.getOrdersWithBoolean(isConfirmed);
+	private ArrayList<Order> getOrdersWithBoolean(boolean isConfirmed, ArrayList<Product> products) {
+		ArrayList<Order> orders = orderDB.getOrdersWithBoolean(isConfirmed, products);
 		return orders;
 	}
 
-	public ArrayList<Order> getConfirmedOrders() {
-		return getOrdersWithBoolean(true);
+	public ArrayList<Order> getConfirmedOrders() throws DataAccessException {
+		return getOrdersWithBoolean(true, productController.findAllProductFromDB());
 	}
 
-	public ArrayList<Order> getUnconfirmedOrders() {
-		return getOrdersWithBoolean(false);
+	public ArrayList<Order> getUnconfirmedOrders() throws DataAccessException {
+		return getOrdersWithBoolean(false, productController.findAllProductFromDB());
 	}
 
 	/**
@@ -105,9 +108,11 @@ public class OrderController {
 			System.err.println("Ordre kunne ikke godkendes");
 		}
 	}
+
 	public int insertOrderFromGui(Order order) throws SQLException {
 		return orderDB.insertOrderFromGUI(order);
 	}
+
 	public void insertUpdatedOrder(Order foundOrder) throws SQLException {
 		orderDB.insertUpdatedOrder(foundOrder);
 
@@ -130,11 +135,11 @@ public class OrderController {
 	}
 
 	/**
-	 * @throws SQLException 
+	 * @throws SQLException
 	 * 
 	 */
 	public Employee getEmployeeFromEmployeeId(int id) throws SQLException {
 		return personController.findEmployeeByEmployeeId(id);
-		
+
 	}
 }

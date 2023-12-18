@@ -50,7 +50,7 @@ public class OrderDB implements OrderDBIF {
 	 * @param isConfirmed
 	 */
 
-	public ArrayList<Order> getOrdersWithBoolean(boolean isConfirmed) {
+	public ArrayList<Order> getOrdersWithBoolean(boolean isConfirmed, ArrayList<Product> products) {
 		ArrayList<Order> orders = new ArrayList<Order>();
 		ResultSet rs;
 		int bit = 0;
@@ -68,20 +68,41 @@ public class OrderDB implements OrderDBIF {
 
 			// Process the result set and populate the list of orders
 			while (rs.next()) {
-				Order order = buildOrderObject(rs, null); // intet product sendt med
+				Order order = buildOrderObject(rs, products); // intet product sendt med
 				// Add to list
 				orders.add(order);
 			}
-
 			// Close the result set
 			rs.close();
 		} catch (SQLException e) {
 			e.printStackTrace(); // Handle the exception appropriately
 		}
-
+		
 		return orders;
 	}
-
+	/*
+	 * Builds the Order Object from the ResultSet
+	 */
+	private Order buildOrderObjectForTables(ResultSet rs, List<Product> products) throws SQLException {
+		Customer customer = null;
+		Employee employee = null;
+		int booleanCheck = rs.getInt("pickUpStatus");
+		boolean pickUpStatus = false;
+		if (booleanCheck == 1) {
+			pickUpStatus = true;
+		}
+		int booleanCheckPaid = rs.getInt("isPaid");
+		boolean isPaid = false;
+		if (booleanCheckPaid == 1) {
+			isPaid = true;
+		}
+		LocalDateTime date = getLocalDateFromSQLDate(rs.getDate("date"));
+		LocalDateTime pickupDate = getLocalDateFromSQLDate(rs.getDate("pickupDate"));
+		Order order = new Order(date, pickUpStatus, pickupDate, isPaid, customer, employee);
+		order.setOrderId(rs.getInt("order_id"));
+		order.setIsConfirmed(convertIntToBoolean(rs.getInt("isConfirmed")));
+		return order;
+	}
 	/*
 	 * Builds the Order Object from the ResultSet
 	 */

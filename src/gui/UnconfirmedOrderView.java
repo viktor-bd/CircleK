@@ -165,7 +165,7 @@ public class UnconfirmedOrderView extends JFrame {
 
 	}
 
-	public ArrayList<Order> getOrdersFromDB() {
+	public ArrayList<Order> getOrdersFromDB() throws DataAccessException {
 		return orderController.getUnconfirmedOrders();
 
 	}

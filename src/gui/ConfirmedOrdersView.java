@@ -109,7 +109,7 @@ public class ConfirmedOrdersView extends JFrame {
 		
 	}
 	
-	public ArrayList<Order> getOrdersFromDB() {
+	public ArrayList<Order> getOrdersFromDB() throws DataAccessException {
 		return orderController.getConfirmedOrders();
 	}
 	

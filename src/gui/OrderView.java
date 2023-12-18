@@ -7,6 +7,7 @@ import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 import javax.swing.JButton;
@@ -79,7 +80,7 @@ public class OrderView extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					confirmDenyClicked();
-				} catch (DataAccessException e1) {
+				} catch (DataAccessException | SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
@@ -142,7 +143,7 @@ public class OrderView extends JFrame {
 		clearWindow();
 	}
 
-	public void confirmDenyClicked() throws DataAccessException {
+	public void confirmDenyClicked() throws DataAccessException, SQLException {
 		UnconfirmedOrderView unconfirmedView = new UnconfirmedOrderView(this);
 		unconfirmedView.setVisible(true);
 		clearWindow();

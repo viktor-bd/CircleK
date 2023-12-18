@@ -25,6 +25,11 @@ public class OrderController {
 		Order newOrder = new Order(orderID, pickUpStatus, pickupDate, isPaid, customer, employee);
 		return newOrder;
 	}
+	public Order createOrderNoOrderIDOnlyDate(LocalDateTime date, boolean pickUpStatus, LocalDateTime pickupDate, boolean isPaid,
+			Customer customer, Employee employee) {
+		Order newOrder = new Order(date, pickUpStatus, pickupDate, false, null, null);
+		return newOrder;
+	}
 
 	public Order saveOrder(Order order) throws SQLException {
 		orderDB.saveOrder(order);
@@ -44,7 +49,9 @@ public class OrderController {
 	public void confirmOrder(Order order) {
 		order.setPickUpStatus(true);
 	}
-
+	public Customer findCustomerByPhone(String phoneNumber) throws DataAccessException {
+		return personController.lookUpCustomerInDB(phoneNumber);
+	}
 	public void addCustomerToOrder(Customer customer, Order order) {
 		order.setCustomer(customer);
 	}
@@ -98,7 +105,9 @@ public class OrderController {
 			System.err.println("Ordre kunne ikke godkendes");
 		}
 	}
-
+	public int insertOrderFromGui(Order order) throws SQLException {
+		return orderDB.insertOrderFromGUI(order);
+	}
 	public void insertUpdatedOrder(Order foundOrder) throws SQLException {
 		orderDB.insertUpdatedOrder(foundOrder);
 
@@ -118,5 +127,14 @@ public class OrderController {
 		}
 		return orderLinesToBeAddedToOrder;
 
+	}
+
+	/**
+	 * @throws SQLException 
+	 * 
+	 */
+	public Employee getEmployeeFromEmployeeId(int id) throws SQLException {
+		return personController.findEmployeeByEmployeeId(id);
+		
 	}
 }

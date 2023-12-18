@@ -279,6 +279,7 @@ public class OrderDB implements OrderDBIF {
 		try (ResultSet generatedKeys = insertOrder.getGeneratedKeys()) {
 			if (generatedKeys.next()) {
 				int orderId = generatedKeys.getInt(1);
+				System.out.println(orderId);
 				return orderId;
 			} else {
 				throw new SQLException("Inserting order failed, no ID obtained.");

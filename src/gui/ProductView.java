@@ -52,13 +52,15 @@ public class ProductView extends JFrame {
 	private JTable tableOrderLines;
 	private ArrayList<OrderLine> orderLinesToTable;
 	private Order order;
-
+	private Employee employee;
 	/**
 	 * @throws DataAccessException
 	 * 
 	 */
 	
 	public ProductView(LocalDateTime creationDate, LocalDateTime desiredDateofCustomer, Employee employee) throws DataAccessException {
+		this.employee = employee;
+		System.out.println(employee.getFirstName());
 		this.setVisible(false);
 		productController = new ProductController();
 		orderController = new OrderController();
@@ -210,14 +212,13 @@ public class ProductView extends JFrame {
 	protected void confirmOrder() throws SQLException {
 		// Read orderLines, add to order.
 		order.addOrderLines(orderLinesToTable);
-		// Read employee
-		order.setEmployee(null);
-		// Call DB to check for orderID
-//		orderController.checkOrderID
-		// Check if customer, emp, "products" != null
+		System.out.println(employee.getFirstName());
+		order.setEmployee(this.employee);
 		if (checkOrderBeforeConfirmation(order)) {
 			int orderId = orderController.insertOrderFromGui(order);
 		}
+		OrderView orderView = new OrderView(this.employee);
+		orderView.setVisible(true);
 		// Call to OrderCtr -> Other CTR -> DB Insert (1st Order, 2nd OrderLine, 3rd OrderOrderLine?)
 	
 	}

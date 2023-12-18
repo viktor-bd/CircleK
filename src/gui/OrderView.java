@@ -42,6 +42,7 @@ public class OrderView extends JFrame {
 	 */
 	public OrderView(Employee emp) {
 		this.employee = emp;
+		System.out.println(employee.getFirstName() + " IN ORDERVIEW ");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
 		setTitle("Startskærm");

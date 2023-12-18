@@ -133,7 +133,7 @@ public class DatePickerView extends JFrame {
 	 * @throws DataAccessException 
 	 */
 	public void openProductView() throws DataAccessException {
-		ProductView productView = new ProductView(currentDateConverted, desiredDateConverted, null);
+		ProductView productView = new ProductView(currentDateConverted, desiredDateConverted, employee);
 		productView.setVisible(true);
 	}
 

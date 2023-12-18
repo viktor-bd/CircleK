@@ -127,11 +127,12 @@ public class OrderController {
 		ArrayList<Product> OrderLineProducts = products;
 		int[] intArray = intQuantities;
 		for (int i = 0; i < products.size(); i++) {
-			OrderLine ol = createOrderLine(products.get(i), intArray[i]);
-			orderLinesToBeAddedToOrder.add(ol);
+			if (intArray[i] > 0) {
+				OrderLine ol = createOrderLine(OrderLineProducts.get(i), intArray[i]);
+				orderLinesToBeAddedToOrder.add(ol);
+			}
 		}
 		return orderLinesToBeAddedToOrder;
-
 	}
 
 	/**

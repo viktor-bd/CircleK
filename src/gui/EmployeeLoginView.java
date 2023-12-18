@@ -113,6 +113,7 @@ public class EmployeeLoginView extends JFrame {
 		int employeeId = getEmployeeIdFromLogIn();
 		try {
 			employee = findEmployee(employeeId);
+			System.out.println(employee.getFirstName());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

@@ -36,6 +36,7 @@ public class DatePickerView extends JFrame {
 	private LocalDateTime desiredDateConverted;
 	private LocalDateTime currentDateConverted;
 	private Employee employee;
+	private OrderView orderView;
 
 	/**
 	 * 
@@ -64,6 +65,11 @@ public class DatePickerView extends JFrame {
 		panel.add(btnCreateOrder);
 
 		JButton btnCancel = new JButton("Tilbage");
+		btnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cancelClicked();
+			}
+		});
 		btnCancel.setBounds(250, 227, 101, 23);
 		panel.add(btnCancel);
 
@@ -140,6 +146,13 @@ public class DatePickerView extends JFrame {
 	/**
 	 * Closes current window
 	 */
+	
+	public void cancelClicked() {
+		OrderView orderView = new OrderView(employee);
+		orderView.setVisible(true);
+		clearWindow();
+	}
+	
 	public void clearWindow() {
 		this.setVisible(false);
 		this.dispose();

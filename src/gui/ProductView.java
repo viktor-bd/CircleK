@@ -15,6 +15,7 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -278,10 +279,12 @@ public class ProductView extends JFrame {
 	 */
 	protected void addOrderLinesClicked() throws DataAccessException {
 		int[] intGetQuantityFromTabel = getQuantityFromTable();
+		if(calculateTotalProducts(intGetQuantityFromTabel)) {
 		orderLinesToTable = orderController.createOrderLinesFromView(intGetQuantityFromTabel, productController.findAllProductFromDB());
 		ProductOrderLinesTableModel productOrderLinesTableModel = new ProductOrderLinesTableModel();
 		productOrderLinesTableModel.setData(orderLinesToTable);
 		tableOrderLines.setModel(productsTableModel);
+	}
 	}
 //	productsTableModel = new ProductTableModel();
 //	productsTableModel.setData(productController.findAllProductFromDB());
@@ -323,5 +326,20 @@ public class ProductView extends JFrame {
 	public void clearWindow() {
 		this.setVisible(false);
 		this.dispose();
+	}
+	public boolean calculateTotalProducts(int[] quantities) {
+		boolean totalProductsMinimum20 = false;
+		int check = 0;
+		for(Integer ints : quantities) {
+			check += ints;
+		}
+		if(check >= 20) {
+			totalProductsMinimum20 = true;
+		}
+		else {
+			JOptionPane.showMessageDialog(null, "Ordren har mindre end 20 produkter");
+		}
+		
+		return totalProductsMinimum20;
 	}
 }

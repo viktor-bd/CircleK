@@ -16,8 +16,10 @@ public class PersonDB implements PersonDBIF {
 	private static final String findCustomerByPhoneNumberQuery = "SELECT person_id, first_name, last_name, phonenumber, zipcode, email, address, isBusiness FROM Person LEFT JOIN Customer ON Customer.customer_id = Person.person_id WHERE phonenumber = ?";
 	private static final String findCustomerByOrderIdQuery = "SELECT o.order_id, p.*, c.isBusiness, c.customer_id FROM [Order] AS o INNER JOIN Customer AS c ON o.customer_id = c.customer_id INNER JOIN Person AS p ON c.customer_id = p.person_id WHERE o.order_id = ?";
 	private static final String findEmployeeByOrderIdQuery = " SELECT o.order_id, p.*, e.isManager, e.employee_id FROM [Order] AS o INNER JOIN Employee AS e ON o.employee_id= e.employee_id INNER JOIN Person AS p ON e.employee_id= p.person_id WHERE o.order_id = ?";
+	private static final String findEmployeeByEmployeeIdQ = ";;SELECT * FROM Person JOIN Employee ON Person.person_id = Employee.employee_id WHERE person_id = ?";
 	private PreparedStatement findCustomerByPhoneNumber;
 	private PreparedStatement findEmployeeByOrderId;
+	private PreparedStatement findEmployeeByEmployeeId;
 	private PreparedStatement findCustomerByOrderId;
 
 	public PersonDB() throws DataAccessException {
@@ -26,6 +28,7 @@ public class PersonDB implements PersonDBIF {
 			findCustomerByPhoneNumber = connection.prepareStatement(findCustomerByPhoneNumberQuery);
 			findCustomerByOrderId = connection.prepareStatement(findCustomerByOrderIdQuery);
 			findEmployeeByOrderId = connection.prepareStatement(findEmployeeByOrderIdQuery);
+			findEmployeeByEmployeeId = connection.prepareStatement(findEmployeeByEmployeeIdQ);
 		} catch (SQLException e) {
 			throw new DataAccessException(e, "Could not prepare statement");
 		}
@@ -108,5 +111,20 @@ public class PersonDB implements PersonDBIF {
 			customer = buildCustomerObject(resultSet);
 		}
 		return customer;
+	}
+
+	/**
+	 * @param id
+	 * @return
+	 * @throws SQLException 
+	 */
+	public Employee findEmployeeByEmployeeId(int id) throws SQLException {
+		Employee employee = null;
+		findEmployeeByEmployeeId.setInt(1, id);
+		ResultSet rs = findEmployeeByEmployeeId.executeQuery();
+		if (rs.next()) {
+			employee = buildEmployeeObject(rs);
+		}
+		return employee;
 	}
 }

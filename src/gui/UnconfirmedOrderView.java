@@ -7,13 +7,16 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 
 import control.OrderController;
 import control.PersonController;
@@ -67,7 +70,19 @@ public class UnconfirmedOrderView extends JFrame {
 		JButton btnConfirmOrder = new JButton("Godkend ordre");
 		btnConfirmOrder.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				confirmOrderClicked();
+				try {
+					confirmOrderClicked();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+					SwingUtilities.invokeLater(() -> {
+				        JOptionPane.showMessageDialog(
+				                UnconfirmedOrderView.this,
+				                "Ordre kunne ikke godkendes.",
+				                "Prøv igen eller tjek ordren",
+				                JOptionPane.ERROR_MESSAGE
+				        );
+				    });
+				}
 			}
 		});
 		btnConfirmOrder.setBounds(331, 238, 103, 23);
@@ -91,6 +106,7 @@ public class UnconfirmedOrderView extends JFrame {
 		unconfirmedOrderTableModel = new UnconfirmedOrderTableModel();
 		// Creating Array for setData to tableModel
 		ArrayList<Order> orders = getOrdersFromDB();
+//		orderController.getCustomerFromOrderId(orders.get(1).getOrderId());
 		// Get all order ids from the list above
 		ArrayList<Integer> orderIds = new ArrayList<Integer>();
 		orderIds = getOrderIDsFromList(orders);
@@ -135,13 +151,13 @@ public class UnconfirmedOrderView extends JFrame {
 
 	/**
 	 * The selected order will be confirmed on click
+	 * @throws SQLException 
 	 */
-	protected void confirmOrderClicked() {
-		// TODO Show active order
-
-		// The active is order is created using the CreateOrder function
-
-		// GUI updates to show new state
+	protected void confirmOrderClicked() throws SQLException {
+		int selectedRow = tableUnconfirmedOrders.getSelectedRow();
+		ArrayList<Order> orders = unconfirmedOrderTableModel.getOrders();
+		Order orderToUpdate = orders.get(selectedRow);
+		orderController.updateOrderToConfirmed(orderToUpdate);
 
 	}
 

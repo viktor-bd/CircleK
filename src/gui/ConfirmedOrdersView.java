@@ -18,6 +18,7 @@ import javax.swing.ListSelectionModel;
 import control.OrderController;
 import dataaccesslayer.DataAccessException;
 import dataaccesslayer.OrderDB;
+import model.Employee;
 import model.Order;
 
 /**
@@ -29,13 +30,15 @@ public class ConfirmedOrdersView extends JFrame {
 	private JTable tableConfirmed;
 	private ConfirmedOrderTableModel confirmedOrderTableModel;
 	private OrderController orderController;
+	private Employee employee;
 
 
 	/**
 	 * @throws DataAccessException 
 	 * 
 	 */
-	public ConfirmedOrdersView() throws DataAccessException {
+	public ConfirmedOrdersView(Employee employee) throws DataAccessException {
+		this.employee = employee;
 		orderController = new OrderController();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Bekræftede ordrer");
@@ -80,7 +83,7 @@ public class ConfirmedOrdersView extends JFrame {
 	 */
 	private void backToMenuClicked() {
 
-		OrderView orderView = new OrderView();
+		OrderView orderView = new OrderView(employee);
 		orderView.run(orderView);
 		clearWindow();
 	}

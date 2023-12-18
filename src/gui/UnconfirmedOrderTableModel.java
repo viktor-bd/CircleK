@@ -5,6 +5,8 @@ package gui;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
+
+import model.Customer;
 import model.Order;
 
 /**
@@ -59,7 +61,8 @@ public class UnconfirmedOrderTableModel extends AbstractTableModel {
 			return order.getPickupDate().toLocalDate();
 
 		case 3:
-			return order.getCustomer().getLastName();
+			Customer customer = order.getCustomer();
+            return (customer != null) ? customer.getLastName() : "Updating";
 
 		case 4:
 			return order.getPrice();
@@ -78,6 +81,10 @@ public class UnconfirmedOrderTableModel extends AbstractTableModel {
 
 	public void setData(ArrayList<Order> orders) {
 		this.orders = orders;
+		super.fireTableDataChanged();
+	}
+	public void updateList(ArrayList<Order> updatedOrders) {
+		this.orders = updatedOrders;
 		super.fireTableDataChanged();
 	}
 }

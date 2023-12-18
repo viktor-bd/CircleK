@@ -12,6 +12,7 @@ import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -19,6 +20,7 @@ import javax.swing.ListSelectionModel;
 import control.OrderController;
 import dataaccesslayer.DataAccessException;
 import dataaccesslayer.OrderDB;
+import model.Customer;
 import model.Employee;
 import model.Order;
 
@@ -75,11 +77,49 @@ public class ConfirmedOrdersView extends JFrame {
 		tableConfirmed = new JTable();
 		tableConfirmed.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		confirmedOrderTableModel = new ConfirmedOrderTableModel();
-		confirmedOrderTableModel.setData(getOrdersFromDB());
+		
+				ArrayList<Order> orders = getOrdersFromDB();
+				
+				ArrayList<Integer> orderIds = new ArrayList<Integer>();
+				orderIds = getOrderIDsFromList(orders);
+				
+				HashMap<Integer, Customer> orderIdCustomerHashMap = new HashMap<Integer, Customer>();	
+				HashMap<Integer, Employee> orderIdEmployeeHashMap = new HashMap<Integer, Employee>();
+				for (Integer currentOrderId : orderIds) {
+				    Customer currentCustomer = orderController.getCustomerFromOrderId(currentOrderId);
+				    Employee currentEmployee = orderController.getEmployeeFromOrderId(currentOrderId);
+				    
+				    orderIdCustomerHashMap.put(currentOrderId, currentCustomer);
+				    orderIdEmployeeHashMap.put(currentOrderId, currentEmployee);
+				    
+				    Order currentOrder = null;
+				    for (Order order : orders) {
+				        if (order.getOrderId() == currentOrderId) {
+				            currentOrder = order;
+				            break;
+				        }
+				    }
+				    
+				    if (currentOrder != null) {
+				        orderController.addCustomerToOrder(currentCustomer, currentOrder);
+				        orderController.testaddEmployeeToOrder(currentEmployee, currentOrder);
+				    }
+				}		
+		confirmedOrderTableModel.setData(orders);
 		tableConfirmed.setModel(confirmedOrderTableModel);
 		scrollPane.setViewportView(tableConfirmed);
 	}
+	
+	public ArrayList<Integer> getOrderIDsFromList(ArrayList<Order> orders) {
+		ArrayList<Integer> orderIds = new ArrayList<Integer>();
+		for (Order o : orders) {
+			int orderId = o.getOrderId();
+			orderIds.add(orderId);
+		}
 
+		return orderIds;
+	}
+	
 	/**
 	 * Go back to menu from ConfirmedOrdersView
 	 */

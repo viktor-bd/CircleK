@@ -43,9 +43,27 @@ public class TestOrderCreation {
 		assertEquals(true, updatedOrder.isConfirmed());
 
 	}
-	
+	/**
+	 * This test verifies that given an order ID, the system retrieves the associated order
+	 * from the database and returns the correct number of order lines. The order lines are
+	 * part of the order's composition, and the test checks if the size of the order lines
+	 * matches the expected value.
+	 *
+	 * Test Steps:
+	 * 1. Arrange: Create an instance of OrderController.
+	 * 2. Act: Retrieve the order with the specified order ID.
+	 * 3. Assert: Verify that the number of order lines on the found order matches the expected value.
+	 *
+	 * Test Case ID: S?_TC?: Given order ID should return Order object with order lines
+	 *
+	 * Test Data:
+	 * - Order ID: 6
+	 *
+	 * Expected Result:
+	 * The test expects that the retrieved order has 2 order lines.
+	 */
 	@Test
-	@DisplayName("Placeholder")
+	@DisplayName("S?_TC?: Given order id should return Order object with order lines")
 	public void givenOrderIdShouldReturnOrderLinesFromOrder() throws DataAccessException {
 		// Arrange
 		OrderController orderController = new OrderController();

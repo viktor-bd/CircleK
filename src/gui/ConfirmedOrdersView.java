@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
@@ -35,9 +36,10 @@ public class ConfirmedOrdersView extends JFrame {
 
 	/**
 	 * @throws DataAccessException 
+	 * @throws SQLException 
 	 * 
 	 */
-	public ConfirmedOrdersView(Employee employee) throws DataAccessException {
+	public ConfirmedOrdersView(Employee employee) throws DataAccessException, SQLException {
 		this.employee = employee;
 		orderController = new OrderController();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

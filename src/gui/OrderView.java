@@ -90,7 +90,7 @@ public class OrderView extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					confirmedOrdersViewClicked();
-				} catch (DataAccessException e1) {
+				} catch (DataAccessException | SQLException e1) {
 					e1.printStackTrace();
 				}
 			}
@@ -136,8 +136,9 @@ public class OrderView extends JFrame {
 	 * Opens a ConfirmedOrdersView when confirmOrdersViewClicked
 	 * 
 	 * @throws DataAccessException
+	 * @throws SQLException 
 	 */
-	private void confirmedOrdersViewClicked() throws DataAccessException {
+	private void confirmedOrdersViewClicked() throws DataAccessException, SQLException {
 		ConfirmedOrdersView confirmedOrdersView = new ConfirmedOrdersView(employee);
 		confirmedOrdersView.setVisible(true);
 		clearWindow();

@@ -71,7 +71,7 @@ public class OrderDB implements OrderDBIF {
 
 			// Process the result set and populate the list of orders
 			while (rs.next()) {
-				Order order = buildOrderObject(rs, products); // intet product sendt med
+				Order order = buildOrderObject(rs, products); 
 				// Add to list
 				orders.add(order);
 			}

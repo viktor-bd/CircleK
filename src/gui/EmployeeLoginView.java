@@ -11,6 +11,7 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -20,19 +21,21 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import control.OrderController;
+import dataaccesslayer.DataAccessException;
 import model.Employee;
 
 /**
- * @author Rasmus Larsen, Viktor Dorph, Johannes Jensen, Malik Agerbæk, Shemon Chowdhury 
+ * @author Rasmus Larsen, Viktor Dorph, Johannes Jensen, Malik Agerbæk, Shemon
+ *         Chowdhury
  *
  */
 public class EmployeeLoginView extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textFieldEmployeeNumber;
-	private Object employee; 
-	//TODO 
-	Employee employeeHardCode;
+	private Employee employee;
+	private OrderController orderController;
 
 	/**
 	 * Launches the application by starting with an employee login.
@@ -52,10 +55,11 @@ public class EmployeeLoginView extends JFrame {
 
 	/**
 	 * Creates the frame.
+	 * @throws DataAccessException 
 	 */
-	public EmployeeLoginView() {
+	public EmployeeLoginView() throws DataAccessException {
+		this.orderController = new OrderController();
 		this.setTitle("Medarbejder login");
-		
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -100,57 +104,65 @@ public class EmployeeLoginView extends JFrame {
 		panel.add(textFieldEmployeeNumber, gbc_textFieldEmployeeNumber);
 		textFieldEmployeeNumber.setColumns(10);
 	}
+
 	/**
-	 * Checks whether or not the employeeLogin textfield is filled correctly
-	 * If filled correctly, OrderView is called
-	 * If not, exception thrown to user
+	 * Checks whether or not the employeeLogin textfield is filled correctly If
+	 * filled correctly, OrderView is called If not, exception thrown to user
 	 */
 	private void loginClicked() {
-	    String employeeNumberText = textFieldEmployeeNumber.getText();
-	    //TODO delete employee stub
-	   employeeHardCode = new Employee(1);
-	    if (employeeNumberText.isEmpty()) {
-	        JOptionPane.showMessageDialog(this, "Medarbejdernummer er påkrævet", "Fejl", JOptionPane.ERROR_MESSAGE);
-	        return;
-	    }
-	    
-	    try {
-	        int employeeNumber = Integer.parseInt(employeeNumberText);
-	      
-	        
-	        //TODO REMOVE EMPLOYEEHARDCODE
-	        if (employee != null || employeeHardCode != null) {
-	            OrderView orderView = new OrderView();
-				openWindow(orderView);
-	            closeWindow();
-	        } else {
-	            JOptionPane.showMessageDialog(this, "Ugyldigt medarbejdernummer", "Fejl", JOptionPane.ERROR_MESSAGE);
-	        }
-	    } catch (NumberFormatException e) {
-	        JOptionPane.showMessageDialog(this, "Ugyldigt medarbejdernummer", "Fejl", JOptionPane.ERROR_MESSAGE);
-	    }
+		int employeeId = getEmployeeIdFromLogIn();
+		try {
+			employee = findEmployee(employeeId);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		if (employee != null) {
+			OrderView orderView = new OrderView(employee);
+			orderView.openWindow();
+			closeWindow();
+		} else {
+			JOptionPane.showMessageDialog(this, "Ugyldigt medarbejdernummer", "Fejl", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	/**
-	 * Method for setting a JFrame object visible
-	 * @param jFrame
+	 * 
 	 */
-	private void openWindow(JFrame jFrame) {
-		jFrame.setVisible(true);
+	private int getEmployeeIdFromLogIn() {
+		int employeeId = -1;
+		String employeeNumberText = textFieldEmployeeNumber.getText();
+		try {
+			employeeId = Integer.parseInt(employeeNumberText);
+		} catch (NumberFormatException nfe) {
+			// TODO JOptionError
+		}
+		return employeeId;
+
 	}
+
+	/**
+	 * @return
+	 * @throws SQLException 
+	 */
+	private Employee findEmployee(int id) throws SQLException {
+		return orderController.getEmployeeFromEmployeeId(id);
+
+	}
+
 	/*
-	 * Closes current window 
+	 * Closes current window
 	 */
 	private void closeWindow() {
 		this.setVisible(false);
 		this.dispose();
 	}
+
 	/**
 	 * Resets employee to null
 	 */
 	public void resetEmployee() {
 		this.employee = null;
-		//TODO REMOVE 
-		this.employeeHardCode = null;
 	}
 }

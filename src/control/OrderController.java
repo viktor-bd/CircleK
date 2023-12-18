@@ -26,6 +26,12 @@ public class OrderController {
 		return newOrder;
 	}
 
+	public Order createOrderNoOrderIDOnlyDate(LocalDateTime date, boolean pickUpStatus, LocalDateTime pickupDate,
+			boolean isPaid, Customer customer, Employee employee) {
+		Order newOrder = new Order(date, pickUpStatus, pickupDate, false, null, null);
+		return newOrder;
+	}
+
 	public Order saveOrder(Order order) throws SQLException {
 		orderDB.saveOrder(order);
 		return order;
@@ -36,6 +42,10 @@ public class OrderController {
 		return order;
 	}
 
+	public ArrayList<Integer> addOrderLinesToDB(Order order) throws SQLException {
+		return orderDB.insertOrderLines(order.getOrderLines());
+	}
+
 	public OrderLine createOrderLine(Product product, int quantity) {
 		OrderLine orderLine = new OrderLine(quantity, product);
 		return orderLine;
@@ -43,6 +53,10 @@ public class OrderController {
 
 	public void confirmOrder(Order order) {
 		order.setPickUpStatus(true);
+	}
+
+	public Customer findCustomerByPhone(String phoneNumber) throws DataAccessException {
+		return personController.lookUpCustomerInDB(phoneNumber);
 	}
 
 	public void addCustomerToOrder(Customer customer, Order order) {
@@ -56,17 +70,17 @@ public class OrderController {
 	/**
 	 * Returns orders from DB that is either confirmed or not
 	 */
-	private ArrayList<Order> getOrdersWithBoolean(boolean isConfirmed) {
-		ArrayList<Order> orders = orderDB.getOrdersWithBoolean(isConfirmed);
+	private ArrayList<Order> getOrdersWithBoolean(boolean isConfirmed, ArrayList<Product> products) {
+		ArrayList<Order> orders = orderDB.getOrdersWithBoolean(isConfirmed, products);
 		return orders;
 	}
 
-	public ArrayList<Order> getConfirmedOrders() {
-		return getOrdersWithBoolean(true);
+	public ArrayList<Order> getConfirmedOrders() throws DataAccessException {
+		return getOrdersWithBoolean(true, productController.findAllProductFromDB());
 	}
 
-	public ArrayList<Order> getUnconfirmedOrders() {
-		return getOrdersWithBoolean(false);
+	public ArrayList<Order> getUnconfirmedOrders() throws DataAccessException {
+		return getOrdersWithBoolean(false, productController.findAllProductFromDB());
 	}
 
 	/**
@@ -99,6 +113,10 @@ public class OrderController {
 		}
 	}
 
+	public int insertOrderFromGui(Order order) throws SQLException {
+		return orderDB.insertOrderFromGUI(order);
+	}
+
 	public void insertUpdatedOrder(Order foundOrder) throws SQLException {
 		orderDB.insertUpdatedOrder(foundOrder);
 
@@ -113,10 +131,29 @@ public class OrderController {
 		ArrayList<Product> OrderLineProducts = products;
 		int[] intArray = intQuantities;
 		for (int i = 0; i < products.size(); i++) {
-			OrderLine ol = createOrderLine(products.get(i), intArray[i]);
-			orderLinesToBeAddedToOrder.add(ol);
+			if (intArray[i] > 0) {
+				OrderLine ol = createOrderLine(OrderLineProducts.get(i), intArray[i]);
+				orderLinesToBeAddedToOrder.add(ol);
+			}
 		}
 		return orderLinesToBeAddedToOrder;
+	}
 
+	/**
+	 * @throws SQLException
+	 * 
+	 */
+	public Employee getEmployeeFromEmployeeId(int id) throws SQLException {
+		return personController.findEmployeeByEmployeeId(id);
+
+	}
+
+	/**
+	 * @param orderLineIds
+	 * @param orderId
+	 * @throws SQLException
+	 */
+	public void insertOrderIDandOrderLinesIDsIntoDB(ArrayList<Integer> orderLineIds, int orderId) throws SQLException {
+		orderDB.insertOrderIdAndOrderLinesIdsIntoDB(orderLineIds, orderId);
 	}
 }

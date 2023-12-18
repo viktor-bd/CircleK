@@ -12,64 +12,75 @@ import java.util.Date;
  *
  */
 public class Order {
-    private int orderId;
-    private LocalDateTime date;
-    private boolean pickUpStatus;
-    private LocalDateTime pickupDate;
-    private boolean isPaid;
-    private boolean isConfirmed;
-   	private Customer customer;
+	private int orderId;
+	private LocalDateTime date;
+	private boolean pickUpStatus;
+	private LocalDateTime pickupDate;
+	private boolean isPaid;
+	private boolean isConfirmed;
+	private Customer customer;
 	private Employee employee;
-    private ArrayList<OrderLine> orderLines;
-    private static final int minimumProducts = 20; // Minimum number of products to order as per special requirement skal det være her eller i Order?
+	private ArrayList<OrderLine> orderLines;
+	private static final int minimumProducts = 20; // Minimum number of products to order as per special requirement
+													// skal det være her eller i Order?
 
-    /**
-     * TODO Check if orderID should be initialized in constructor or set on confirmation of order
-     * Constructs an Order object with the specified values.
-     *
-     * @param orderId     The unique numeric identifier for the order.
-     * @param date        The date when the order was created.
-     * @param pickUpStatus The status of the order for pickup (true if ready, false if not ready). This is only for Circle K mostly (whether or not it needs to be handled)
-     * @param pickupDate  The date the customer requested the order be to be ready
-     * @param isPaid      The status of the order, whether its paid or not. True if paid, false if non-paid.
-     * @param customerId  The unique identifier of the customer associated with the order. 
-     * @param employeeId  The unique identifier of the employee associated with handling the order. 
-     */
-    public Order(int orderId, boolean pickUpStatus, LocalDateTime pickupDate,
-                 boolean isPaid, Customer customer, Employee employee) {
-        this.orderId = -1; // Hardcoding -1 to differentiate between non persisted (-1) orders and persisted orders (non negative, non null id)
-        this.date = LocalDateTime.now();
-        this.pickUpStatus = pickUpStatus; // TODO False from creation, manually 
-        this.pickupDate = pickupDate;
-        this.isPaid = isPaid;
-        this.customer = customer;
-        this.employee = employee;
-        this.isConfirmed = false;
-        orderLines = new ArrayList<OrderLine>();
-    }
-    /**
-     * Constructor for no orderId objects
-     * @param pickUpStatus
-     * @param pickupDate
-     * @param isPaid
-     * @param customer
-     * @param employee
-     */
-    public Order(LocalDateTime date, boolean pickUpStatus, LocalDateTime pickupDate,
-            boolean isPaid, Customer customer, Employee employee) {
-   this.orderId = -1; // Hardcoding -1 to differentiate between non persisted (-1) orders and persisted orders (non negative, non null id)
-   this.date = date;
-   this.pickUpStatus = pickUpStatus; // TODO False from creation, manually 
-   this.pickupDate = pickupDate;
-   this.isPaid = isPaid;
-   this.customer = customer;
-   this.employee = employee;
-   this.isConfirmed = false;
-   orderLines = new ArrayList<OrderLine>();
-}
-    
-    /**
+	/**
+	 * TODO Check if orderID should be initialized in constructor or set on
+	 * confirmation of order Constructs an Order object with the specified values.
+	 *
+	 * @param orderId      The unique numeric identifier for the order.
+	 * @param date         The date when the order was created.
+	 * @param pickUpStatus The status of the order for pickup (true if ready, false
+	 *                     if not ready). This is only for Circle K mostly (whether
+	 *                     or not it needs to be handled)
+	 * @param pickupDate   The date the customer requested the order be to be ready
+	 * @param isPaid       The status of the order, whether its paid or not. True if
+	 *                     paid, false if non-paid.
+	 * @param customerId   The unique identifier of the customer associated with the
+	 *                     order.
+	 * @param employeeId   The unique identifier of the employee associated with
+	 *                     handling the order.
+	 */
+	public Order(int orderId, boolean pickUpStatus, LocalDateTime pickupDate, boolean isPaid, Customer customer,
+			Employee employee) {
+		this.orderId = -1; // Hardcoding -1 to differentiate between non persisted (-1) orders and
+							// persisted orders (non negative, non null id)
+		this.date = LocalDateTime.now();
+		this.pickUpStatus = pickUpStatus; // TODO False from creation, manually
+		this.pickupDate = pickupDate;
+		this.isPaid = isPaid;
+		this.customer = customer;
+		this.employee = employee;
+		this.isConfirmed = false;
+		orderLines = new ArrayList<OrderLine>();
+	}
+
+	/**
+	 * Constructor for no orderId objects
+	 * 
+	 * @param pickUpStatus
+	 * @param pickupDate
+	 * @param isPaid
+	 * @param customer
+	 * @param employee
+	 */
+	public Order(LocalDateTime date, boolean pickUpStatus, LocalDateTime pickupDate, boolean isPaid, Customer customer,
+			Employee employee) {
+		this.orderId = -1; // Hardcoding -1 to differentiate between non persisted (-1) orders and
+							// persisted orders (non negative, non null id)
+		this.date = date;
+		this.pickUpStatus = pickUpStatus; // TODO False from creation, manually
+		this.pickupDate = pickupDate;
+		this.isPaid = isPaid;
+		this.customer = customer;
+		this.employee = employee;
+		this.isConfirmed = false;
+		orderLines = new ArrayList<OrderLine>();
+	}
+
+	/**
 	 * Returns the current time in the specified format.
+	 * 
 	 * @return the formatted current time
 	 */
 	private String formatTime(Date date) {
@@ -197,32 +208,38 @@ public class Order {
 	public Employee getEmployee() {
 		return employee;
 	}
-    /**
-     * Sets the unique identifier of the employee associated with handling the order.
-     *
-     * @param The employee creating the order
-     */
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
-    }
-    /**
-     * Adds orderLines to Order
-     * @param the orderLine to be added
-     */
-    public void addOrderLine(OrderLine ol) {
-    	orderLines.add(ol);
-    }
-    public void addOrderLines(ArrayList<OrderLine> newOrderLines) {
-    	orderLines = newOrderLines;
-    }
-    
-    public int getSizeOfOrderLines() {
-    	return orderLines.size();
-    }
-    
-    public ArrayList<OrderLine> getOrderLines() {
-    	return orderLines;
-    }
+
+	/**
+	 * Sets the unique identifier of the employee associated with handling the
+	 * order.
+	 *
+	 * @param The employee creating the order
+	 */
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
+	}
+
+	/**
+	 * Adds orderLines to Order
+	 * 
+	 * @param the orderLine to be added
+	 */
+	public void addOrderLine(OrderLine ol) {
+		orderLines.add(ol);
+	}
+
+	public void addOrderLines(ArrayList<OrderLine> newOrderLines) {
+		orderLines = newOrderLines;
+	}
+
+	public int getSizeOfOrderLines() {
+		return orderLines.size();
+	}
+
+	public ArrayList<OrderLine> getOrderLines() {
+		return orderLines;
+	}
+
 	/**
 	 * Sets the unique identifier of the employee associated with handling the
 	 * order.
@@ -232,31 +249,39 @@ public class Order {
 	public void setEmployeeId(Employee employee) {
 		this.employee = employee;
 	}
-	 public boolean isConfirmed() {
-			return isConfirmed;
-		}
+
+	public boolean isConfirmed() {
+		return isConfirmed;
+	}
+
 	public void setIsConfirmed(boolean confirmed) {
 		this.isConfirmed = confirmed;
 	}
+
 	public boolean checkOrder() {
 		Boolean isPossible = false;
-		if(
-		isCustomerOk() &&
-		isEmployeeOk() &&
-		isDateDifferenceOk()) {
-		isPossible = true;	
+		if (isCustomerOk() && isEmployeeOk() && isDateDifferenceOk()) {
+			isPossible = true;
 		}
-		return isPossible;		
+		return isPossible;
 	}
+
 	private boolean isDateDifferenceOk() {
-		return this.date.plusHours(48).isBefore(this.pickupDate);
+		return !this.date.plusHours(48).isAfter(this.pickupDate);
 	}
 
 	private boolean isEmployeeOk() {
-	    return this.employee != null;
+		return this.employee != null;
 	}
 
 	private boolean isCustomerOk() {
-	    return this.customer != null;
+		return this.customer != null;
+	}
+
+	/**
+	 * @return Filler Price cause Price is not implemented yet
+	 */
+	public Object getPrice() {
+		return "PriceTemp";
 	}
 }

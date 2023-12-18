@@ -15,10 +15,17 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import java.awt.FlowLayout;
+
+import control.OrderController;
+import control.PersonController;
+import dataaccesslayer.DataAccessException;
+import model.Customer;
+import model.Order;
 
 /**
  * @author Rasmus Larsen, Viktor Dorph, Johannes Jensen, Malik Agerbæk, Shemon
@@ -31,8 +38,10 @@ public class FindCustomerView extends JFrame {
 	
 	private JTextField textFieldCustomerNumber;
 	private Container contentPane;
+	private Order order;
 
-	public FindCustomerView() {
+	public FindCustomerView(Order order) {
+		this.order = order;
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -60,7 +69,11 @@ public class FindCustomerView extends JFrame {
 		JButton btnSearch = new JButton("Søg");
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				searchClicked();
+				try {
+					searchClicked();
+				} catch (DataAccessException e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
 		panel_1.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
@@ -84,17 +97,49 @@ public class FindCustomerView extends JFrame {
 		panel_1.add(btnCancel);
 	}
 		
-	public void searchClicked() {
-		// TODO Auto-generated method stub
+	public void searchClicked() throws DataAccessException {
+		Customer c = findCustomerByPhone();
+		if(c != null) {
+			confirmCustomer(c, order);
+		} else {
+			//TODO JOPTIONERROR MSG
+		}
+		
 
+	}
+
+	/**
+	 * 
+	 */
+	private boolean confirmCustomer(Customer customer, Order order) {
+		boolean customerAdded = false;
+		if (JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(this, "Vil du vælge " + customer.getFirstName() + "?",
+				"Kunde", JOptionPane.YES_NO_OPTION)) {
+			order.setCustomer(customer);
+			customerAdded = true;
+			this.setVisible(false);
+			
+		}
+		return customerAdded;
 	}
 
 	public void cancelClicked() {
-		// TODO Auto-generated method stub
-
+		clearWindow();
 	}
+	
 	public void createCustomerClicked() {
 		CreateCustomerView createCustomerView = new CreateCustomerView();
 		createCustomerView.setVisible(true);
 	}
+	public Customer findCustomerByPhone() throws DataAccessException {
+		OrderController orderController = new OrderController();
+		String phone = textFieldCustomerNumber.getText();
+		return orderController.findCustomerByPhone(phone);
+	}
+	
+	public void clearWindow() {
+		this.setVisible(false);
+		this.dispose();
+	}
+
 }

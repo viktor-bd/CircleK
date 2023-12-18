@@ -58,10 +58,10 @@ public class ConfirmedOrderTableModel extends AbstractTableModel {
 			result += order.getPickupDate();
 			break;
 		case 4: 
-			result += order.getCustomer();
+			result += order.getCustomer().getLastName();
 			break;
 		case 5: 
-			result += order.getEmployee();
+			result += order.getEmployee().getLastName();
 			break;
 		}
 		return result;

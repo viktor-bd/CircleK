@@ -24,11 +24,13 @@ public class OrderDB implements OrderDBIF {
 	private static final String insertOrderOrderLineQuery = "INSERT INTO Order_OrderLine (order_id, orderline_id) VALUES (?, ?)";
 	private static final String updateOrderQuery = "UPDATE [Order] SET isConfirmed = 1 WHERE order_id = ?";
 	private static final String selectOrderOnOrderLineQuery = "SELECT ool.order_id, ol.* FROM OrderLine ol JOIN Order_OrderLine ool ON ol.orderline_id = ool.orderline_id WHERE order_id = ?";
+	private static final String insertIntoOrderOrderLineQ = "INSERT INTO Order_OrderLine (order_id, orderline_id) VALUES (?, ?)";
 	private PreparedStatement insertOrder;
 	private PreparedStatement insertOrderLine;
 	private PreparedStatement insertOrderOrderLine;
 	private PreparedStatement updateOrder;
 	private PreparedStatement selectOrderOnOrderLine;
+	private PreparedStatement insertIntoOrderOrderLine;
 	private Connection connection;
 
 	public OrderDB() throws DataAccessException {
@@ -38,6 +40,7 @@ public class OrderDB implements OrderDBIF {
 			insertOrderLine = connection.prepareStatement(insertOrderLineQuery, Statement.RETURN_GENERATED_KEYS);
 			insertOrderOrderLine = connection.prepareStatement(insertOrderOrderLineQuery);
 			selectOrderOnOrderLine = connection.prepareStatement(selectOrderOnOrderLineQuery);
+			insertIntoOrderOrderLine = connection.prepareStatement(insertIntoOrderOrderLineQ);
 			updateOrder = connection.prepareStatement(updateOrderQuery);
 		} catch (SQLException e) {
 			throw new DataAccessException(e, "Could not prepare statement");
@@ -50,7 +53,7 @@ public class OrderDB implements OrderDBIF {
 	 * @param isConfirmed
 	 */
 
-	public ArrayList<Order> getOrdersWithBoolean(boolean isConfirmed) {
+	public ArrayList<Order> getOrdersWithBoolean(boolean isConfirmed, ArrayList<Product> products) {
 		ArrayList<Order> orders = new ArrayList<Order>();
 		ResultSet rs;
 		int bit = 0;
@@ -68,11 +71,10 @@ public class OrderDB implements OrderDBIF {
 
 			// Process the result set and populate the list of orders
 			while (rs.next()) {
-				Order order = buildOrderObject(rs, null); // intet product sendt med
+				Order order = buildOrderObject(rs, products); 
 				// Add to list
 				orders.add(order);
 			}
-
 			// Close the result set
 			rs.close();
 		} catch (SQLException e) {
@@ -80,6 +82,30 @@ public class OrderDB implements OrderDBIF {
 		}
 
 		return orders;
+	}
+
+	/*
+	 * Builds the Order Object from the ResultSet
+	 */
+	private Order buildOrderObjectForTables(ResultSet rs, List<Product> products) throws SQLException {
+		Customer customer = null;
+		Employee employee = null;
+		int booleanCheck = rs.getInt("pickUpStatus");
+		boolean pickUpStatus = false;
+		if (booleanCheck == 1) {
+			pickUpStatus = true;
+		}
+		int booleanCheckPaid = rs.getInt("isPaid");
+		boolean isPaid = false;
+		if (booleanCheckPaid == 1) {
+			isPaid = true;
+		}
+		LocalDateTime date = getLocalDateFromSQLDate(rs.getDate("date"));
+		LocalDateTime pickupDate = getLocalDateFromSQLDate(rs.getDate("pickupDate"));
+		Order order = new Order(date, pickUpStatus, pickupDate, isPaid, customer, employee);
+		order.setOrderId(rs.getInt("order_id"));
+		order.setIsConfirmed(convertIntToBoolean(rs.getInt("isConfirmed")));
+		return order;
 	}
 
 	/*
@@ -170,7 +196,7 @@ public class OrderDB implements OrderDBIF {
 		}
 	}
 
-	private ArrayList<Integer> insertOrderLines(ArrayList<OrderLine> orderLines) throws SQLException {
+	public ArrayList<Integer> insertOrderLines(ArrayList<OrderLine> orderLines) throws SQLException {
 		ArrayList<Integer> orderLineID = new ArrayList<>();
 		for (OrderLine orderLine : orderLines) {
 			orderLineID.addAll(insertOrderLine(orderLine));
@@ -243,6 +269,30 @@ public class OrderDB implements OrderDBIF {
 		}
 	}
 
+	public int insertOrderFromGUI(Order newOrder) throws SQLException {
+		insertOrder.setDate(1, java.sql.Date.valueOf(newOrder.getDate().toLocalDate()));
+		System.out.println(java.sql.Date.valueOf(newOrder.getDate().toLocalDate()));
+		insertOrder.setInt(2, convertBooleanToInt(newOrder.isPickUpStatus()));
+		insertOrder.setDate(3, java.sql.Date.valueOf(newOrder.getPickupDate().toLocalDate()));
+		insertOrder.setInt(4, convertBooleanToInt(newOrder.isPaid()));
+		insertOrder.setInt(5, 0);
+		insertOrder.setInt(6, newOrder.getCustomer().getCustomerId());
+		insertOrder.setInt(7, newOrder.getEmployee().getEmployeeId());
+		int rowsAffected = insertOrder.executeUpdate();
+		if (rowsAffected == 0) {
+			throw new SQLException("Inserting order failed, no rows affected.");
+		}
+		try (ResultSet generatedKeys = insertOrder.getGeneratedKeys()) {
+			if (generatedKeys.next()) {
+				int orderId = generatedKeys.getInt(1);
+				System.out.println(orderId);
+				return orderId;
+			} else {
+				throw new SQLException("Inserting order failed, no ID obtained.");
+			}
+		}
+	}
+
 	private LocalDateTime getLocalDateFromSQLDate(Date date) {
 		LocalDateTime localDateTime = null;
 		if (date != null) {
@@ -282,5 +332,19 @@ public class OrderDB implements OrderDBIF {
 	public void insertUpdatedOrder(Order foundOrder) throws SQLException {
 		updateOrder.setInt(1, foundOrder.getOrderId());
 		updateOrder.executeUpdate();
+	}
+
+	/**
+	 * @param orderLineIds
+	 * @param orderId
+	 * @throws SQLException
+	 */
+	public void insertOrderIdAndOrderLinesIdsIntoDB(ArrayList<Integer> orderLineIds, int orderId) throws SQLException {
+		for (Integer orderLineId : orderLineIds) {
+			insertIntoOrderOrderLine.setInt(1, orderId);
+			insertIntoOrderOrderLine.setInt(2, orderLineId);
+			insertIntoOrderOrderLine.executeUpdate();
+		}
+
 	}
 }

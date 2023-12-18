@@ -7,19 +7,30 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import control.OrderController;
 import control.PersonController;
 import dataaccesslayer.DataAccessException;
 import dataaccesslayer.OrderDB;
 import model.Order;
+import model.Customer;
+import model.Employee;
 
 /**
  * @author Rasmus Larsen, Viktor Dorph, Johannes Jensen, Malik Agerbæk, Shemon
@@ -32,13 +43,20 @@ public class UnconfirmedOrderView extends JFrame {
 	private UnconfirmedOrderTableModel unconfirmedOrderTableModel;
 	private OrderController orderController;
 	private PersonController personController;
+	private OrderView orderView;
+	private JScrollPane scrollPane;
+	private ScheduledExecutorService exec;
+	private volatile boolean viewRunning;
 
 	/**
 	 * Creates and sets the view
 	 * 
 	 * @throws DataAccessException
+	 * @throws SQLException
 	 */
-	public UnconfirmedOrderView() throws DataAccessException {
+	public UnconfirmedOrderView(OrderView orderView) throws DataAccessException, SQLException {
+		viewRunning = true;
+		this.orderView = orderView;
 		personController = new PersonController();
 		orderController = new OrderController();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -65,7 +83,15 @@ public class UnconfirmedOrderView extends JFrame {
 		JButton btnConfirmOrder = new JButton("Godkend ordre");
 		btnConfirmOrder.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				confirmOrderClicked();
+				try {
+					confirmOrderClicked();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+					SwingUtilities.invokeLater(() -> {
+						JOptionPane.showMessageDialog(UnconfirmedOrderView.this, "Ordre kunne ikke godkendes.",
+								"Prøv igen eller tjek ordren", JOptionPane.ERROR_MESSAGE);
+					});
+				}
 			}
 		});
 		btnConfirmOrder.setBounds(331, 238, 103, 23);
@@ -89,10 +115,33 @@ public class UnconfirmedOrderView extends JFrame {
 		unconfirmedOrderTableModel = new UnconfirmedOrderTableModel();
 		// Creating Array for setData to tableModel
 		ArrayList<Order> orders = getOrdersFromDB();
-		// Get all order ids from the list above
+
 		ArrayList<Integer> orderIds = new ArrayList<Integer>();
 		orderIds = getOrderIDsFromList(orders);
-		// Loop call to PersonController with orderIds
+
+		HashMap<Integer, Customer> orderIdCustomerHashMap = new HashMap<Integer, Customer>();
+		HashMap<Integer, Employee> orderIdEmployeeHashMap = new HashMap<Integer, Employee>();
+		for (Integer currentOrderId : orderIds) {
+			Customer currentCustomer = orderController.getCustomerFromOrderId(currentOrderId);
+			Employee currentEmployee = orderController.getEmployeeFromOrderId(currentOrderId);
+
+			orderIdCustomerHashMap.put(currentOrderId, currentCustomer);
+			orderIdEmployeeHashMap.put(currentOrderId, currentEmployee);
+
+			Order currentOrder = null;
+			for (Order order : orders) {
+				if (order.getOrderId() == currentOrderId) {
+					currentOrder = order;
+					break;
+				}
+			}
+
+			if (currentOrder != null) {
+				orderController.addCustomerToOrder(currentCustomer, currentOrder);
+				orderController.testaddEmployeeToOrder(currentEmployee, currentOrder);
+			}
+		}
+
 		// Use list to find customers in PersonController with PersonDB
 
 		// Create customers and add to order
@@ -102,44 +151,92 @@ public class UnconfirmedOrderView extends JFrame {
 		tableUnconfirmedOrders.setModel(unconfirmedOrderTableModel);
 		scrollPane.setViewportView(tableUnconfirmedOrders);
 
-//		FIXME Thread for update table
-//		 Setting up a thread for updating
-//				exec = Executors.newSingleThreadScheduledExecutor();
-//				exec.scheduleAtFixedRate(new Runnable() {
-//				    @Override
-//				    public void run() {
-//				        TableModel.setData(getDataMethod());
-//				        TableModel.revalidate();
-//				        TableModel.repaint();
-//				    }
-//				}, 0, 5, TimeUnit.SECONDS);
-//				import java.util.concurrent.Executors;
-//				import java.util.concurrent.ScheduledExecutorService;
-//				import java.util.concurrent.TimeUnit;
-
+//		executeUpdateToTable();
 	}
+
+	/**
+	 * 
+	 */
+//	private void executeUpdateToTable() {
+//		if (viewRunning) {
+//			exec = Executors.newSingleThreadScheduledExecutor();
+//			exec.scheduleAtFixedRate(() -> {
+//				try {
+//					updateSwingComponents();
+//				} catch (SQLException e) {
+//					e.printStackTrace();
+//				}
+//			}, 15, 30, TimeUnit.SECONDS);
+//		} else {
+//			exec.shutdown();
+//		}
+//	}
+
+//	private void updateSwingComponents() throws SQLException {
+//		if (viewRunning) {
+//			System.out.println("Starting updateSwingComponents");
+//			try {
+//				ArrayList<Order> updatedOrders = getOrdersFromDB();
+//				unconfirmedOrderTableModel.updateList(updatedOrders);
+//				ArrayList<Integer> orderIds = new ArrayList<Integer>();
+//				orderIds = getOrderIDsFromList(updatedOrders);
+//
+//				HashMap<Integer, Customer> orderIdCustomerHashMap = new HashMap<Integer, Customer>();
+//				HashMap<Integer, Employee> orderIdEmployeeHashMap = new HashMap<Integer, Employee>();
+//				for (Integer currentOrderId : orderIds) {
+//					Customer currentCustomer = orderController.getCustomerFromOrderId(currentOrderId);
+//					Employee currentEmployee = orderController.getEmployeeFromOrderId(currentOrderId);
+//
+//					orderIdCustomerHashMap.put(currentOrderId, currentCustomer);
+//					orderIdEmployeeHashMap.put(currentOrderId, currentEmployee);
+//
+//					Order currentOrder = null;
+//					for (Order order : updatedOrders) {
+//						if (order.getOrderId() == currentOrderId) {
+//							currentOrder = order;
+//							break;
+//						}
+//					}
+//
+//					if (currentOrder != null) {
+//						orderController.addCustomerToOrder(currentCustomer, currentOrder);
+//						orderController.testaddEmployeeToOrder(currentEmployee, currentOrder);
+//					}
+//				}
+////				tableUnconfirmedOrders.setModel(unconfirmedOrderTableModel);
+////				scrollPane.setViewportView(tableUnconfirmedOrders);
+////				tableUnconfirmedOrders.revalidate();
+////				tableUnconfirmedOrders.repaint();
+//				System.out.println("Finished updateSwingComponents");
+//
+//			} catch (DataAccessException | SQLException e) {
+//				e.printStackTrace();
+//			}
+//		} else {
+//			exec.shutdown();
+//		}
+//		executeUpdateToTable();
+//	}
 
 	/**
 	 * The selected order will be rejected on click
 	 */
 	protected void rejectOrderClicked() {
-		// TODO Show active order
-
-		// The active order is removed
-
-		// GUI updates to show new state
+		clearWindow();
 
 	}
 
 	/**
 	 * The selected order will be confirmed on click
+	 * 
+	 * @throws SQLException
 	 */
-	protected void confirmOrderClicked() {
-		// TODO Show active order
-
-		// The active is order is created using the CreateOrder function
-
-		// GUI updates to show new state
+	protected void confirmOrderClicked() throws SQLException {
+		int selectedRow = tableUnconfirmedOrders.getSelectedRow();
+		ArrayList<Order> orders = unconfirmedOrderTableModel.getOrders();
+		Order orderToUpdate = orders.get(selectedRow);
+		orderController.updateOrderToConfirmed(orderToUpdate);
+		backToMenuClicked();
 
 	}
 
@@ -147,8 +244,6 @@ public class UnconfirmedOrderView extends JFrame {
 	 * Go back to menu from OrderView
 	 */
 	private void backToMenuClicked() {
-
-		OrderView orderView = new OrderView();
 		orderView.run(orderView);
 		clearWindow();
 	}
@@ -158,14 +253,24 @@ public class UnconfirmedOrderView extends JFrame {
 	 */
 	public void clearWindow() {
 		this.setVisible(false);
+		viewNotRunning();
 		this.dispose();
 	}
 
-	public void display() {
+	/**
+	 * 
+	 */
+	private void viewNotRunning() {
+		viewRunning = false;
 
 	}
 
-	public ArrayList<Order> getOrdersFromDB() {
+	public void display() {
+		this.repaint();
+		this.revalidate();
+	}
+
+	public ArrayList<Order> getOrdersFromDB() throws DataAccessException {
 		return orderController.getUnconfirmedOrders();
 
 	}

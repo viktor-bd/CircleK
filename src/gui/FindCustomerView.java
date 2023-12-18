@@ -124,9 +124,9 @@ public class FindCustomerView extends JFrame {
 	}
 
 	public void cancelClicked() {
-		// TODO Auto-generated method stub
-
+		clearWindow();
 	}
+	
 	public void createCustomerClicked() {
 		CreateCustomerView createCustomerView = new CreateCustomerView();
 		createCustomerView.setVisible(true);
@@ -135,6 +135,11 @@ public class FindCustomerView extends JFrame {
 		OrderController orderController = new OrderController();
 		String phone = textFieldCustomerNumber.getText();
 		return orderController.findCustomerByPhone(phone);
+	}
+	
+	public void clearWindow() {
+		this.setVisible(false);
+		this.dispose();
 	}
 
 }

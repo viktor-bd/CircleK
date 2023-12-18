@@ -161,6 +161,11 @@ public class ProductView extends JFrame {
 		panel.add(btnConfirmOrderCreation);
 
 		JButton btnNewButton_3 = new JButton("Tilbage");
+		btnNewButton_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cancelClicked();
+			}
+		});
 		btnNewButton_3.setBounds(385, 51, 89, 23);
 		panel.add(btnNewButton_3);
 
@@ -307,5 +312,16 @@ public class ProductView extends JFrame {
 	public void addCustomerClicked(Order o) {
 		FindCustomerView findCustomerView = new FindCustomerView(o);
 		findCustomerView.setVisible(true);
+	}
+	
+	public void cancelClicked() {
+		OrderView orderView = new OrderView(employee);
+		orderView.setVisible(true);
+		clearWindow();
+	}
+	
+	public void clearWindow() {
+		this.setVisible(false);
+		this.dispose();
 	}
 }

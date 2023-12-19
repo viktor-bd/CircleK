@@ -123,7 +123,7 @@ public class UnconfirmedOrderView extends JFrame {
     	tableUnconfirmedOrders.setModel(unconfirmedOrderTableModel);
         scrollPane.setViewportView(tableUnconfirmedOrders);
 		executeUpdateToTable();
-
+		ArrayList<Order> orders = getOrdersFromDB();
 		ArrayList<Integer> orderIds = new ArrayList<Integer>();
 		orderIds = getOrderIDsFromList(orders);
 

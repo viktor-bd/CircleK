@@ -119,8 +119,10 @@ public class UnconfirmedOrderView extends JFrame {
 		tableUnconfirmedOrders = new JTable();
 		tableUnconfirmedOrders.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		unconfirmedOrderTableModel = new UnconfirmedOrderTableModel();
-		// Creating Array for setData to tableModel
-		ArrayList<Order> orders = getOrdersFromDB();
+		unconfirmedOrderTableModel.setData(getOrdersFromDB());
+    	tableUnconfirmedOrders.setModel(unconfirmedOrderTableModel);
+        scrollPane.setViewportView(tableUnconfirmedOrders);
+		executeUpdateToTable();
 
 		ArrayList<Integer> orderIds = new ArrayList<Integer>();
 		orderIds = getOrderIDsFromList(orders);
@@ -158,72 +160,72 @@ public class UnconfirmedOrderView extends JFrame {
 		scrollPane.setViewportView(tableUnconfirmedOrders);
 
 		executeUpdateToTable();
+
 	}
 
 	/**
 	 * 
 	 */
 	private void executeUpdateToTable() {
-		if (viewRunning) {
-			exec = Executors.newSingleThreadScheduledExecutor();
-			exec.scheduleAtFixedRate(() -> {
-				try {
-					updateSwingComponents();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}, 15, 30, TimeUnit.SECONDS);
-		} else {
-			System.err.println("Shutdown af thread");
-			exec.shutdown();
-		}
+
+	    if (viewRunning) {
+	        exec = Executors.newSingleThreadScheduledExecutor();
+	        exec.scheduleAtFixedRate(() -> {
+	            try {
+	                updateSwingComponents();
+	                System.out.println("166 ramt");
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }, 5, 10000, TimeUnit.SECONDS);
+	    } else {
+	        exec.shutdown();
+	    }
 	}
 
 	private void updateSwingComponents() throws SQLException {
-		if (viewRunning) {
-			System.out.println("Starting updateSwingComponents");
-			try {
-				ArrayList<Order> updatedOrders = getOrdersFromDB();
-				unconfirmedOrderTableModel.updateList(updatedOrders);
-				ArrayList<Integer> orderIds = new ArrayList<Integer>();
-				orderIds = getOrderIDsFromList(updatedOrders);
+	    if (viewRunning) {
+	        System.out.println("Starting updateSwingComponents");
+	        try {
+	        
+	            ArrayList<Order> updatedOrders = getOrdersFromDB();
+	            unconfirmedOrderTableModel.updateList(updatedOrders);
+	            tableUnconfirmedOrders.revalidate();
+	            tableUnconfirmedOrders.repaint();
+	            ArrayList<Integer> orderIds = getOrderIDsFromList(updatedOrders);
 
-				HashMap<Integer, Customer> orderIdCustomerHashMap = new HashMap<Integer, Customer>();
-				HashMap<Integer, Employee> orderIdEmployeeHashMap = new HashMap<Integer, Employee>();
-				for (Integer currentOrderId : orderIds) {
-					Customer currentCustomer = orderController.getCustomerFromOrderId(currentOrderId);
-					Employee currentEmployee = orderController.getEmployeeFromOrderId(currentOrderId);
+	            HashMap<Integer, Customer> orderIdCustomerHashMap = new HashMap<>();
+	            HashMap<Integer, Employee> orderIdEmployeeHashMap = new HashMap<>();
+	            for (Integer currentOrderId : orderIds) {
+	                Customer currentCustomer = orderController.getCustomerFromOrderId(currentOrderId);
+	                Employee currentEmployee = orderController.getEmployeeFromOrderId(currentOrderId);
 
-					orderIdCustomerHashMap.put(currentOrderId, currentCustomer);
-					orderIdEmployeeHashMap.put(currentOrderId, currentEmployee);
+	                orderIdCustomerHashMap.put(currentOrderId, currentCustomer);
+	                orderIdEmployeeHashMap.put(currentOrderId, currentEmployee);
 
-					Order currentOrder = null;
-					for (Order order : updatedOrders) {
-						if (order.getOrderId() == currentOrderId) {
-						currentOrder = order;
-							//break;
-					}
-				}
+	                Order currentOrder = null;
+	                for (Order order : updatedOrders) {
+	                    if (order.getOrderId() == currentOrderId) {
+	                        currentOrder = order;
+	                    }
+	                }
+	                System.out.println("200 ramt");
+	                if (currentOrder != null) {
+	                    orderController.addCustomerToOrder(currentCustomer, currentOrder);
+	                    orderController.testaddEmployeeToOrder(currentEmployee, currentOrder);
+	                }
+	            }
+	            System.out.println("Repaint 207");
+	            tableUnconfirmedOrders.revalidate();
+	            tableUnconfirmedOrders.repaint();
 
-					if (currentOrder != null) {
-						orderController.addCustomerToOrder(currentCustomer, currentOrder);
-						orderController.testaddEmployeeToOrder(currentEmployee, currentOrder);
-					}
-			}
-				tableUnconfirmedOrders.setModel(unconfirmedOrderTableModel);
-				scrollPane.setViewportView(tableUnconfirmedOrders);
-				tableUnconfirmedOrders.revalidate();
-				tableUnconfirmedOrders.repaint();
-				System.out.println("Finished updateSwingComponents");
+	            System.out.println("Finished updateSwingComponents");
+	        } catch (DataAccessException | SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	    executeUpdateToTable();
 
-			} catch (DataAccessException | SQLException e) {
-				e.printStackTrace();
-			}
-		} else {
-			System.out.println("Shutdown exec hit");
-			exec.shutdown();
-		}
-		executeUpdateToTable();
 	}
 
 	 private void confirmSelectedOrder() {
@@ -242,11 +244,11 @@ public class UnconfirmedOrderView extends JFrame {
 	    }
 	
 	/**
-	 * The selected order will be rejected on click
+	 * The selected order will be rejected // Not implemented
 	 */
 	protected void rejectOrderClicked() {
 		clearWindow();
-
+		System.out.println("Not implemented");
 	}
 
 	/**

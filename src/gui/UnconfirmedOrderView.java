@@ -177,7 +177,7 @@ public class UnconfirmedOrderView extends JFrame {
 	            } catch (SQLException e) {
 	                e.printStackTrace();
 	            }
-	        }, 5, 10000, TimeUnit.SECONDS);
+	        }, 5, 30, TimeUnit.SECONDS);
 	    } else {
 	        exec.shutdown();
 	    }
@@ -209,7 +209,6 @@ public class UnconfirmedOrderView extends JFrame {
 	                        currentOrder = order;
 	                    }
 	                }
-	                System.out.println("200 ramt");
 	                if (currentOrder != null) {
 	                    orderController.addCustomerToOrder(currentCustomer, currentOrder);
 	                    orderController.testaddEmployeeToOrder(currentEmployee, currentOrder);
@@ -224,8 +223,12 @@ public class UnconfirmedOrderView extends JFrame {
 	            e.printStackTrace();
 	        }
 	    }
+<<<<<<< Updated upstream
 	    executeUpdateToTable();
 
+=======
+//	    executeUpdateToTable();
+>>>>>>> Stashed changes
 	}
 
 	 private void confirmSelectedOrder() {

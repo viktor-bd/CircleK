@@ -27,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 import control.OrderController;
 import control.PersonController;
 import dataaccesslayer.DataAccessException;
+import dataaccesslayer.InvalidConcurrencyException;
 import dataaccesslayer.OrderDB;
 import model.Order;
 import model.Customer;
@@ -230,8 +231,9 @@ public class UnconfirmedOrderView extends JFrame {
 	 * The selected order will be confirmed on click
 	 * 
 	 * @throws SQLException
+	 * @throws InvalidConcurrencyException 
 	 */
-	protected void confirmOrderClicked() throws SQLException {
+	protected void confirmOrderClicked() throws SQLException, InvalidConcurrencyException {
 		int selectedRow = tableUnconfirmedOrders.getSelectedRow();
 		ArrayList<Order> orders = unconfirmedOrderTableModel.getOrders();
 		Order orderToUpdate = orders.get(selectedRow);

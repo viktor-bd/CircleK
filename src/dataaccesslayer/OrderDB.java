@@ -329,9 +329,7 @@ public class OrderDB implements OrderDBIF {
 		return foundOrder;
 	}
 
-	public void insertUpdatedOrder(Order foundOrder) throws SQLException {
-		updateOrder.setInt(1, foundOrder.getOrderId());
-		updateOrder.executeUpdate();
+	public void insertUpdatedOrder(Order foundOrder) throws SQLException, InvalidConcurrencyException {
 	}
 
 	/**

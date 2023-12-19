@@ -86,7 +86,7 @@ public class UnconfirmedOrderView extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					confirmOrderClicked();
-				} catch (SQLException e1) {
+				} catch (SQLException | InvalidConcurrencyException e1) {
 					e1.printStackTrace();
 					SwingUtilities.invokeLater(() -> {
 						JOptionPane.showMessageDialog(UnconfirmedOrderView.this, "Ordre kunne ikke godkendes.",

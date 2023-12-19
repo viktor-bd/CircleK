@@ -29,7 +29,7 @@ public class OrderController {
 
 	public Order createOrderNoOrderIDOnlyDate(LocalDateTime date, boolean pickUpStatus, LocalDateTime pickupDate,
 			boolean isPaid, Customer customer, Employee employee) {
-		Order newOrder = new Order(date, pickUpStatus, pickupDate, false, null, null);
+		Order newOrder = new Order(date, pickUpStatus, pickupDate, false, null, null,null);
 		return newOrder;
 	}
 

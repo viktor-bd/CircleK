@@ -21,8 +21,9 @@ public class Order {
 	private Customer customer;
 	private Employee employee;
 	private ArrayList<OrderLine> orderLines;
-	private static final int minimumProducts = 20; // Minimum number of products to order as per special requirement
-													// skal det være her eller i Order?
+	private static final int minimumProducts = 20;
+	private byte[] concurrencyToken;
+													
 
 	/**
 	 * TODO Check if orderID should be initialized in constructor or set on
@@ -65,7 +66,7 @@ public class Order {
 	 * @param employee
 	 */
 	public Order(LocalDateTime date, boolean pickUpStatus, LocalDateTime pickupDate, boolean isPaid, Customer customer,
-			Employee employee) {
+			Employee employee, byte[] concurrencyToken ) {
 		this.orderId = -1; // Hardcoding -1 to differentiate between non persisted (-1) orders and
 							// persisted orders (non negative, non null id)
 		this.date = date;
@@ -75,6 +76,7 @@ public class Order {
 		this.customer = customer;
 		this.employee = employee;
 		this.isConfirmed = false;
+		this.concurrencyToken = concurrencyToken;
 		orderLines = new ArrayList<OrderLine>();
 	}
 
@@ -283,5 +285,13 @@ public class Order {
 	 */
 	public Object getPrice() {
 		return "PriceTemp";
+	}
+
+	public byte[] getConcurrencyToken() {
+		return concurrencyToken;
+	}
+
+	public void setConcurrencyToken(byte[] concurrencyToken) {
+		this.concurrencyToken = concurrencyToken;
 	}
 }

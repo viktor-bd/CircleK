@@ -158,7 +158,6 @@ public class UnconfirmedOrderView extends JFrame {
 		unconfirmedOrderTableModel.setData(orders);
 		tableUnconfirmedOrders.setModel(unconfirmedOrderTableModel);
 		scrollPane.setViewportView(tableUnconfirmedOrders);
-
 		executeUpdateToTable();
 
 	}
@@ -223,12 +222,6 @@ public class UnconfirmedOrderView extends JFrame {
 	            e.printStackTrace();
 	        }
 	    }
-<<<<<<< Updated upstream
-	    executeUpdateToTable();
-
-=======
-//	    executeUpdateToTable();
->>>>>>> Stashed changes
 	}
 
 	 private void confirmSelectedOrder() {

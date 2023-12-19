@@ -157,73 +157,90 @@ public class UnconfirmedOrderView extends JFrame {
 		tableUnconfirmedOrders.setModel(unconfirmedOrderTableModel);
 		scrollPane.setViewportView(tableUnconfirmedOrders);
 
-//		executeUpdateToTable();
+		executeUpdateToTable();
 	}
 
 	/**
 	 * 
 	 */
-//	private void executeUpdateToTable() {
-//		if (viewRunning) {
-//			exec = Executors.newSingleThreadScheduledExecutor();
-//			exec.scheduleAtFixedRate(() -> {
-//				try {
-//					updateSwingComponents();
-//				} catch (SQLException e) {
-//					e.printStackTrace();
-//				}
-//			}, 15, 30, TimeUnit.SECONDS);
-//		} else {
-//			exec.shutdown();
-//		}
-//	}
+	private void executeUpdateToTable() {
+		if (viewRunning) {
+			exec = Executors.newSingleThreadScheduledExecutor();
+			exec.scheduleAtFixedRate(() -> {
+				try {
+					updateSwingComponents();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}, 15, 30, TimeUnit.SECONDS);
+		} else {
+			System.err.println("Shutdown af thread");
+			exec.shutdown();
+		}
+	}
 
-//	private void updateSwingComponents() throws SQLException {
-//		if (viewRunning) {
-//			System.out.println("Starting updateSwingComponents");
-//			try {
-//				ArrayList<Order> updatedOrders = getOrdersFromDB();
-//				unconfirmedOrderTableModel.updateList(updatedOrders);
-//				ArrayList<Integer> orderIds = new ArrayList<Integer>();
-//				orderIds = getOrderIDsFromList(updatedOrders);
-//
-//				HashMap<Integer, Customer> orderIdCustomerHashMap = new HashMap<Integer, Customer>();
-//				HashMap<Integer, Employee> orderIdEmployeeHashMap = new HashMap<Integer, Employee>();
-//				for (Integer currentOrderId : orderIds) {
-//					Customer currentCustomer = orderController.getCustomerFromOrderId(currentOrderId);
-//					Employee currentEmployee = orderController.getEmployeeFromOrderId(currentOrderId);
-//
-//					orderIdCustomerHashMap.put(currentOrderId, currentCustomer);
-//					orderIdEmployeeHashMap.put(currentOrderId, currentEmployee);
-//
-//					Order currentOrder = null;
-//					for (Order order : updatedOrders) {
-//						if (order.getOrderId() == currentOrderId) {
-//							currentOrder = order;
-//							break;
-//						}
-//					}
-//
-//					if (currentOrder != null) {
-//						orderController.addCustomerToOrder(currentCustomer, currentOrder);
-//						orderController.testaddEmployeeToOrder(currentEmployee, currentOrder);
-//					}
-//				}
-////				tableUnconfirmedOrders.setModel(unconfirmedOrderTableModel);
-////				scrollPane.setViewportView(tableUnconfirmedOrders);
-////				tableUnconfirmedOrders.revalidate();
-////				tableUnconfirmedOrders.repaint();
-//				System.out.println("Finished updateSwingComponents");
-//
-//			} catch (DataAccessException | SQLException e) {
-//				e.printStackTrace();
-//			}
-//		} else {
-//			exec.shutdown();
-//		}
-//		executeUpdateToTable();
-//	}
+	private void updateSwingComponents() throws SQLException {
+		if (viewRunning) {
+			System.out.println("Starting updateSwingComponents");
+			try {
+				ArrayList<Order> updatedOrders = getOrdersFromDB();
+				unconfirmedOrderTableModel.updateList(updatedOrders);
+				ArrayList<Integer> orderIds = new ArrayList<Integer>();
+				orderIds = getOrderIDsFromList(updatedOrders);
 
+				HashMap<Integer, Customer> orderIdCustomerHashMap = new HashMap<Integer, Customer>();
+				HashMap<Integer, Employee> orderIdEmployeeHashMap = new HashMap<Integer, Employee>();
+				for (Integer currentOrderId : orderIds) {
+					Customer currentCustomer = orderController.getCustomerFromOrderId(currentOrderId);
+					Employee currentEmployee = orderController.getEmployeeFromOrderId(currentOrderId);
+
+					orderIdCustomerHashMap.put(currentOrderId, currentCustomer);
+					orderIdEmployeeHashMap.put(currentOrderId, currentEmployee);
+
+					Order currentOrder = null;
+					for (Order order : updatedOrders) {
+						if (order.getOrderId() == currentOrderId) {
+						currentOrder = order;
+							//break;
+					}
+				}
+
+					if (currentOrder != null) {
+						orderController.addCustomerToOrder(currentCustomer, currentOrder);
+						orderController.testaddEmployeeToOrder(currentEmployee, currentOrder);
+					}
+			}
+				tableUnconfirmedOrders.setModel(unconfirmedOrderTableModel);
+				scrollPane.setViewportView(tableUnconfirmedOrders);
+				tableUnconfirmedOrders.revalidate();
+				tableUnconfirmedOrders.repaint();
+				System.out.println("Finished updateSwingComponents");
+
+			} catch (DataAccessException | SQLException e) {
+				e.printStackTrace();
+			}
+		} else {
+			System.out.println("Shutdown exec hit");
+			exec.shutdown();
+		}
+		executeUpdateToTable();
+	}
+
+	 private void confirmSelectedOrder() {
+	        // Ensure only one employee can confirm an order at a time
+	        orderSelectionLock.lock();
+	        try {
+	            if (selectedOrder != null) {
+	                // Perform the confirmation logic for the selected order
+	                System.out.println("Order confirmed by employee: " + selectedOrder);
+	                // Clear the selected order
+	                selectedOrder = null;
+	            }
+	        } finally {
+	            orderSelectionLock.unlock();
+	        }
+	    }
+	
 	/**
 	 * The selected order will be rejected on click
 	 */

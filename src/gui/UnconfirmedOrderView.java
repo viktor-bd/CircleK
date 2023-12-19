@@ -20,6 +20,9 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -48,6 +51,8 @@ public class UnconfirmedOrderView extends JFrame {
 	private JScrollPane scrollPane;
 	private ScheduledExecutorService exec;
 	private volatile boolean viewRunning;
+	private Lock orderSelectionLock;
+	private Object selectedOrder;
 
 	/**
 	 * Creates and sets the view

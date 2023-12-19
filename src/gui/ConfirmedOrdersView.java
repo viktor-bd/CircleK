@@ -102,7 +102,7 @@ public class ConfirmedOrdersView extends JFrame {
 				    
 				    if (currentOrder != null) {
 				        orderController.addCustomerToOrder(currentCustomer, currentOrder);
-				        orderController.testaddEmployeeToOrder(currentEmployee, currentOrder);
+				        orderController.addEmployeeToOrder(currentEmployee, currentOrder);
 				    }
 				}		
 		confirmedOrderTableModel.setData(orders);

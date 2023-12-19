@@ -17,6 +17,7 @@ import control.OrderController;
 import control.PersonController;
 
 import dataaccesslayer.DataAccessException;
+import dataaccesslayer.InvalidConcurrencyException;
 
 public class TestOrderCreation {
 	/*
@@ -26,7 +27,7 @@ public class TestOrderCreation {
 	 */
 	@Test
 	@DisplayName("S?_TC?: Given order will update order confirmation status")
-	public void givenValidOrderWillSetConfirmedTrueShouldReturnOrder() throws DataAccessException, SQLException {
+	public void givenValidOrderWillSetConfirmedTrueShouldReturnOrder() throws DataAccessException, SQLException, InvalidConcurrencyException {
 		// Arrange
 		OrderController orderController = new OrderController();
 		Order foundOrder = orderController.getOrderWithOrderId(4);

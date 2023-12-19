@@ -9,6 +9,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import model.Customer;
@@ -23,6 +24,7 @@ public class OrderDB implements OrderDBIF {
 	private static final String insertOrderLineQuery = "INSERT INTO OrderLine (quantity, sku) VALUES (?, ?)";
 	private static final String insertOrderOrderLineQuery = "INSERT INTO Order_OrderLine (order_id, orderline_id) VALUES (?, ?)";
 	private static final String updateOrderQuery = "UPDATE [Order] SET isConfirmed = 1 WHERE order_id = ?";
+	private static final String selectConcurrencyTokenQuery = "SELECT concurrency_token FROM [Order] WHERE order_id = ?";
 	private static final String selectOrderOnOrderLineQuery = "SELECT ool.order_id, ol.* FROM OrderLine ol JOIN Order_OrderLine ool ON ol.orderline_id = ool.orderline_id WHERE order_id = ?";
 	private static final String insertIntoOrderOrderLineQ = "INSERT INTO Order_OrderLine (order_id, orderline_id) VALUES (?, ?)";
 	private PreparedStatement insertOrder;
@@ -31,6 +33,7 @@ public class OrderDB implements OrderDBIF {
 	private PreparedStatement updateOrder;
 	private PreparedStatement selectOrderOnOrderLine;
 	private PreparedStatement insertIntoOrderOrderLine;
+	private PreparedStatement selectConcurrencyToken;
 	private Connection connection;
 
 	public OrderDB() throws DataAccessException {
@@ -42,6 +45,7 @@ public class OrderDB implements OrderDBIF {
 			selectOrderOnOrderLine = connection.prepareStatement(selectOrderOnOrderLineQuery);
 			insertIntoOrderOrderLine = connection.prepareStatement(insertIntoOrderOrderLineQ);
 			updateOrder = connection.prepareStatement(updateOrderQuery);
+			selectConcurrencyToken = connection.prepareStatement(selectConcurrencyTokenQuery);
 		} catch (SQLException e) {
 			throw new DataAccessException(e, "Could not prepare statement");
 		}
@@ -71,7 +75,7 @@ public class OrderDB implements OrderDBIF {
 
 			// Process the result set and populate the list of orders
 			while (rs.next()) {
-				Order order = buildOrderObject(rs, products); 
+				Order order = buildOrderObject(rs, products);
 				// Add to list
 				orders.add(order);
 			}
@@ -82,30 +86,6 @@ public class OrderDB implements OrderDBIF {
 		}
 
 		return orders;
-	}
-
-	/*
-	 * Builds the Order Object from the ResultSet
-	 */
-	private Order buildOrderObjectForTables(ResultSet rs, List<Product> products) throws SQLException {
-		Customer customer = null;
-		Employee employee = null;
-		int booleanCheck = rs.getInt("pickUpStatus");
-		boolean pickUpStatus = false;
-		if (booleanCheck == 1) {
-			pickUpStatus = true;
-		}
-		int booleanCheckPaid = rs.getInt("isPaid");
-		boolean isPaid = false;
-		if (booleanCheckPaid == 1) {
-			isPaid = true;
-		}
-		LocalDateTime date = getLocalDateFromSQLDate(rs.getDate("date"));
-		LocalDateTime pickupDate = getLocalDateFromSQLDate(rs.getDate("pickupDate"));
-		Order order = new Order(date, pickUpStatus, pickupDate, isPaid, customer, employee);
-		order.setOrderId(rs.getInt("order_id"));
-		order.setIsConfirmed(convertIntToBoolean(rs.getInt("isConfirmed")));
-		return order;
 	}
 
 	/*
@@ -126,7 +106,8 @@ public class OrderDB implements OrderDBIF {
 		}
 		LocalDateTime date = getLocalDateFromSQLDate(rs.getDate("date"));
 		LocalDateTime pickupDate = getLocalDateFromSQLDate(rs.getDate("pickupDate"));
-		Order order = new Order(date, pickUpStatus, pickupDate, isPaid, customer, employee);
+		byte[] concurrencyToken = rs.getBytes("concurrency_token");
+		Order order = new Order(date, pickUpStatus, pickupDate, isPaid, customer, employee, concurrencyToken);
 		order.setOrderId(rs.getInt("order_id"));
 		order.setIsConfirmed(convertIntToBoolean(rs.getInt("isConfirmed")));
 		ArrayList<OrderLine> orderLines = buildOrderLineObject(order, products);
@@ -248,7 +229,6 @@ public class OrderDB implements OrderDBIF {
 
 	private int insertOrder(Order newOrder) throws SQLException {
 		insertOrder.setDate(1, java.sql.Date.valueOf(LocalDateTime.now().toLocalDate()));
-		System.out.println(java.sql.Date.valueOf(newOrder.getDate().toLocalDate()));
 		insertOrder.setInt(2, convertBooleanToInt(newOrder.isPickUpStatus()));
 		insertOrder.setDate(3, java.sql.Date.valueOf(newOrder.getDate().toLocalDate()));
 		insertOrder.setInt(4, convertBooleanToInt(newOrder.isPaid()));
@@ -271,7 +251,6 @@ public class OrderDB implements OrderDBIF {
 
 	public int insertOrderFromGUI(Order newOrder) throws SQLException {
 		insertOrder.setDate(1, java.sql.Date.valueOf(newOrder.getDate().toLocalDate()));
-		System.out.println(java.sql.Date.valueOf(newOrder.getDate().toLocalDate()));
 		insertOrder.setInt(2, convertBooleanToInt(newOrder.isPickUpStatus()));
 		insertOrder.setDate(3, java.sql.Date.valueOf(newOrder.getPickupDate().toLocalDate()));
 		insertOrder.setInt(4, convertBooleanToInt(newOrder.isPaid()));
@@ -329,9 +308,30 @@ public class OrderDB implements OrderDBIF {
 		return foundOrder;
 	}
 
-	public void insertUpdatedOrder(Order foundOrder) throws SQLException {
-		updateOrder.setInt(1, foundOrder.getOrderId());
-		updateOrder.executeUpdate();
+	public void insertUpdatedOrder(Order foundOrder) throws SQLException, InvalidConcurrencyException {
+		if (validateConcurrencyToken(foundOrder)) {
+			updateOrder.setInt(1, foundOrder.getOrderId());
+			updateOrder.executeUpdate();
+		} else {
+			throw new InvalidConcurrencyException(null, "Concurrency check failed for order ID: " + foundOrder.getOrderId());
+		}
+	}
+
+	private boolean validateConcurrencyToken(Order foundOrder) throws SQLException {
+		boolean valid = false;
+		selectConcurrencyToken.setInt(1, foundOrder.getOrderId());
+		var rs = selectConcurrencyToken.executeQuery();
+		while (rs.next()) {
+
+			var existingConcurrencyToken = rs.getBytes("concurrency_token");
+			var oldConcurrencyToken = foundOrder.getConcurrencyToken();
+			var validateTokens = Arrays.equals(oldConcurrencyToken, existingConcurrencyToken);
+
+			if (validateTokens) {
+				valid = true;
+			}
+		}
+		return valid;
 	}
 
 	/**

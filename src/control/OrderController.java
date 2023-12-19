@@ -1,6 +1,7 @@
 package control;
 
 import dataaccesslayer.DataAccessException;
+import dataaccesslayer.InvalidConcurrencyException;
 import dataaccesslayer.OrderDB;
 import model.*;
 import java.sql.SQLException;
@@ -28,7 +29,7 @@ public class OrderController {
 
 	public Order createOrderNoOrderIDOnlyDate(LocalDateTime date, boolean pickUpStatus, LocalDateTime pickupDate,
 			boolean isPaid, Customer customer, Employee employee) {
-		Order newOrder = new Order(date, pickUpStatus, pickupDate, false, null, null);
+		Order newOrder = new Order(date, pickUpStatus, pickupDate, false, null, null,null);
 		return newOrder;
 	}
 
@@ -104,7 +105,7 @@ public class OrderController {
 		return personController.getEmployeeFromOrderId(orderId);
 	}
 
-	public void updateOrderToConfirmed(Order foundOrder) throws SQLException {
+	public void updateOrderToConfirmed(Order foundOrder) throws SQLException, InvalidConcurrencyException {
 		if (foundOrder.checkOrder()) {
 			foundOrder.setIsConfirmed(true);
 			insertUpdatedOrder(foundOrder);
@@ -117,8 +118,8 @@ public class OrderController {
 		return orderDB.insertOrderFromGUI(order);
 	}
 
-	public void insertUpdatedOrder(Order foundOrder) throws SQLException {
-		orderDB.insertUpdatedOrder(foundOrder);
+	public void insertUpdatedOrder(Order foundOrder) throws SQLException, InvalidConcurrencyException {
+			orderDB.insertUpdatedOrder(foundOrder);
 
 	}
 

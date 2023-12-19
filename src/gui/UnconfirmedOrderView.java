@@ -20,6 +20,9 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -27,6 +30,7 @@ import java.util.concurrent.TimeUnit;
 import control.OrderController;
 import control.PersonController;
 import dataaccesslayer.DataAccessException;
+import dataaccesslayer.InvalidConcurrencyException;
 import dataaccesslayer.OrderDB;
 import model.Order;
 import model.Customer;
@@ -47,6 +51,8 @@ public class UnconfirmedOrderView extends JFrame {
 	private JScrollPane scrollPane;
 	private ScheduledExecutorService exec;
 	private volatile boolean viewRunning;
+	private Lock orderSelectionLock;
+	private Object selectedOrder;
 
 	/**
 	 * Creates and sets the view
@@ -85,7 +91,7 @@ public class UnconfirmedOrderView extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					confirmOrderClicked();
-				} catch (SQLException e1) {
+				} catch (SQLException | InvalidConcurrencyException e1) {
 					e1.printStackTrace();
 					SwingUtilities.invokeLater(() -> {
 						JOptionPane.showMessageDialog(UnconfirmedOrderView.this, "Ordre kunne ikke godkendes.",
@@ -118,12 +124,50 @@ public class UnconfirmedOrderView extends JFrame {
         scrollPane.setViewportView(tableUnconfirmedOrders);
 		executeUpdateToTable();
 
+		ArrayList<Integer> orderIds = new ArrayList<Integer>();
+		orderIds = getOrderIDsFromList(orders);
+
+		HashMap<Integer, Customer> orderIdCustomerHashMap = new HashMap<Integer, Customer>();
+		HashMap<Integer, Employee> orderIdEmployeeHashMap = new HashMap<Integer, Employee>();
+		for (Integer currentOrderId : orderIds) {
+			Customer currentCustomer = orderController.getCustomerFromOrderId(currentOrderId);
+			Employee currentEmployee = orderController.getEmployeeFromOrderId(currentOrderId);
+
+			orderIdCustomerHashMap.put(currentOrderId, currentCustomer);
+			orderIdEmployeeHashMap.put(currentOrderId, currentEmployee);
+
+			Order currentOrder = null;
+			for (Order order : orders) {
+				if (order.getOrderId() == currentOrderId) {
+					currentOrder = order;
+					break;
+				}
+			}
+
+			if (currentOrder != null) {
+				orderController.addCustomerToOrder(currentCustomer, currentOrder);
+				orderController.testaddEmployeeToOrder(currentEmployee, currentOrder);
+			}
+		}
+
+		// Use list to find customers in PersonController with PersonDB
+
+		// Create customers and add to order
+
+		// Check table design
+		unconfirmedOrderTableModel.setData(orders);
+		tableUnconfirmedOrders.setModel(unconfirmedOrderTableModel);
+		scrollPane.setViewportView(tableUnconfirmedOrders);
+
+		executeUpdateToTable();
+
 	}
 
 	/**
 	 * 
 	 */
 	private void executeUpdateToTable() {
+
 	    if (viewRunning) {
 	        exec = Executors.newSingleThreadScheduledExecutor();
 	        exec.scheduleAtFixedRate(() -> {
@@ -181,8 +225,24 @@ public class UnconfirmedOrderView extends JFrame {
 	        }
 	    }
 	    executeUpdateToTable();
+
 	}
 
+	 private void confirmSelectedOrder() {
+	        // Ensure only one employee can confirm an order at a time
+	        orderSelectionLock.lock();
+	        try {
+	            if (selectedOrder != null) {
+	                // Perform the confirmation logic for the selected order
+	                System.out.println("Order confirmed by employee: " + selectedOrder);
+	                // Clear the selected order
+	                selectedOrder = null;
+	            }
+	        } finally {
+	            orderSelectionLock.unlock();
+	        }
+	    }
+	
 	/**
 	 * The selected order will be rejected // Not implemented
 	 */
@@ -195,8 +255,9 @@ public class UnconfirmedOrderView extends JFrame {
 	 * The selected order will be confirmed on click
 	 * 
 	 * @throws SQLException
+	 * @throws InvalidConcurrencyException 
 	 */
-	protected void confirmOrderClicked() throws SQLException {
+	protected void confirmOrderClicked() throws SQLException, InvalidConcurrencyException {
 		int selectedRow = tableUnconfirmedOrders.getSelectedRow();
 		ArrayList<Order> orders = unconfirmedOrderTableModel.getOrders();
 		Order orderToUpdate = orders.get(selectedRow);

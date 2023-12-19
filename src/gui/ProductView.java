@@ -152,7 +152,7 @@ public class ProductView extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					confirmOrder();
+					confirmCreateOrder();
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
@@ -213,10 +213,9 @@ public class ProductView extends JFrame {
 	}
 	/**
 	 * @throws SQLException 
-	 * 
 	 */
-	protected void confirmOrder() throws SQLException {
-		// Read orderLines, add to order.
+	protected void confirmCreateOrder() throws SQLException {
+		/// Read orderLines, add to order.
 		order.addOrderLines(orderLinesToTable);
 		order.setEmployee(this.employee);
 		if (checkOrderBeforeConfirmation(order)) {
@@ -230,9 +229,10 @@ public class ProductView extends JFrame {
 		OrderView orderView = new OrderView(this.employee);
 		closeWindow();
 		orderView.setVisible(true);
-		// Call to OrderCtr -> Other CTR -> DB Insert (1st Order, 2nd OrderLine, 3rd OrderOrderLine?)
-	
+		
+		
 	}
+	
 	/**
 	 * 
 	 */

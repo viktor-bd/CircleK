@@ -75,7 +75,7 @@ public class OrderDB implements OrderDBIF {
 
 			// Process the result set and populate the list of orders
 			while (rs.next()) {
-				Order order = buildOrderObject(rs, products); 
+				Order order = buildOrderObject(rs, products);
 				// Add to list
 				orders.add(order);
 			}
@@ -229,7 +229,6 @@ public class OrderDB implements OrderDBIF {
 
 	private int insertOrder(Order newOrder) throws SQLException {
 		insertOrder.setDate(1, java.sql.Date.valueOf(LocalDateTime.now().toLocalDate()));
-		System.out.println(java.sql.Date.valueOf(newOrder.getDate().toLocalDate()));
 		insertOrder.setInt(2, convertBooleanToInt(newOrder.isPickUpStatus()));
 		insertOrder.setDate(3, java.sql.Date.valueOf(newOrder.getDate().toLocalDate()));
 		insertOrder.setInt(4, convertBooleanToInt(newOrder.isPaid()));
@@ -252,7 +251,6 @@ public class OrderDB implements OrderDBIF {
 
 	public int insertOrderFromGUI(Order newOrder) throws SQLException {
 		insertOrder.setDate(1, java.sql.Date.valueOf(newOrder.getDate().toLocalDate()));
-		System.out.println(java.sql.Date.valueOf(newOrder.getDate().toLocalDate()));
 		insertOrder.setInt(2, convertBooleanToInt(newOrder.isPickUpStatus()));
 		insertOrder.setDate(3, java.sql.Date.valueOf(newOrder.getPickupDate().toLocalDate()));
 		insertOrder.setInt(4, convertBooleanToInt(newOrder.isPaid()));

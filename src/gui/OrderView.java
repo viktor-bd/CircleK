@@ -3,23 +3,15 @@
  */
 package gui;
 
-import java.awt.Component;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
-import java.time.LocalDate;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
+
 import javax.swing.JPanel;
-
-import org.jdatepicker.impl.JDatePanelImpl;
-import org.jdatepicker.impl.JDatePickerImpl;
-import org.jdatepicker.impl.UtilDateModel;
-
 import dataaccesslayer.DataAccessException;
 import model.Employee;
 
@@ -33,8 +25,6 @@ public class OrderView extends JFrame {
 	private JButton btnViewOrders;
 	private JButton btnLogOut;
 	private JButton btnConfirmDenyOrders;
-	private JDatePanelImpl datePanel;
-	private Component datePicker;
 	private JLabel lblEmployee;
 	private Employee employee;
 
@@ -130,14 +120,14 @@ public class OrderView extends JFrame {
 		DatePickerView dpv = new DatePickerView(employee);
 		dpv.setVisible(true);
 		clearWindow();
-		
+
 	}
 
 	/**
 	 * Opens a ConfirmedOrdersView when confirmOrdersViewClicked
 	 * 
 	 * @throws DataAccessException
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	private void confirmedOrdersViewClicked() throws DataAccessException, SQLException {
 		ConfirmedOrdersView confirmedOrdersView = new ConfirmedOrdersView(employee);
@@ -180,6 +170,7 @@ public class OrderView extends JFrame {
 	 */
 	public void openWindow() {
 		this.setVisible(true);
+		updateDisplay();
 
 	}
 }

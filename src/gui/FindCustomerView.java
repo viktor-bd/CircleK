@@ -5,9 +5,7 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -22,7 +20,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.FlowLayout;
 
 import control.OrderController;
-import control.PersonController;
+
 import dataaccesslayer.DataAccessException;
 import model.Customer;
 import model.Order;

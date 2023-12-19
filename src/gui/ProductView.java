@@ -38,15 +38,7 @@ import model.OrderLine;
  */
 public class ProductView extends JFrame {
 	private JTextField textField;
-	private JTextField textField_Product_1;
-	private JTextField textField_Product_2;
-	private JTextField textField_Product_3;
-	private JTextField textField_Product_4;
-	private JTextField textField_Product_5;
-	private JTextField textField_Product_6;
-	private JTextField textField_Product_7;
 	private JTable tableProducts;
-	private ArrayList<JTextField> productTextFields;
 	private ProductTableModel  productsTableModel;
 	private ProductController productController;
 	private OrderController orderController;
@@ -177,34 +169,6 @@ public class ProductView extends JFrame {
 		JLabel lblNewLabel_2 = new JLabel("Pris:");
 		lblNewLabel_2.setBounds(267, 236, 46, 14);
 		panel.add(lblNewLabel_2);
-//		textField_Product_1 = new JTextField();
-//		textField_Product_1.setBounds(194, 233, 23, 20);
-//		panel.add(textField_Product_1);
-//		textField_Product_1.setColumns(10);
-//		textField_Product_2 = new JTextField();
-//		textField_Product_2.setBounds(186, 52, 23, 21);
-//		panel.add(textField_Product_2);
-//		textField_Product_2.setColumns(10);
-//		textField_Product_3 = new JTextField();
-//		textField_Product_3.setBounds(184, 70, 23, 20);
-//		panel.add(textField_Product_3);
-//		textField_Product_3.setColumns(10);
-//		textField_Product_4 = new JTextField();
-//		textField_Product_4.setBounds(186, 94, 23, 20);
-//		panel.add(textField_Product_4);
-//		textField_Product_4.setColumns(10);
-//		textField_Product_5 = new JTextField();
-//		textField_Product_5.setBounds(186, 183, 23, 20);
-//		panel.add(textField_Product_5);
-//		textField_Product_5.setColumns(10);
-//		textField_Product_6 = new JTextField();
-//		textField_Product_6.setBounds(194, 152, 23, 20);
-//		panel.add(textField_Product_6);
-//		textField_Product_6.setColumns(10);
-//		textField_Product_7 = new JTextField();
-//		textField_Product_7.setBounds(196, 215, 23, 20);
-//		panel.add(textField_Product_7);
-//		textField_Product_7.setColumns(10);
 		JLabel lblNewLabel_Quantity = new JLabel("Antal");
 		lblNewLabel_Quantity.setBounds(145, 11, 46, 14);
 		panel.add(lblNewLabel_Quantity);
@@ -286,16 +250,6 @@ public class ProductView extends JFrame {
 		tableOrderLines.setModel(productsTableModel);
 	}
 	}
-//	productsTableModel = new ProductTableModel();
-//	productsTableModel.setData(productController.findAllProductFromDB());
-//	tableProducts.setModel(productsTableModel);
-//	TableColumn column1 = tableProducts.getColumnModel().getColumn(0);
-//    column1.setPreferredWidth(145);
-//
-//    // Adjust the width of the second column (index 1) to 45
-//    TableColumn column2 = tableProducts.getColumnModel().getColumn(1);
-//    column2.setPreferredWidth(30);
-//	scrollPane.setViewportView(tableProducts);
 
 	/**
 	 * 

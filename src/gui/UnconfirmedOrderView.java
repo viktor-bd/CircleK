@@ -12,7 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.awt.event.ActionEvent;
@@ -21,7 +21,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -31,7 +31,7 @@ import control.OrderController;
 import control.PersonController;
 import dataaccesslayer.DataAccessException;
 import dataaccesslayer.InvalidConcurrencyException;
-import dataaccesslayer.OrderDB;
+
 import model.Order;
 import model.Customer;
 import model.Employee;
@@ -42,13 +42,10 @@ import model.Employee;
  *
  */
 public class UnconfirmedOrderView extends JFrame {
-	private JTable tableUnconfirmedOrder;
 	private JTable tableUnconfirmedOrders;
 	private UnconfirmedOrderTableModel unconfirmedOrderTableModel;
 	private OrderController orderController;
-	private PersonController personController;
 	private OrderView orderView;
-	private JScrollPane scrollPane;
 	private ScheduledExecutorService exec;
 	private volatile boolean viewRunning;
 	private Lock orderSelectionLock;
@@ -63,7 +60,6 @@ public class UnconfirmedOrderView extends JFrame {
 	public UnconfirmedOrderView(OrderView orderView) throws DataAccessException, SQLException {
 		viewRunning = true;
 		this.orderView = orderView;
-		personController = new PersonController();
 		orderController = new OrderController();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Bekræft ordrer");

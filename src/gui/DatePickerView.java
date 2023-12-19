@@ -36,7 +36,7 @@ public class DatePickerView extends JFrame {
 	private LocalDateTime desiredDateConverted;
 	private LocalDateTime currentDateConverted;
 	private Employee employee;
-	private OrderView orderView;
+
 
 	/**
 	 * 

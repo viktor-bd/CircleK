@@ -70,7 +70,7 @@ public class TestOrderCreation {
 		OrderController orderController = new OrderController();
 		
 		// Act
-		Order foundOrder = orderController.getOrderWithOrderId(6);
+		Order foundOrder = orderController.getOrderWithOrderId(4);
 		int amountOfOrderLinesOnFoundOrder = (foundOrder.getSizeOfOrderLines());
 		
 		// Assert
@@ -122,7 +122,7 @@ public class TestOrderCreation {
 		orderController.addOrderLineToOrder(newOrderLine2, newOrder);
 		Customer foundCustomer = personController.lookUpCustomerInDB(validPhoneNumber);
 		orderController.addCustomerToOrder(foundCustomer, newOrder);
-		orderController.testaddEmployeeToOrder(testEmployee, newOrder);
+		orderController.addEmployeeToOrder(testEmployee, newOrder);
 
 		// Act
 		Order foundOrder = orderController.saveOrder(newOrder);

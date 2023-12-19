@@ -64,8 +64,8 @@ public class OrderController {
 		order.setCustomer(customer);
 	}
 
-	public void testaddEmployeeToOrder(Employee testEmployee, Order newOrder) {
-		newOrder.setEmployee(testEmployee);
+	public void addEmployeeToOrder(Employee employee, Order newOrder) {
+		newOrder.setEmployee(employee);
 	}
 
 	/**

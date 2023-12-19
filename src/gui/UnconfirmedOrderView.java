@@ -146,7 +146,7 @@ public class UnconfirmedOrderView extends JFrame {
 
 			if (currentOrder != null) {
 				orderController.addCustomerToOrder(currentCustomer, currentOrder);
-				orderController.testaddEmployeeToOrder(currentEmployee, currentOrder);
+				orderController.addEmployeeToOrder(currentEmployee, currentOrder);
 			}
 		}
 
@@ -171,8 +171,7 @@ public class UnconfirmedOrderView extends JFrame {
 	        exec = Executors.newSingleThreadScheduledExecutor();
 	        exec.scheduleAtFixedRate(() -> {
 	            try {
-	                updateSwingComponents();
-	                System.out.println("166 ramt");
+	                updateSwingComponents();	                
 	            } catch (SQLException e) {
 	                e.printStackTrace();
 	            }
@@ -210,7 +209,7 @@ public class UnconfirmedOrderView extends JFrame {
 	                }
 	                if (currentOrder != null) {
 	                    orderController.addCustomerToOrder(currentCustomer, currentOrder);
-	                    orderController.testaddEmployeeToOrder(currentEmployee, currentOrder);
+	                    orderController.addEmployeeToOrder(currentEmployee, currentOrder);
 	                }
 	            }
 	            System.out.println("Repaint 207");

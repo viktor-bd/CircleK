@@ -126,10 +126,11 @@ public class OrderView extends JFrame {
 	/**
 	 * Opens a DatePickerView when createOrderClicked
 	 */
-	public void pickDesiredDate() {
+	private void pickDesiredDate() {
 		DatePickerView dpv = new DatePickerView(employee);
 		dpv.setVisible(true);
 		clearWindow();
+		
 	}
 
 	/**

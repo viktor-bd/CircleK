@@ -5,8 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import dataaccesslayer.DBConnection;
-import dataaccesslayer.DataAccessException;
 import model.Customer;
 import model.Employee;
 

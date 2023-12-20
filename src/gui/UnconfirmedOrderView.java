@@ -12,7 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.awt.event.ActionEvent;
@@ -20,18 +20,14 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import control.OrderController;
-import control.PersonController;
 import dataaccesslayer.DataAccessException;
 import dataaccesslayer.InvalidConcurrencyException;
-import dataaccesslayer.OrderDB;
+
 import model.Order;
 import model.Customer;
 import model.Employee;
@@ -41,18 +37,17 @@ import model.Employee;
  *         Chowdhury
  *
  */
+@SuppressWarnings("serial")
 public class UnconfirmedOrderView extends JFrame {
-	private JTable tableUnconfirmedOrder;
+	/**
+	 * 
+	 */
 	private JTable tableUnconfirmedOrders;
 	private UnconfirmedOrderTableModel unconfirmedOrderTableModel;
 	private OrderController orderController;
-	private PersonController personController;
 	private OrderView orderView;
-	private JScrollPane scrollPane;
 	private ScheduledExecutorService exec;
 	private volatile boolean viewRunning;
-	private Lock orderSelectionLock;
-	private Object selectedOrder;
 
 	/**
 	 * Creates and sets the view
@@ -63,7 +58,6 @@ public class UnconfirmedOrderView extends JFrame {
 	public UnconfirmedOrderView(OrderView orderView) throws DataAccessException, SQLException {
 		viewRunning = true;
 		this.orderView = orderView;
-		personController = new PersonController();
 		orderController = new OrderController();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Bekræft ordrer");
@@ -120,8 +114,8 @@ public class UnconfirmedOrderView extends JFrame {
 		tableUnconfirmedOrders.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		unconfirmedOrderTableModel = new UnconfirmedOrderTableModel();
 		unconfirmedOrderTableModel.setData(getOrdersFromDB());
-    	tableUnconfirmedOrders.setModel(unconfirmedOrderTableModel);
-        scrollPane.setViewportView(tableUnconfirmedOrders);
+		tableUnconfirmedOrders.setModel(unconfirmedOrderTableModel);
+		scrollPane.setViewportView(tableUnconfirmedOrders);
 		executeUpdateToTable();
 		ArrayList<Order> orders = getOrdersFromDB();
 		ArrayList<Integer> orderIds = new ArrayList<Integer>();
@@ -167,77 +161,62 @@ public class UnconfirmedOrderView extends JFrame {
 	 */
 	private void executeUpdateToTable() {
 
-	    if (viewRunning) {
-	        exec = Executors.newSingleThreadScheduledExecutor();
-	        exec.scheduleAtFixedRate(() -> {
-	            try {
-	                updateSwingComponents();	                
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            }
-	        }, 5, 30, TimeUnit.SECONDS);
-	    } else {
-	        exec.shutdown();
-	    }
+		if (viewRunning) {
+			exec = Executors.newSingleThreadScheduledExecutor();
+			exec.scheduleAtFixedRate(() -> {
+				try {
+					updateSwingComponents();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}, 5, 30, TimeUnit.SECONDS);
+		} else {
+			exec.shutdown();
+		}
 	}
 
 	private void updateSwingComponents() throws SQLException {
-	    if (viewRunning) {
-	        System.out.println("Starting updateSwingComponents");
-	        try {
-	        
-	            ArrayList<Order> updatedOrders = getOrdersFromDB();
-	            unconfirmedOrderTableModel.updateList(updatedOrders);
-	            tableUnconfirmedOrders.revalidate();
-	            tableUnconfirmedOrders.repaint();
-	            ArrayList<Integer> orderIds = getOrderIDsFromList(updatedOrders);
+		if (viewRunning) {
+			System.out.println("Starting updateSwingComponents");
+			try {
 
-	            HashMap<Integer, Customer> orderIdCustomerHashMap = new HashMap<>();
-	            HashMap<Integer, Employee> orderIdEmployeeHashMap = new HashMap<>();
-	            for (Integer currentOrderId : orderIds) {
-	                Customer currentCustomer = orderController.getCustomerFromOrderId(currentOrderId);
-	                Employee currentEmployee = orderController.getEmployeeFromOrderId(currentOrderId);
+				ArrayList<Order> updatedOrders = getOrdersFromDB();
+				unconfirmedOrderTableModel.updateList(updatedOrders);
+				tableUnconfirmedOrders.revalidate();
+				tableUnconfirmedOrders.repaint();
+				ArrayList<Integer> orderIds = getOrderIDsFromList(updatedOrders);
 
-	                orderIdCustomerHashMap.put(currentOrderId, currentCustomer);
-	                orderIdEmployeeHashMap.put(currentOrderId, currentEmployee);
+				HashMap<Integer, Customer> orderIdCustomerHashMap = new HashMap<>();
+				HashMap<Integer, Employee> orderIdEmployeeHashMap = new HashMap<>();
+				for (Integer currentOrderId : orderIds) {
+					Customer currentCustomer = orderController.getCustomerFromOrderId(currentOrderId);
+					Employee currentEmployee = orderController.getEmployeeFromOrderId(currentOrderId);
 
-	                Order currentOrder = null;
-	                for (Order order : updatedOrders) {
-	                    if (order.getOrderId() == currentOrderId) {
-	                        currentOrder = order;
-	                    }
-	                }
-	                if (currentOrder != null) {
-	                    orderController.addCustomerToOrder(currentCustomer, currentOrder);
-	                    orderController.addEmployeeToOrder(currentEmployee, currentOrder);
-	                }
-	            }
-	            System.out.println("Repaint 207");
-	            tableUnconfirmedOrders.revalidate();
-	            tableUnconfirmedOrders.repaint();
+					orderIdCustomerHashMap.put(currentOrderId, currentCustomer);
+					orderIdEmployeeHashMap.put(currentOrderId, currentEmployee);
 
-	            System.out.println("Finished updateSwingComponents");
-	        } catch (DataAccessException | SQLException e) {
-	            e.printStackTrace();
-	        }
-	    }
+					Order currentOrder = null;
+					for (Order order : updatedOrders) {
+						if (order.getOrderId() == currentOrderId) {
+							currentOrder = order;
+						}
+					}
+					if (currentOrder != null) {
+						orderController.addCustomerToOrder(currentCustomer, currentOrder);
+						orderController.addEmployeeToOrder(currentEmployee, currentOrder);
+					}
+				}
+				System.out.println("Repaint 207");
+				tableUnconfirmedOrders.revalidate();
+				tableUnconfirmedOrders.repaint();
+
+				System.out.println("Finished updateSwingComponents");
+			} catch (DataAccessException | SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
-	 private void confirmSelectedOrder() {
-	        // Ensure only one employee can confirm an order at a time
-	        orderSelectionLock.lock();
-	        try {
-	            if (selectedOrder != null) {
-	                // Perform the confirmation logic for the selected order
-	                System.out.println("Order confirmed by employee: " + selectedOrder);
-	                // Clear the selected order
-	                selectedOrder = null;
-	            }
-	        } finally {
-	            orderSelectionLock.unlock();
-	        }
-	    }
-	
 	/**
 	 * The selected order will be rejected // Not implemented
 	 */
@@ -250,7 +229,7 @@ public class UnconfirmedOrderView extends JFrame {
 	 * The selected order will be confirmed on click
 	 * 
 	 * @throws SQLException
-	 * @throws InvalidConcurrencyException 
+	 * @throws InvalidConcurrencyException
 	 */
 	protected void confirmOrderClicked() throws SQLException, InvalidConcurrencyException {
 		int selectedRow = tableUnconfirmedOrders.getSelectedRow();

@@ -6,7 +6,6 @@ package gui;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
-import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
@@ -19,7 +18,7 @@ import javax.swing.ListSelectionModel;
 
 import control.OrderController;
 import dataaccesslayer.DataAccessException;
-import dataaccesslayer.OrderDB;
+
 import model.Customer;
 import model.Employee;
 import model.Order;
@@ -29,6 +28,7 @@ import model.Order;
  *         Chowdhury
  *
  */
+@SuppressWarnings("serial")
 public class ConfirmedOrdersView extends JFrame {
 	private JTable tableConfirmed;
 	private ConfirmedOrderTableModel confirmedOrderTableModel;

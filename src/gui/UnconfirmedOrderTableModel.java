@@ -14,6 +14,7 @@ import model.Order;
  *         Chowdhury
  *
  */
+@SuppressWarnings("serial")
 public class UnconfirmedOrderTableModel extends AbstractTableModel {
 
 	private ArrayList<Order> orders;

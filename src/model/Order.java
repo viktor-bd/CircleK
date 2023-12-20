@@ -1,10 +1,7 @@
 package model;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * @author Rasmus Larsen, Viktor Dorph, Johannes Jensen, Malik Agerbæk, Shemon
@@ -21,9 +18,7 @@ public class Order {
 	private Customer customer;
 	private Employee employee;
 	private ArrayList<OrderLine> orderLines;
-	private static final int minimumProducts = 20;
 	private byte[] concurrencyToken;
-													
 
 	/**
 	 * TODO Check if orderID should be initialized in constructor or set on
@@ -66,7 +61,7 @@ public class Order {
 	 * @param employee
 	 */
 	public Order(LocalDateTime date, boolean pickUpStatus, LocalDateTime pickupDate, boolean isPaid, Customer customer,
-			Employee employee, byte[] concurrencyToken ) {
+			Employee employee, byte[] concurrencyToken) {
 		this.orderId = -1; // Hardcoding -1 to differentiate between non persisted (-1) orders and
 							// persisted orders (non negative, non null id)
 		this.date = date;
@@ -78,18 +73,6 @@ public class Order {
 		this.isConfirmed = false;
 		this.concurrencyToken = concurrencyToken;
 		orderLines = new ArrayList<OrderLine>();
-	}
-
-	/**
-	 * Returns the current time in the specified format.
-	 * 
-	 * @return the formatted current time
-	 */
-	private String formatTime(Date date) {
-		LocalDateTime now = LocalDateTime.now();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-		String formattedDateTime = now.format(formatter);
-		return formattedDateTime;
 	}
 
 	/**

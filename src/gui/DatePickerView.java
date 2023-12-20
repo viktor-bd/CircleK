@@ -18,7 +18,6 @@ import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JFormattedTextField;
 import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -29,6 +28,7 @@ import java.awt.event.ActionEvent;
  *         Chowdhury
  *
  */
+@SuppressWarnings("serial")
 public class DatePickerView extends JFrame {
 	private UtilDateModel dateModel;
 	private Date currentDate;
@@ -36,7 +36,7 @@ public class DatePickerView extends JFrame {
 	private LocalDateTime desiredDateConverted;
 	private LocalDateTime currentDateConverted;
 	private Employee employee;
-	private OrderView orderView;
+
 
 	/**
 	 * 

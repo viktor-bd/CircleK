@@ -8,7 +8,6 @@ import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
@@ -30,6 +29,7 @@ import model.Employee;
  *         Chowdhury
  *
  */
+@SuppressWarnings("serial")
 public class EmployeeLoginView extends JFrame {
 
 	private JPanel contentPane;

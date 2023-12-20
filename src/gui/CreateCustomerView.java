@@ -14,6 +14,7 @@ import javax.swing.JTextField;
  * @author Rasmus Larsen, Viktor Dorph, Johannes Jensen, Malik Agerbæk, Shemon Chowdhury 
  *
  */
+@SuppressWarnings("serial")
 public class CreateCustomerView extends JFrame {
 	private JTextField textField;
 	private JTextField textField_1;

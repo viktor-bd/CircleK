@@ -28,6 +28,7 @@ import model.Order;
  *         Chowdhury
  *
  */
+@SuppressWarnings("serial")
 public class ConfirmedOrdersView extends JFrame {
 	private JTable tableConfirmed;
 	private ConfirmedOrderTableModel confirmedOrderTableModel;

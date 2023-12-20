@@ -20,6 +20,7 @@ import model.Employee;
  *         Chowdhury
  *
  */
+@SuppressWarnings("serial")
 public class OrderView extends JFrame {
 	private JButton btnCreateOrder;
 	private JButton btnViewOrders;

@@ -31,9 +31,9 @@ import model.Order;
  * @1.Semesterprojekt
  *
  */
+@SuppressWarnings("serial")
 public class FindCustomerView extends JFrame {
 
-	
 	private JTextField textFieldCustomerNumber;
 	private Container contentPane;
 	private Order order;
@@ -75,13 +75,13 @@ public class FindCustomerView extends JFrame {
 			}
 		});
 		panel_1.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		
+
 		JButton btnNewButton = new JButton("Opret kunde");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				createCustomerClicked();
 			}
-			
+
 		});
 		panel_1.add(btnNewButton);
 		panel_1.add(btnSearch);
@@ -94,15 +94,14 @@ public class FindCustomerView extends JFrame {
 		});
 		panel_1.add(btnCancel);
 	}
-		
+
 	public void searchClicked() throws DataAccessException {
 		Customer c = findCustomerByPhone();
-		if(c != null) {
+		if (c != null) {
 			confirmCustomer(c, order);
 		} else {
-			//TODO JOPTIONERROR MSG
+			// TODO JOPTIONERROR MSG
 		}
-		
 
 	}
 
@@ -111,12 +110,12 @@ public class FindCustomerView extends JFrame {
 	 */
 	private boolean confirmCustomer(Customer customer, Order order) {
 		boolean customerAdded = false;
-		if (JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(this, "Vil du vælge " + customer.getFirstName() + "?",
-				"Kunde", JOptionPane.YES_NO_OPTION)) {
+		if (JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(this,
+				"Vil du vælge " + customer.getFirstName() + "?", "Kunde", JOptionPane.YES_NO_OPTION)) {
 			order.setCustomer(customer);
 			customerAdded = true;
 			this.setVisible(false);
-			
+
 		}
 		return customerAdded;
 	}
@@ -124,17 +123,18 @@ public class FindCustomerView extends JFrame {
 	public void cancelClicked() {
 		clearWindow();
 	}
-	
+
 	public void createCustomerClicked() {
 		CreateCustomerView createCustomerView = new CreateCustomerView();
 		createCustomerView.setVisible(true);
 	}
+
 	public Customer findCustomerByPhone() throws DataAccessException {
 		OrderController orderController = new OrderController();
 		String phone = textFieldCustomerNumber.getText();
 		return orderController.findCustomerByPhone(phone);
 	}
-	
+
 	public void clearWindow() {
 		this.setVisible(false);
 		this.dispose();

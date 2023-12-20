@@ -6,6 +6,7 @@ import javax.swing.table.AbstractTableModel;
 
 import model.Order;
 
+@SuppressWarnings("serial")
 public class ConfirmedOrderTableModel extends AbstractTableModel {
 
 	private ArrayList<Order> orders;

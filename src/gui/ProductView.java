@@ -33,6 +33,7 @@ import model.OrderLine;
  *         Chowdhury
  *
  */
+@SuppressWarnings("serial")
 public class ProductView extends JFrame {
 	private JTextField textField;
 	private JTable tableProducts;

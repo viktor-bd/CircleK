@@ -14,6 +14,7 @@ import model.Product;
  * @author Rasmus Larsen, Viktor Dorph, Johannes Jensen, Malik Agerbæk, Shemon Chowdhury 
  *
  */
+@SuppressWarnings("serial")
 public class ProductOrderLinesTableModel extends AbstractTableModel {
 	private ArrayList<OrderLine> orderLines;
 	private static final String[] COLUMN_HEADERS = { "Produkt", "Antal" };

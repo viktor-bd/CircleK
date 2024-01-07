@@ -103,7 +103,7 @@ public class OrderView extends JFrame {
 	 * @param orderView
 	 */
 	public void run(OrderView orderView) {
-		orderView.setVisible(true);
+		orderView.setVisible(true);		
 	}
 
 	/*
@@ -163,7 +163,7 @@ public class OrderView extends JFrame {
 	private void updateDisplay() {
 		this.revalidate();
 		this.repaint();
-	}
+		}
 
 	/**
 	 * 

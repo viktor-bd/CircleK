@@ -86,7 +86,7 @@ public class UnconfirmedOrderView extends JFrame {
 				try {
 					confirmOrderClicked();
 				} catch (SQLException | InvalidConcurrencyException e1) {
-					//e1.printStackTrace();
+					// e1.printStackTrace();
 					SwingUtilities.invokeLater(() -> {
 						JOptionPane.showMessageDialog(UnconfirmedOrderView.this, "Ordre kunne ikke godkendes.",
 								"Prøv igen eller tjek ordren", JOptionPane.ERROR_MESSAGE);
@@ -151,17 +151,22 @@ public class UnconfirmedOrderView extends JFrame {
 	private void executeUpdateToTable() {
 
 		if (viewRunning) {
-			exec = Executors.newSingleThreadScheduledExecutor();
-			exec.scheduleAtFixedRate(() -> {
-				try {
-					updateSwingComponents();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}, 5, 30, TimeUnit.SECONDS);
+			if (exec == null || exec.isShutdown() || exec.isTerminated()) {
+				exec = Executors.newSingleThreadScheduledExecutor();
+				exec.scheduleAtFixedRate(() -> {
+					try {
+						updateSwingComponents();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}, 5, 30, TimeUnit.SECONDS);
+			}
 		} else {
-			exec.shutdownNow();
+			if (exec != null && !exec.isShutdown()) {
+				exec.shutdown();
+			}
 		}
+
 	}
 
 	private void updateSwingComponents() throws SQLException {
@@ -195,8 +200,8 @@ public class UnconfirmedOrderView extends JFrame {
 						orderController.addEmployeeToOrder(currentEmployee, currentOrder);
 					}
 				}
-				//System.out.println("Number of threads " + Thread.activeCount());
-				
+				 System.out.println("Number of threads " + Thread.activeCount());
+
 				tableUnconfirmedOrders.revalidate();
 				tableUnconfirmedOrders.repaint();
 
@@ -252,7 +257,9 @@ public class UnconfirmedOrderView extends JFrame {
 	 */
 	private void viewNotRunning() {
 		viewRunning = false;
-
+		if (exec != null && !exec.isShutdown()) {
+			exec.shutdown();
+		}
 	}
 
 	public void display() {

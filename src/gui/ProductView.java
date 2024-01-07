@@ -178,21 +178,10 @@ public class ProductView extends JFrame {
 	 */
 	protected void confirmCreateOrder() throws SQLException {
 		/// Read orderLines, add to order.
-		order.addOrderLines(orderLinesToTable);
-		order.setEmployee(this.employee);
-		if (checkOrderBeforeConfirmation(order)) {
-			int orderId = orderController.insertOrderFromGui(order);
-			order.setOrderId(orderId);
+			orderView.setVisible(true);
+		} else {
+			JOptionPane.showMessageDialog(null, "Fejl: Mangler kunde.");
 		}
-		// insert orderlines into orderline (DB)
-		ArrayList<Integer> orderLineIds = insertOrderLinesWithOrderId(order);
-		// insert into OrderOrderLines
-		insertIntoOrderOrderLine(orderLineIds, order.getOrderId());
-		OrderView orderView = new OrderView(this.employee);
-		closeWindow();
-		orderView.setVisible(true);
-		
-		
 	}
 	
 	/**

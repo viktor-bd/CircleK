@@ -171,7 +171,7 @@ public class UnconfirmedOrderView extends JFrame {
 				}
 			}, 5, 30, TimeUnit.SECONDS);
 		} else {
-			exec.shutdown();
+			exec.shutdownNow();
 		}
 	}
 

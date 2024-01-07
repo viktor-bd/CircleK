@@ -320,12 +320,12 @@ public class OrderDB implements OrderDBIF {
 	private boolean validateConcurrencyToken(Order foundOrder) throws SQLException {
 		boolean valid = false;
 		selectConcurrencyToken.setInt(1, foundOrder.getOrderId());
-		var rs = selectConcurrencyToken.executeQuery();
+		ResultSet rs = selectConcurrencyToken.executeQuery();
 		while (rs.next()) {
 
-			var existingConcurrencyToken = rs.getBytes("concurrency_token");
-			var oldConcurrencyToken = foundOrder.getConcurrencyToken();
-			var validateTokens = Arrays.equals(oldConcurrencyToken, existingConcurrencyToken);
+			byte[] existingConcurrencyToken = rs.getBytes("concurrency_token");
+			byte[] oldConcurrencyToken = foundOrder.getConcurrencyToken();
+			boolean validateTokens = Arrays.equals(oldConcurrencyToken, existingConcurrencyToken);
 
 			if (validateTokens) {
 				valid = true;

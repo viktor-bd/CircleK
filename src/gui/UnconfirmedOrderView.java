@@ -163,6 +163,7 @@ public class UnconfirmedOrderView extends JFrame {
 			}
 		} else {
 			if (exec != null && !exec.isShutdown()) {
+				exec.shutdownNow();
 				exec.shutdown();
 			}
 		}
@@ -258,6 +259,7 @@ public class UnconfirmedOrderView extends JFrame {
 	private void viewNotRunning() {
 		viewRunning = false;
 		if (exec != null && !exec.isShutdown()) {
+			exec.shutdownNow();
 			exec.shutdown();
 		}
 	}

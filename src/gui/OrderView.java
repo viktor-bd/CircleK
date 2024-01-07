@@ -103,7 +103,8 @@ public class OrderView extends JFrame {
 	 * @param orderView
 	 */
 	public void run(OrderView orderView) {
-		orderView.setVisible(true);		
+		orderView.setVisible(true);
+		System.out.println("Number of threads " + Thread.activeCount());
 	}
 
 	/*

@@ -42,6 +42,7 @@ public class ConfirmedOrdersView extends JFrame {
 	 * 
 	 */
 	public ConfirmedOrdersView(Employee employee) throws DataAccessException, SQLException {
+		System.out.println("Number of threads " + Thread.activeCount());
 		this.employee = employee;
 		orderController = new OrderController();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

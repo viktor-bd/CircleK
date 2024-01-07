@@ -206,7 +206,8 @@ public class UnconfirmedOrderView extends JFrame {
 						orderController.addEmployeeToOrder(currentEmployee, currentOrder);
 					}
 				}
-				System.out.println("Repaint 207");
+				//System.out.println("Number of threads " + Thread.activeCount());
+				
 				tableUnconfirmedOrders.revalidate();
 				tableUnconfirmedOrders.repaint();
 

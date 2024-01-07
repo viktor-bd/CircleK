@@ -86,7 +86,7 @@ public class UnconfirmedOrderView extends JFrame {
 				try {
 					confirmOrderClicked();
 				} catch (SQLException | InvalidConcurrencyException e1) {
-					e1.printStackTrace();
+					//e1.printStackTrace();
 					SwingUtilities.invokeLater(() -> {
 						JOptionPane.showMessageDialog(UnconfirmedOrderView.this, "Ordre kunne ikke godkendes.",
 								"Prøv igen eller tjek ordren", JOptionPane.ERROR_MESSAGE);
@@ -143,17 +143,6 @@ public class UnconfirmedOrderView extends JFrame {
 				orderController.addEmployeeToOrder(currentEmployee, currentOrder);
 			}
 		}
-
-		// Use list to find customers in PersonController with PersonDB
-
-		// Create customers and add to order
-
-		// Check table design
-		unconfirmedOrderTableModel.setData(orders);
-		tableUnconfirmedOrders.setModel(unconfirmedOrderTableModel);
-		scrollPane.setViewportView(tableUnconfirmedOrders);
-		executeUpdateToTable();
-
 	}
 
 	/**

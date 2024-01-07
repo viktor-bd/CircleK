@@ -57,7 +57,7 @@ public class ConfirmedOrderTableModel extends AbstractTableModel {
 			result = order.getDate().toString();
 			break;
 		case 3:
-			result += order.getPickupDate();
+			result += order.isPaid();
 			break;
 		case 4:
 			result += order.getCustomer().getLastName();
